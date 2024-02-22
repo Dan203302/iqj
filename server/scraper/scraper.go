@@ -44,7 +44,7 @@ func Exportbl(newsbl []NewsBlock) {
 	file.Write(jsonString)
 }
 
-//// Запись блочной новости в файл
+//// Запись полной новости в файл
 //func Export(newsbl []News) {
 //	file, err := os.Create("news.json")
 //	if err != nil {
