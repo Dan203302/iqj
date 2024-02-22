@@ -1,11 +1,11 @@
 package main
 
 import (
-	"database/sql"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	"projects/elitka/project_root/server/scraper"
 )
 
 func Write(w http.ResponseWriter, r *http.Request) {
@@ -15,15 +15,7 @@ func Write(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	connStr := "user=postgres password=qwer1234 dbname=api sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	if err := db.Ping(); err != nil {
-		log.Fatal(err)
-	}
+	scraper.Scraper()
 	router := mux.NewRouter()
 	router.HandleFunc("/", Write)
 	if err := http.ListenAndServe(":8080", router); err != nil {
