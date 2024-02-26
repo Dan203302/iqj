@@ -17,7 +17,7 @@ class Welcome extends StatelessWidget {
                 height: 90,
               ),
               Text(
-                'Добро\nпожаловать!',
+                'Добро\n пожаловать!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
