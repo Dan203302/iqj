@@ -2,6 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:iqj/widgets/welcome.dart';
 
 void main() {
-  const welcome = Welcome();
-  return runApp(welcome);
+  const app = App();
+  return runApp(app);
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android:
+                FadeUpwardsPageTransitionsBuilder(), // Анимация затухания для Android
+            TargetPlatform.iOS:
+                FadeUpwardsPageTransitionsBuilder(), // Анимация затухания для iOS
+          },
+        ),
+      ),
+      home: const Welcome(),
+    );
+  }
 }

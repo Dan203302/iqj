@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/widgets/welcomeSecondScreen.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Image(image: AssetImage('assets/images/welcome/welcome_1.png')),
-              SizedBox(
+              const Image(
+                image: AssetImage('assets/images/welcome/welcome_1.png'),
+              ),
+              const SizedBox(
                 height: 90,
               ),
-              Text(
-                'Добро\n пожаловать',
+              const Text(
+                'Добро\n пожаловать!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
@@ -25,19 +28,31 @@ class Welcome extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 210,
               ),
-              FilledButton(
-                onPressed: null,
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WelcomeSecondScreen(),
+                    ),
+                  );
+                },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStatePropertyAll<Color>(Color(0xFFEFAC00)),
-                  padding: MaterialStatePropertyAll(
-                    EdgeInsets.only(left: 110, right: 110, top: 20, bottom: 20),
+                      MaterialStateProperty.all<Color>(const Color(0xFFEFAC00)),
+                  padding: MaterialStateProperty.all(
+                    const EdgeInsets.only(
+                      left: 110,
+                      right: 110,
+                      top: 20,
+                      bottom: 20,
+                    ),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Далее',
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
