@@ -1,11 +1,10 @@
-package main
+package github
 
 import (
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
+	"github.com/mirea/iqj/server/scraper"
 	"log"
 	"net/http"
-	"projects/elitka/project_root/server/scraper"
 )
 
 func main() {
