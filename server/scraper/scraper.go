@@ -1,10 +1,7 @@
 package scraper
 
 import (
-	"encoding/json"
 	"github.com/gocolly/colly"
-	"log"
-	"os"
 )
 
 func Scraper() {
@@ -14,65 +11,29 @@ func Scraper() {
 	//Export(newsarr)
 }
 
-var newsblarr []NewsBlock
-var newsarr []News
-
-// Структура блочной новости
-type NewsBlock struct {
-	Header          string `json:"header"`
-	Link            string `json:"link"`
-	ImageLink       string `json:"image_link"`
-	PublicationTime string `json:"publication_time"`
-}
-
-// Структура полной новости
-type News struct {
-	Header          string `json:"header"`
-	Text            string `json:"text"`
-	ImageLink       string `json:"image_link"`
-	PublicationTime string `json:"publication_time"`
-}
-
-// Запись блочной новости в файл
-func Exportbl(newsbl []NewsBlock) {
-	file, err := os.Create("newsblock.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	jsonString, _ := json.MarshalIndent(newsbl, " ", " ")
-	file.Write(jsonString)
-}
-
-//// Запись полной новости в файл
-//func Export(newsbl []News) {
-//	file, err := os.Create("news.json")
-//	if err != nil {
-//		log.Fatal(err)
-//	}
-//	defer file.Close()
-//	jsonString, _ := json.MarshalIndent(newsbl, " ", " ")
-//	file.Write(jsonString)
-//}
-
 // Получаем данные из всех блочных новостей
 func scraper(url string) {
 	c := colly.NewCollector()
-	c.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
 	c.OnHTML(".uk-card.uk-card-default", func(e *colly.HTMLElement) {
 		newsblock := NewsBlock{}
+
 		x := e.ChildText(".uk-link-reset")
 		newsblock.Header = x[:len(x)-18]
 		newsblock.Link = "https://www.mirea.ru" + e.ChildAttr(".uk-link-reset", "href")
 		newsblock.PublicationTime = e.ChildText(".uk-margin-small-bottom.uk-text-small")
 		newsblock.ImageLink = "https://www.mirea.ru" + e.ChildAttr(".enableSrcset", "data-src")
-		newsblarr = append(newsblarr, newsblock)
+		// Работа с файлом
+		flag := checkbl(newsblock.ImageLink)
+		if flag == true {
+			newsblarr = append(newsblarr, newsblock)
+		}
 	})
 
-	c.OnHTML(".bx-pag-next a", func(e *colly.HTMLElement) {
-		nextPage := e.Request.AbsoluteURL(e.Attr("href"))
-		c.Visit(nextPage)
-	})
+	// Переключение на следующую страницу
+	//c.OnHTML(".bx-pag-next a", func(e *colly.HTMLElement) {
+	//	nextPage := e.Request.AbsoluteURL(e.Attr("href"))
+	//	c.Visit(nextPage)
+	//})
 
 	c.Visit(url)
 }
