@@ -1,8 +1,8 @@
-package github
+package main
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/mirea/iqj/server/scraper"
+	"iqj/server/scraper"
 	"log"
 	"net/http"
 )

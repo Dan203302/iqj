@@ -1,4 +1,4 @@
-module github.com/mirea/iqj
+module iqj
 
 go 1.21.6
 
