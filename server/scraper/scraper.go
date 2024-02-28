@@ -2,17 +2,29 @@ package scraper
 
 import (
 	"github.com/gocolly/colly"
+	"time"
 )
+
+func ScrapTick() {
+	ticker := time.NewTicker(30 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			go Scraper()
+		}
+	}
+}
 
 func Scraper() {
 	scraper("https://www.mirea.ru/news/index.php?set_filter=Y&arrFilter_ff%5BTAGS%5D=%D1%81%D0%BE%D1%82%D1%80%D1%83%D0%B4%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC")
-	Exportbl(newsblarr)
 	//scraper2()
-	//Export(newsarr)
 }
 
 // Получаем данные из всех блочных новостей
 func scraper(url string) {
+	var newsblarr []NewsBlock
 	c := colly.NewCollector()
 	c.OnHTML(".uk-card.uk-card-default", func(e *colly.HTMLElement) {
 		newsblock := NewsBlock{}
@@ -36,10 +48,13 @@ func scraper(url string) {
 	//})
 
 	c.Visit(url)
+
+	Exportbl(newsblarr)
 }
 
 //// Получаем данные из всех полных новостей
 //func scraper2() {
+//var newsarr []News
 //	c := colly.NewCollector()
 //	c.OnHTML(".uk-width-1-1", func(e *colly.HTMLElement) {
 //		news := News{}
@@ -60,5 +75,5 @@ func scraper(url string) {
 //	}
 //
 //	c.Visit("https://www.mirea.ru/news/prepodavateli-instituta-mezhdunarodnogo-obrazovaniya-prinyali-uchastie-v-nauchno-prakticheskoy-konfe/")
-//
+//Export(newsarr)
 //}

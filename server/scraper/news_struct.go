@@ -1,8 +1,5 @@
 package scraper
 
-var newsblarr []NewsBlock
-var newsarr []News
-
 // Структура блочной новости
 type NewsBlock struct {
 	Header          string `json:"header"`

@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	scraper.Scraper()
+	scraper.ScrapTick()
 	router := mux.NewRouter()
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
