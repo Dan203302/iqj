@@ -41,14 +41,33 @@ func Exportbl(newsblarr []NewsBlock) {
 }
 
 //// Запись полной новости в файл
-//func Export(newsbl []News) {
-//	file, err := os.Create("news.json")
+//func Export(newsarr []News) {
+//	file, err := os.Open("news.json")
 //	if err != nil {
 //		log.Fatal(err)
 //	}
 //	defer file.Close()
-//	jsonString, _ := json.MarshalIndent(newsbl, " ", " ")
-//	file.Write(jsonString)
+//
+//	var news3 []NewsBlock
+//	decoder := json.NewDecoder(file)
+//
+//	if err = decoder.Decode(&news3); err != nil {
+//		fmt.Println(err)
+//	}
+//
+//	for i := range news3 {
+//		newsarr = append(newsarr, news3[i])
+//	}
+//
+//	if file, err = os.Create("news.json"); err != nil {
+//		log.Fatal(err)
+//	}
+//	defer file.Close()
+//	encoder := json.NewEncoder(file)
+//	encoder.SetIndent("", "\t")
+//	if err = encoder.Encode(newsarr); err != nil {
+//		log.Fatal(err)
+//	}
 //}
 
 // Проверка наличия элемента
@@ -71,6 +90,33 @@ func checkbl(imagelink string) bool {
 		fmt.Println(err)
 	}
 	for _, i := range newsbl2 {
+		if strings.Contains(i.ImageLink, imagelink) {
+			flag = false
+		}
+	}
+	return flag
+}
+
+// Проверка наличия элемента
+func check(imagelink string) bool {
+	flag := true
+	fileOp, err := os.Open("news.json")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer fileOp.Close()
+
+	data, err := io.ReadAll(fileOp)
+	if err != nil {
+		fmt.Println(err)
+	}
+	var news2 []NewsBlock
+
+	err = json.Unmarshal(data, &news2)
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, i := range news2 {
 		if strings.Contains(i.ImageLink, imagelink) {
 			flag = false
 		}

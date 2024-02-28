@@ -48,7 +48,11 @@ func scraper(url string) {
 //		news.ImageLink = e.ChildText(".uk-card")                    // не работает
 //		x := []byte(e.ChildText(".uk-margin-bottom"))
 //		news.PublicationTime = string(x[:10]) // работает
-//		newsarr = append(newsarr, news)
+//		// Работа с файлом
+//		flag := check(news.ImageLink)
+//		if flag == true {
+//			newsarr = append(newsarr, news)
+//		}
 //	})
 //
 //	for i := range newsblarr {
