@@ -12,7 +12,7 @@ func ScrapTick() {
 	for {
 		select {
 		case <-ticker.C:
-			go Scraper()
+			Scraper()
 		}
 	}
 }
