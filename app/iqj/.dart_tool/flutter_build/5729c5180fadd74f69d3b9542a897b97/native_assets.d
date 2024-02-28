@@ -1,0 +1,1 @@
+ C:\\Users\\user\\Desktop\\project\\iqj\\app\\iqj\\.dart_tool\\flutter_build\\5729c5180fadd74f69d3b9542a897b97\\native_assets.yaml: 

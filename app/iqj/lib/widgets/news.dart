@@ -1,13 +1,10 @@
+// Основной виджет - News
+
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-// class NewsItem {
-//   final String title;
-//   final String imageURL;
-//   final String content;
-
-//   NewsItem({required this.title, required this.imageURL, required this.content});
-// }
+import 'package:http/http.dart' as http;
 
 class News extends StatefulWidget {
   const News({super.key});
@@ -17,23 +14,16 @@ class News extends StatefulWidget {
 }
 
 class _NewsState extends State<News> {
+  late Future<List<NewsArticle>> newsAlbum;
+
+  @override
+  void initState() {
+    super.initState();
+    newsAlbum = fetchNews();
+  }
 
   @override
   Widget build(BuildContext context) {
-    
-    //TODO: добавить макет карточки и генератор оной
-    final newsList = [
-      Placeholder(),
-      SizedBox(
-        height: 9,
-      ),
-      Placeholder(),
-      SizedBox(
-        height: 9,
-      ),
-      Placeholder(),
-    ];
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -67,12 +57,66 @@ class _NewsState extends State<News> {
         ],
       ),
 
-      body: ListView(
-        padding: const EdgeInsets.only(top: 8, left: 10, right: 10),
-        children: newsList,
-      ),
-    );
+      // TODO заменить на генератор блоков новостей
+      body: FutureBuilder<List<NewsArticle>>(
+      future: newsAlbum,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData) {
+          return ListView.builder(
+            padding: const EdgeInsets.only(left: 12, right: 12),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              final news = snapshot.data![index];
+              return GestureDetector(
+                onTap: () {
+                  // TODO: перейти к экрану новости
+                },
+                child: Container(
+                  color: Colors.black12,
+                  margin: const EdgeInsets.only(top: 12),
+                  height: 260,
+                  // TODO: настроить контейнер с новостными данными
+                ),
+              );
+            },
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    ),
+  );
+}
+}
 
+Future<List<NewsArticle>> fetchNews() async {
+  // TODO Временно здесь будет пустышка, которую потом нужно заменить!!
+  final response = await http.get(Uri.parse('https://dummyjson.com/products'));
+  if (response.statusCode == 200){
+    return compute(parseArticles, response.body);
   }
+  else {
+    throw Exception('Failed to load news');
+  }
+}
 
+List<NewsArticle> parseArticles(String body){
+  final parsed = (jsonDecode(body) as List).cast<Map<String, dynamic>>();
+
+  return parsed.map<NewsArticle>((json) => NewsArticle.fromJson(json)).toList();
+}
+
+class NewsArticle {
+  final String thumbnail;
+  final String title;
+  NewsArticle({required this.thumbnail, required this.title});
+
+  factory NewsArticle.fromJson(Map<String, dynamic> json) {
+    return NewsArticle(
+      thumbnail: json['image'] as String,
+      title: json['name'] as String,
+      );
+  }
 }
