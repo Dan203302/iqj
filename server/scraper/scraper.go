@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Тикер, который запускает функцию каждые 30 секунд
 func ScrapTick() {
 	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()

@@ -70,7 +70,7 @@ func Exportbl(newsblarr []NewsBlock) {
 //	}
 //}
 
-// Проверка наличия элемента
+// Проверка наличия элемента в блочной новости
 func checkbl(imagelink string) bool {
 	flag := true
 	fileOp, err := os.Open("newsblock.json")
@@ -97,7 +97,7 @@ func checkbl(imagelink string) bool {
 	return flag
 }
 
-// Проверка наличия элемента
+// Проверка наличия элемента в полной новости
 func check(imagelink string) bool {
 	flag := true
 	fileOp, err := os.Open("news.json")
