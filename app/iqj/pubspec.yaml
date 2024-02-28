@@ -63,6 +63,8 @@ flutter:
     - assets/images/welcome/welcome_1.png
     - assets/images/welcome/welcome_2.png
 
+    - assets/icons/news/bookmarks.svg
+    - assets/icons/news/filter.svg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
