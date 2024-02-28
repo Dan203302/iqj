@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+// class NewsItem {
+//   final String title;
+//   final String imageURL;
+//   final String content;
+
+//   NewsItem({required this.title, required this.imageURL, required this.content});
+// }
+
 class News extends StatefulWidget {
   const News({super.key});
 
@@ -16,9 +24,13 @@ class _NewsState extends State<News> {
     //TODO: добавить макет карточки и генератор оной
     final newsList = [
       Placeholder(),
-      SizedBox(height: 9,),
+      SizedBox(
+        height: 9,
+      ),
       Placeholder(),
-      SizedBox(height: 9,),
+      SizedBox(
+        height: 9,
+      ),
       Placeholder(),
     ];
 
@@ -55,10 +67,10 @@ class _NewsState extends State<News> {
         ],
       ),
 
-    body: ListView(
-      padding: const EdgeInsets.only(top: 8, left: 10, right: 10),
-      children: newsList,
-    ),
+      body: ListView(
+        padding: const EdgeInsets.only(top: 8, left: 10, right: 10),
+        children: newsList,
+      ),
     );
 
   }
