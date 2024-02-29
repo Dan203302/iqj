@@ -8,6 +8,9 @@ import (
 )
 
 func main() {
+
+	// database.ConnectStorage()
+
 	go scraper.ScrapTick()
 	router := mux.NewRouter()
 	if err := http.ListenAndServe(":8080", router); err != nil {
