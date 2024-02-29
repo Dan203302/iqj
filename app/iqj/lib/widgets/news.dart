@@ -12,6 +12,31 @@ class News extends StatefulWidget {
   State<News> createState() => _NewsState();
 }
 
+void showFilterDialog(BuildContext context) { 
+              Widget okButton = TextButton(
+                child: Text("Закрыть"),
+                onPressed: () { 
+                  Navigator.of(context).pop();
+                },
+              );
+
+              AlertDialog alert = AlertDialog(
+                title: Text("Фильтры"),
+                content: Text("Todo"),
+                actions: [
+                  okButton,
+                ],
+              );
+
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alert;
+                },
+              );
+}
+
+
 class _NewsState extends State<News> {
   late Future<List<NewsArticle>> newsList;
 
@@ -49,14 +74,15 @@ class _NewsState extends State<News> {
           const SizedBox(width: 6,),
           IconButton(
             onPressed: () {
-              //TODO
+              showFilterDialog(context);
             },
             icon: SvgPicture.asset('assets/icons/news/filter.svg'),
           ),
         ],
       ),
 
-      body: FutureBuilder(future: newsList, builder: (context, snapshot) {
+      body: 
+          FutureBuilder(future: newsList, builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting){
           return const CircularProgressIndicator();
         }
@@ -78,6 +104,62 @@ Future<List<NewsArticle>> getNews() async {
   final response = await http.get(Uri.parse('https://dummyjson.com/products'));
   final List body = (json.decode(response.body) as Map<String, dynamic>)['products'] as List;
   return body.map((e) => NewsArticle.fromJson(e as Map<String, dynamic>)).toList();
+}
+
+// Important news alert
+Widget importantNews(){
+  return Container(
+            margin: const EdgeInsets.only(top: 12),
+            height: 80,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: const Color.fromARGB(255, 250, 228, 171),
+              border: Border.all(
+                color: const Color.fromARGB(255, 255, 166, 0),
+              ),
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 2,
+                  color: Color.fromARGB(255, 239, 172, 0),
+                  spreadRadius: 1,
+                ),
+              ],
+            ),
+            child: Row(
+              
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Row(
+                    children: [
+                        SvgPicture.asset(
+                        'assets/icons/schedule/warning2.svg', // todo fix this 
+                          semanticsLabel: 'warning',
+                          height: 24,
+                          width: 24,
+                          allowDrawingOutsideViewBox: true,
+                          color: const Color.fromARGB(255, 239, 172, 0),
+                        ),
+                        const Expanded(
+                          child: Text(
+                            'С 25 мая по 28 июня будет проводиться что-то очень важное.',
+                            softWrap: true,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 255, 166, 0),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
 }
 
 // Генератор новостной ленты.
@@ -128,7 +210,7 @@ Widget buildNews(List<NewsArticle> newsList){
                         ),
                         IconButton(
                           onPressed: () {
-                
+                              
                           },
                           icon: SvgPicture.asset('assets/icons/news/bookmark.svg'),
                         ),

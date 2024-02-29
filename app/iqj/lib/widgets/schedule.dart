@@ -11,6 +11,31 @@ class Schedule extends StatefulWidget {
   State<Schedule> createState() => _ScheduleState();
 }
 
+void showFilterDialog(BuildContext context) { 
+              Widget okButton = TextButton(
+                child: Text("Закрыть"),
+                onPressed: () { 
+                  Navigator.of(context).pop();
+                },
+              );
+
+              AlertDialog alert = AlertDialog(
+                title: Text("Фильтры"),
+                content: Text("Todo"),
+                actions: [
+                  okButton,
+                ],
+              );
+
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alert;
+                },
+              );
+}
+
+
 class _ScheduleState extends State<Schedule> {
   late Future<List<DaySchedule>> dayScheduleList;
 
@@ -44,7 +69,7 @@ class _ScheduleState extends State<Schedule> {
           ),
           IconButton(
             onPressed: () {
-              //TODO
+              showFilterDialog(context);
             },
             padding: const EdgeInsets.only(
               right: 12,
@@ -79,14 +104,38 @@ class _ScheduleState extends State<Schedule> {
                 ),
               ],
             ),
-            child: const Text(
-              'Календарь здесь',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                color: Color.fromARGB(255, 255, 166, 0),
-              ),
+            child: Row(
+              
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Row(
+                    children: [
+                        SvgPicture.asset(
+                        'assets/icons/schedule/warning2.svg',
+                          semanticsLabel: 'warning',
+                          height: 24,
+                          width: 24,
+                          allowDrawingOutsideViewBox: true,
+                          color: const Color.fromARGB(255, 239, 172, 0),
+                        ),
+                        const Expanded(
+                          child: Text(
+                            'С 25 мая по 28 июня будет проводиться что-то очень важное.',
+                            softWrap: true,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 255, 166, 0),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
