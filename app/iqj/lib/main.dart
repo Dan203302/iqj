@@ -30,7 +30,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:iqj/widgets/news.dart';
-import 'package:iqj/widgets/welcome.dart';
+import 'package:iqj/widgets/schedule.dart';
 
 void main() => runApp(const App());
 
@@ -45,11 +45,11 @@ class _AppState extends State<App> {
   var _currentPage = 0;
 
   final _pages = <Widget>[
-    const Welcome(),
+    const Schedule(),
+    const Text('Здесь будет личный кабинет'),
+    const Text('Здесь будут чаты'),
     const News(),
-    const Text('3. Страница облако'),
-    const News(),
-    const Text('5. Еще одна страница'), // Добавлен новый элемент
+    const Text('Сервисы'),
   ];
 
   @override
