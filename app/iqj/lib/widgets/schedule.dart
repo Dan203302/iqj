@@ -76,19 +76,18 @@ class _ScheduleState extends State<Schedule> {
         ),
         centerTitle: false,
         actions: [
-          const SizedBox(
-            width: 6,
-          ),
-          IconButton(
-            onPressed: () {
-              showFilterDialog(context);
-            },
-            padding: const EdgeInsets.only(
-              right: 12,
-            ), // todo fix icon/highlight offset
-            icon: SvgPicture.asset(
-              'assets/icons/news/filter.svg',
-            ), // Todo three dots icon here
+          Container(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    showFilterDialog(context);
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/filter.svg'),
+                ),
+              ]
+            ),
           ),
         ],
       ),

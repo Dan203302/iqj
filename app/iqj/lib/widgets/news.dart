@@ -77,18 +77,25 @@ class _NewsState extends State<News> {
         ),
         centerTitle: false,
         actions: [
-          IconButton(
-            onPressed: () {
-              //TODO
-            },
-            icon: SvgPicture.asset('assets/icons/news/bookmarks.svg'),
-          ),
-          const SizedBox(width: 6,),
-          IconButton(
-            onPressed: () {
-              showFilterDialog(context);
-            },
-            icon: SvgPicture.asset('assets/icons/news/filter.svg'),
+          Container(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    //TODO
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/bookmarks.svg'),
+                ),
+                const SizedBox(width: 6,),
+                IconButton(
+                  onPressed: () {
+                    showFilterDialog(context);
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/filter.svg'),
+                ),
+              ]
+            ),
           ),
         ],
       ),
@@ -113,7 +120,10 @@ class _NewsState extends State<News> {
           );
         }
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Center(
+            child: Text(snapshot.error.toString()),
+            //child: Text("Ошибка загрузки.")
+          );
         }
         if (!snapshot.hasData) {
           return const Text('Нет новостей!');
