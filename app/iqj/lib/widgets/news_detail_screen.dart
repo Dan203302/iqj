@@ -55,7 +55,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           Container(
             child: Container(
               height: height * .45,
-              child: ClipRRect(
+              child: const ClipRRect(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
@@ -74,16 +74,16 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           Container(
             height: height * 6,
             margin: EdgeInsets.only(top: height * .4),
-            padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
+            decoration:  BoxDecoration(
               color: Colors.white
             ),
-            child: ListView(
+            child:  ListView(
               children: [
-                 Text(
+                  Text(
                   'Новость',
                   //widget.newsTitle, 
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 20, 
                     color: Color(0xFF152536),
@@ -92,12 +92,12 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 
                 ),
                 SizedBox(height: height * .02,),
-                Row(
+                 Row(
                   children: [
                     Text(
                       'ресурс новости',
                       //widget.source, 
-                    style: const TextStyle(
+                    style:  TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13, 
                     color: Color(0xFF152536),
@@ -110,7 +110,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 Text(
                     'Описание новости',
                     //widget.description, 
-                    style: const TextStyle(
+                    style:  TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13, 
                     color: Color(0xFF152536),
