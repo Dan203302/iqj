@@ -1,38 +1,6 @@
-// import 'package:flutter/material.dart';
-// import 'package:iqj/widgets/welcome.dart';
-
-// void main() {
-//   const app = App();
-//   return runApp(app);
-// }
-
-// class App extends StatelessWidget {
-//   const App({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ThemeData(
-//         primaryColor: Colors.white,
-//         pageTransitionsTheme: const PageTransitionsTheme(
-//           builders: {
-//             TargetPlatform.android:
-//                 FadeUpwardsPageTransitionsBuilder(), // Анимация затухания для Android
-//             TargetPlatform.iOS:
-//                 FadeUpwardsPageTransitionsBuilder(), // Анимация затухания для iOS
-//           },
-//         ),
-//       ),
-//       home: const Welcome(),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
-import 'package:iqj/widgets/news_detail_screen.dart';
 import 'package:iqj/widgets/news.dart';
-import 'package:iqj/widgets/welcome.dart';
-import 'package:iqj/widgets/news.dart';
+import 'package:iqj/widgets/schedule.dart';
 
 void main() => runApp(const App());
 
@@ -47,11 +15,11 @@ class _AppState extends State<App> {
   var _currentPage = 0;
 
   final _pages = <Widget>[
-    const Welcome(),
+    const Schedule(),
+    const Text('Здесь будет личный кабинет'),
+    const Text('Здесь будут чаты'),
     const News(),
-    const Text('3. Страница облако'),
-    const News(),
-    const Text('5. Еще одна страница'), // Добавлен новый элемент
+    const Text('Сервисы'),
   ];
 
   @override
@@ -84,7 +52,7 @@ class _AppState extends State<App> {
             BottomNavigationBarItem(
               icon: Icon(Icons.grid_view),
               label: 'Сервисы',
-            ), // Добавлен новый элемент
+            ),
           ],
           currentIndex: _currentPage,
           fixedColor: const Color(0xFFEFAC00),

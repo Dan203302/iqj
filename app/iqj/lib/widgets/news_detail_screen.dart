@@ -61,9 +61,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30),
                   bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30)
+                  bottomRight: Radius.circular(30),
                 ),
-              )
+              ),
               //TODO картинка
               // child: CachedNetworkImage(
               //     imageUrl: widget.newsImage
@@ -77,7 +77,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             margin: EdgeInsets.only(top: height * .4),
             padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
             decoration:  const BoxDecoration(
-              color: Colors.white
+              color: Colors.white,
             ),
             child:  ListView(
               children: [
@@ -102,7 +102,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     fontSize: 13, 
                     color: Color(0xFF152536),
                     fontWeight: FontWeight.w600,
-                  ),)
+                  ),),
                   ],
                 ),
                   //TODO дата
@@ -115,12 +115,12 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     fontSize: 13, 
                     color: Color(0xFF152536),
                     fontWeight: FontWeight.w600,
-                  ),)
+                  ),),
               ],
             ),
-          )
+          ),
         ],
-      )
+      ),
     );
   }
 }

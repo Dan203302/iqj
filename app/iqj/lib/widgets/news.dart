@@ -70,7 +70,6 @@ class _NewsState extends State<News> {
       },),
     );
   }
-
 }
 
 // Запрос к api и генерация списка новостных заголовков.
@@ -182,6 +181,4 @@ class NewsArticle {
       description: json['description'] as String,
       );
   }
-
 }
-
