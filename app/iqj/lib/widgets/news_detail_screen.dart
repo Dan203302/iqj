@@ -25,6 +25,12 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+           //TODO;
+          },
+          icon: SvgPicture.asset('assets/icons/news/arrow.svg'),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -41,12 +47,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             icon: SvgPicture.asset('assets/icons/news/filter.svg'),
           ),
           
-          IconButton(
-            onPressed: () {
-              //TODO
-            },
-            icon: SvgPicture.asset('assets/icons/news/arrow.svg'),
-          ),
+        
         ],
       ),
       body: Stack(
@@ -86,7 +87,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                     fontFamily: 'Inter',
                     fontSize: 20, 
                     color: Color(0xFF152536),
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w900,
                   ),
                 
                 ),
