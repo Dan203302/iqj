@@ -31,7 +31,8 @@ void showFilterDialog(BuildContext context) {
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                )),
+                ),
+                ),
                 backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 content: const Text("Todo"),
                 actions: [
@@ -86,7 +87,7 @@ class _ScheduleState extends State<Schedule> {
                   },
                   icon: SvgPicture.asset('assets/icons/news/filter.svg'),
                 ),
-              ]
+              ],
             ),
           ),
         ],
@@ -111,7 +112,6 @@ class _ScheduleState extends State<Schedule> {
                 BoxShadow(
                   blurRadius: 2,
                   color: Color.fromARGB(255, 239, 172, 0),
-                  offset: Offset.zero,
                   spreadRadius: 1,
                 ),
               ],
@@ -124,7 +124,7 @@ class _ScheduleState extends State<Schedule> {
                   child: Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(right: 12),
+                        margin: const EdgeInsets.only(right: 12),
                         child: SvgPicture.asset(
                         'assets/icons/schedule/warning.svg',
                           semanticsLabel: 'warning',

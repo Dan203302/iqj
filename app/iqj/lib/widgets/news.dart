@@ -32,7 +32,8 @@ void showFilterDialog(BuildContext context) {
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                )),
+                ),
+                ),
                 backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 content: const Text("Todo"),
                 actions: [
@@ -94,7 +95,7 @@ class _NewsState extends State<News> {
                   },
                   icon: SvgPicture.asset('assets/icons/news/filter.svg'),
                 ),
-              ]
+              ],
             ),
           ),
         ],
