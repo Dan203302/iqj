@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/widgets/news_detail_screen.dart';
 import 'package:iqj/widgets/welcome.dart';
 
 void main() {
