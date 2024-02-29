@@ -19,7 +19,7 @@ class _AppState extends State<App> {
     const Text('Здесь будет личный кабинет'),
     const Text('Здесь будут чаты'),
     const News(),
-    const Text('Сервисы'),
+    const Text('Здесь будут сервисы'),
   ];
 
   @override

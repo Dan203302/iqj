@@ -13,16 +13,28 @@ class News extends StatefulWidget {
 }
 
 void showFilterDialog(BuildContext context) { 
-              Widget okButton = TextButton(
-                child: Text("Закрыть"),
+              final Widget okButton = TextButton(
+                style: const ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+                ),
+                child: const Text(
+                  "Закрыть",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 239, 172, 0),
+                  ),),
                 onPressed: () { 
                   Navigator.of(context).pop();
                 },
               );
 
-              AlertDialog alert = AlertDialog(
-                title: Text("Фильтры"),
-                content: Text("Todo"),
+              final AlertDialog alert = AlertDialog(
+                title: const Text("Фильтры",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                )),
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                content: const Text("Todo"),
                 actions: [
                   okButton,
                 ],
@@ -84,7 +96,21 @@ class _NewsState extends State<News> {
       body: 
           FutureBuilder(future: newsList, builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting){
-          return const CircularProgressIndicator();
+          return Container(
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: const CircularProgressIndicator(
+                    color: Color.fromARGB(255, 255, 166, 0),
+                  ),
+                ),
+                const Text("Загружаем"),
+              ],
+            ),
+          );
         }
         if (snapshot.hasError) {
           return Center(child: Text(snapshot.error.toString()));
@@ -135,7 +161,7 @@ Widget importantNews(){
                   child: Row(
                     children: [
                         SvgPicture.asset(
-                        'assets/icons/schedule/warning2.svg', // todo fix this 
+                        'assets/icons/schedule/warning.svg',
                           semanticsLabel: 'warning',
                           height: 24,
                           width: 24,
