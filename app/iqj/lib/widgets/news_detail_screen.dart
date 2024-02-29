@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NewsDetailScreen extends StatefulWidget {
-  //final String newsImage, newsTitle, newsDate, description, content, source ;
-  const NewsDetailScreen({super.key});
-  //  required this.newsImage, 
-  //  required this.newsTitle, 
-  //  required this.newsDate, 
-  //  required this.description, 
-  //  required this.content, 
-  //  required this.source});
+  final String newsImage;
+  final String newsTitle;
+  final String newsDate;
+  final String description;
+  final String content;
+  final String source ;
+  const NewsDetailScreen({super.key, required this.newsImage, required this.newsTitle, required this.newsDate, required this.description, required this.content, required this.source, 
+
+   });
 
   @override
   State<NewsDetailScreen> createState() => _NewsDetailScreenState();
@@ -75,15 +76,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             height: height * 6,
             margin: EdgeInsets.only(top: height * .4),
             padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-            decoration:  BoxDecoration(
+            decoration:  const BoxDecoration(
               color: Colors.white
             ),
             child:  ListView(
               children: [
                   Text(
-                  'Новость',
-                  //widget.newsTitle, 
-                  style:  TextStyle(
+                  widget.newsTitle, 
+                  style:  const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 20, 
                     color: Color(0xFF152536),
@@ -95,9 +95,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                  Row(
                   children: [
                     Text(
-                      'ресурс новости',
-                      //widget.source, 
-                    style:  TextStyle(
+                      //'ресурс новости',
+                      widget.source, 
+                    style:  const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13, 
                     color: Color(0xFF152536),
@@ -107,10 +107,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 ),
                   //TODO дата
                 SizedBox(height: height * .03,),
-                Text(
-                    'Описание новости',
-                    //widget.description, 
-                    style:  TextStyle(
+                 Text(
+                    //'Описание новости',
+                    widget.description, 
+                    style:  const TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 13, 
                     color: Color(0xFF152536),
