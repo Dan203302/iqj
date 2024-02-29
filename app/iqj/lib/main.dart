@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iqj/widgets/news_detail_screen.dart';
 import 'package:iqj/widgets/welcome.dart';
+import 'package:iqj/widgets/news.dart';
 
 void main() {
   const app = App();
@@ -24,7 +25,7 @@ class App extends StatelessWidget {
           },
         ),
       ),
-      home: const Welcome(),
+      home: const News(),
     );
   }
 }
