@@ -19,6 +19,7 @@ func (st *Storage) AddNews(newsBlock scraper.NewsBlock, newsText string) error {
 	return nil
 }
 
+// Выдает блоки новостей от новых к старым, offset - промежуток пропуска (если первый запрос то 0), count - количество блоков
 func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]scraper.NewsBlock, error) {
 	query := fmt.Sprintf("SELECT header, link, image_link, publication_time FROM news ORDER BY publication_time DESC LIMIT %d OFFSET %d", count, offset)
 
@@ -52,6 +53,7 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]scraper.NewsBlock, 
 	return latestNewsBlocks, nil
 }
 
+// Выдает полную новость по заданному ID
 func (st *Storage) GetNewsByID(id int) (scraper.News, error) {
 	row := st.Db.QueryRow("SELECT header, news_text, image_link, publication_time FROM news WHERE id = ?", id)
 
