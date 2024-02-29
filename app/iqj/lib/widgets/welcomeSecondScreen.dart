@@ -30,7 +30,7 @@ class WelcomeSecondScreen extends StatelessWidget {
               image: AssetImage('assets/images/welcome/welcome_2.png'),
             ),
             const SizedBox(
-              height: 100,
+              height: 210,
             ),
 
             // Группа кнопок (назад и далее)

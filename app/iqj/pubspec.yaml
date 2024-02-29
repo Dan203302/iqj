@@ -33,6 +33,7 @@ dependencies:
   flutter_svg: ^0.22.0
   http: ^1.2.1
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -48,7 +49,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -63,11 +64,16 @@ flutter:
   assets:
     - assets/images/welcome/welcome_1.png
     - assets/images/welcome/welcome_2.png
+<<<<<<< HEAD
     - assets/icons/news/bookmarks.svg
     - assets/icons/news/filter.svg
     - assets/icons/news/arrow.svg
 
 
+=======
+
+    - assets/icons/news/
+>>>>>>> 9ac7a5a383fdbe4241aa4e3a3b6f543f3ef4e629
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
