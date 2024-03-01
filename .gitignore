@@ -6,3 +6,13 @@ app/iqj/macos/Flutter/GeneratedPluginRegistrant.swift
 app/iqj/windows/flutter/generated_plugin_registrant.cc
 app/iqj/windows/flutter/generated_plugin_registrant.h
 app/iqj/windows/flutter/generated_plugins.cmake
+
+# Flutter/Dart/Pub related
+app/iqj/.dart_tool/
+
+# IntelliJ related
+app/iqj/.idea/
+
+# Visual Studio Code related
+app/iqj/.vscode/
+.vscode/
