@@ -2,14 +2,14 @@ package database
 
 import (
 	"fmt"
-	"iqj/server/scraper"
+	"iqj/server/models"
 	"time"
 )
 
 // TODO: ребята пж разберитесь с моделями, очень очень нужно структуру для блока с полем ID для дальнейшего доступа к полноценной новости
 // я как бы мог и сам у вас подправить, но лучше будет если это сделаете вы
 // и с картинками еще: просто массив строк объедините в строку, перечислая ссылка через запятую, так хранить будет сильно проще
-func (st *Storage) AddNews(newsBlock scraper.NewsBlock, newsText string) error {
+func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 	publicationTime := time.Now().Format("2006-01-02 15:04:05")
 	_, err := st.Db.Exec("INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES (?, ?, ?, ?, ?)",
 		newsBlock.Header, newsBlock.Link, newsText, newsBlock.ImageLink, publicationTime)
@@ -20,7 +20,7 @@ func (st *Storage) AddNews(newsBlock scraper.NewsBlock, newsText string) error {
 }
 
 // Выдает блоки новостей от новых к старым, offset - промежуток пропуска (если первый запрос то 0), count - количество блоков
-func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]scraper.NewsBlock, error) {
+func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]models.NewsBlock, error) {
 	query := fmt.Sprintf("SELECT header, link, image_link, publication_time FROM news ORDER BY publication_time DESC LIMIT %d OFFSET %d", count, offset)
 
 	rows, err := st.Db.Query(query)
@@ -29,7 +29,7 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]scraper.NewsBlock, 
 	}
 	defer rows.Close()
 
-	var latestNewsBlocks []scraper.NewsBlock
+	var latestNewsBlocks []models.NewsBlock
 
 	for rows.Next() {
 		var header, link, imageLink, publicationTime string
@@ -37,7 +37,7 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]scraper.NewsBlock, 
 		if err != nil {
 			return nil, err
 		}
-		newsBlock := scraper.NewsBlock{
+		newsBlock := models.NewsBlock{
 			Header:          header,
 			Link:            link,
 			ImageLink:       imageLink,
@@ -54,17 +54,17 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]scraper.NewsBlock, 
 }
 
 // Выдает полную новость по заданному ID
-func (st *Storage) GetNewsByID(id int) (scraper.News, error) {
+func (st *Storage) GetNewsByID(id int) (models.News, error) {
 	row := st.Db.QueryRow("SELECT header, news_text, image_link, publication_time FROM news WHERE id = ?", id)
 
 	var header, text, imageLink, publicationTime string
 
 	err := row.Scan(&header, &text, &imageLink, &publicationTime)
 	if err != nil {
-		return scraper.News{}, err
+		return models.News{}, err
 	}
 
-	news := scraper.News{
+	news := models.News{
 		Header:          header,
 		Text:            text,
 		ImageLink:       imageLink,
