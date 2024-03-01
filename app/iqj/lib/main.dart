@@ -12,7 +12,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  var _currentPage = 3;
+  var _currentPage = 0;
 
   final _pages = <Widget>[
     const Schedule(),
