@@ -1,0 +1,10 @@
+^C:\USERS\USER\DESKTOP\PROJECT\IQJ\APP\IQJ\BUILD\WINDOWS\X64\CMAKEFILES\7F93F1BC26EC1C0B0D0CD55CFAE28575\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

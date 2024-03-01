@@ -56,13 +56,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           Container(
             child: Container(
               height: height * .45,
-              child: const ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
               ),
               //TODO картинка
               // child: CachedNetworkImage(

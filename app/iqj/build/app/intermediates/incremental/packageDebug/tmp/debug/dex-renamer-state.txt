@@ -1,0 +1,4 @@
+#Thu Feb 29 21:46:36 MSK 2024
+base.0=C\:\\Users\\user\\Desktop\\project\\iqj\\app\\iqj\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
