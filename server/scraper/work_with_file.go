@@ -41,25 +41,21 @@ func Exportbl(newsblarr []models.NewsBlock) []models.NewsBlock {
 	return newsblarr
 }
 
-// // Запись полной новости в файл
+// Запись полной новости в файл
 func Export(newsarr []models.News) {
 	file, err := os.Open("news.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
-
 	var news3 []models.News
 	decoder := json.NewDecoder(file)
-
 	if err = decoder.Decode(&news3); err != nil {
 		fmt.Println(err)
 	}
-
 	for i := range news3 {
 		newsarr = append(newsarr, news3[i])
 	}
-
 	if file, err = os.Create("news.json"); err != nil {
 		log.Fatal(err)
 	}
