@@ -63,13 +63,6 @@ flutter:
   assets:
     - assets/images/welcome/welcome_1.png
     - assets/images/welcome/welcome_2.png
-    - assets/icons/news/bookmarks.svg
-    - assets/icons/news/filter.svg
-    - assets/icons/news/arrow.svg
-    - assets/icons/news/
-    - assets/icons/news/
-    - assets/icons/schedule/
-    - assets/icons/news/
     - assets/icons/schedule/
     - assets/icons/news/
   # To add assets to your application, add an assets section, like this:
