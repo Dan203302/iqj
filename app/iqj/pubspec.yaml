@@ -66,6 +66,7 @@ flutter:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     - assets/icons/news/bookmarks.svg
     - assets/icons/news/filter.svg
     - assets/icons/news/arrow.svg
@@ -79,6 +80,10 @@ flutter:
 
     - assets/icons/news/
 >>>>>>> 60efd013b788bc3527da5c0d30234d8816515c71
+=======
+    - assets/icons/schedule/
+    - assets/icons/news/
+>>>>>>> 9e4fda0068a81fbf5eee506d062e7f3288747475
 =======
     - assets/icons/schedule/
     - assets/icons/news/

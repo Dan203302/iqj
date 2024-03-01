@@ -12,20 +12,21 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  var _currentPage = 0;
+  var _currentPage = 3;
 
   final _pages = <Widget>[
     const Schedule(),
     const Text('Здесь будет личный кабинет'),
     const Text('Здесь будут чаты'),
     const News(),
-    const Text('Сервисы'),
+    const Text('Здесь будут сервисы'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'IQJ',
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Center(
           child: _pages.elementAt(_currentPage),
