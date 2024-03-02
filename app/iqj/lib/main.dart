@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iqj/widgets/news.dart';
+import 'package:iqj/widgets/news/news.dart';
 import 'package:iqj/widgets/schedule.dart';
 
 void main() => runApp(const App());
