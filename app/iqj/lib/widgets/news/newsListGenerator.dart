@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 
 // Запрос к api и генерация списка новостных заголовков.
@@ -24,7 +24,7 @@ class NewsArticle {
       {required this.thumbnail,
       required this.title,
       required this.date,
-      required this.description});
+      required this.description,});
 
   factory NewsArticle.fromJson(Map<String, dynamic> json) {
     return NewsArticle(
@@ -49,83 +49,85 @@ Widget buildNews(List<NewsArticle> newsList) {
     // TODO Добавить важное уведомление
     itemBuilder: (context, index) {
       final article = newsList[index];
-      return Center(
-        child: Container(
-          height: 323,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.black12),
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black12,
-                    image: DecorationImage(
-                        image: NetworkImage(article.thumbnail),
-                        fit: BoxFit.cover),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              article.title.length < 18
-                                  ? article.title
-                                  : '${article.title.substring(0, 16)}...',
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 28,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset(
-                                'assets/icons/news/bookmark.svg'),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        article.date,
-                        style: const TextStyle(
-                          fontFamily: 'Iter',
-                          fontSize: 12,
-                          color: Color(0xFF828282),
-                        ),
-                      ),
-                      Text(
-                        article.description,
-                        softWrap: true,
-                        style: const TextStyle(
-                          fontFamily: 'Iter',
-                          fontSize: 16,
-                          color: Color(0xFF152536),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+      return newsCardMobile(article);
     },
   );
 }
 
-Widget newsCard() {
+Card newsCardMobile(NewsArticle article) {
+  bool isBookmarked = false;
+
   return Card(
-    
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    elevation: 0.5,
+    color: const Color.fromARGB(255, 255, 254, 250), // Поменять цвет, когда появится в дизайне
+    child: SizedBox(
+      height: 323,
+      child: Column(
+        children: [
+          CachedNetworkImage(
+            imageUrl: article.thumbnail,
+            fit: BoxFit.cover,
+            height: 192,
+            width: double.infinity,
+            progressIndicatorBuilder: (context, url, progress) =>
+                const SizedBox(
+              child: LinearProgressIndicator(
+                color: Colors.black12,
+              ),
+            ),
+            errorWidget: (context, url, error) => const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error, color: Colors.black87),
+                Text('Что-то пошло не так.', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.black54)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        article.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 28,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        isBookmarked = !isBookmarked;
+                        
+                      },
+                      // ignore: dead_code
+                      icon: isBookmarked? Icon(Icons.bookmark, color: Colors.amber[400]) : const Icon(Icons.bookmark_outline),
+                    ),
+                  ],
+                ),
+                Text(
+                  article.date,
+                  style: const TextStyle(color: Colors.black54, fontFamily: 'Inter', fontSize: 12),
+                ),
+                Text(
+                  article.description,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontFamily: 'Iter', fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }

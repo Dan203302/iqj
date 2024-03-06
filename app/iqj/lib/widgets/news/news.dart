@@ -12,45 +12,6 @@ class News extends StatefulWidget {
   State<News> createState() => _NewsState();
 }
 
-void showFilterDialog(BuildContext context) {
-  final Widget okButton = TextButton(
-    style: const ButtonStyle(
-      overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
-    ),
-    child: const Text(
-      "Закрыть",
-      style: TextStyle(
-        color: Color.fromARGB(255, 239, 172, 0),
-      ),
-    ),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
-
-  final AlertDialog alert = AlertDialog(
-    title: const Text(
-      "Фильтры",
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-    content: const Text("Todo"),
-    actions: [
-      okButton,
-    ],
-  );
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
 class _NewsState extends State<News> {
   late Future<List<NewsArticle>> newsList;
 
@@ -86,7 +47,7 @@ class _NewsState extends State<News> {
                   onPressed: () {
                     //TODO
                   },
-                  icon: SvgPicture.asset('assets/icons/news/bookmarks.svg'),
+                  icon: Icon(Icons.bookmarks_outlined),
                 ),
                 const SizedBox(
                   width: 6,
@@ -95,7 +56,7 @@ class _NewsState extends State<News> {
                   onPressed: () {
                     showFilterDialog(context);
                   },
-                  icon: SvgPicture.asset('assets/icons/news/filter.svg'),
+                  icon: const Icon(Icons.filter_alt_outlined),
                 ),
               ],
             ),
@@ -179,6 +140,46 @@ Widget importantNews() {
         ),
       ],
     ),
+  );
+}
+
+
+void showFilterDialog(BuildContext context) {
+  final Widget okButton = TextButton(
+    style: const ButtonStyle(
+      overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+    ),
+    child: const Text(
+      "Закрыть",
+      style: TextStyle(
+        color: Color.fromARGB(255, 239, 172, 0),
+      ),
+    ),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  final AlertDialog alert = AlertDialog(
+    title: const Text(
+      "Фильтры",
+      style: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+    content: const Text("Todo"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }
 
