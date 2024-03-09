@@ -11,11 +11,23 @@ import (
 // и с картинками еще: просто массив строк объедините в строку, перечислая ссылка через запятую, так хранить будет сильно проще
 func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 	publicationTime := time.Now().Format("2006-01-02 15:04:05")
-	_, err := st.Db.Exec("INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES (?, ?, ?, ?, ?)",
-		newsBlock.Header, newsBlock.Link, newsText, newsBlock.ImageLink, publicationTime)
+
+	var count int
+	err := st.Db.QueryRow("SELECT COUNT(*) FROM news WHERE header = ?", newsBlock.Header).Scan(&count)
 	if err != nil {
 		return err
 	}
+
+	if count == 0 {
+		_, err = st.Db.Exec("INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES (?, ?, ?, ?, ?)",
+			newsBlock.Header, newsBlock.Link, newsText, newsBlock.ImageLink, publicationTime)
+		if err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("news is already existing in database")
+	}
+
 	return nil
 }
 
