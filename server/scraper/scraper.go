@@ -1,7 +1,9 @@
 package scraper
 
 import (
+	"fmt"
 	"github.com/gocolly/colly"
+	"iqj/database"
 	"iqj/server/models"
 	"strings"
 	"time"
@@ -41,6 +43,10 @@ func scraper(url string) []models.NewsBlock {
 		flag := checkbl(newsblock.ImageLink)
 		if flag == true {
 			newsblarr = append(newsblarr, newsblock)
+			err := database.Database.AddNews(newsblock, "Hello")
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	})
 
