@@ -89,7 +89,6 @@ func scraper2(newsblarr []models.NewsBlock) {
 		if flag == true {
 			newsarr = append(newsarr, news)
 			n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime}
-			fmt.Println(news.Text)
 			err := database.Database.AddNews(n1, news.Text)
 			if err != nil {
 				fmt.Println(err)

@@ -52,7 +52,7 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]models.NewsBlock, e
 
 // Выдает полную новость по заданному ID
 func (st *Storage) GetNewsByID(id int) (models.News, error) {
-	row := st.Db.QueryRow("SELECT header, news_text, image_link, publication_time FROM news WHERE id = ?", id)
+	row := st.Db.QueryRow("SELECT header, news_text, image_link, publication_time FROM news WHERE id = $1", id)
 
 	var header, text, imageLink, publicationTime string
 

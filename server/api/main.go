@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"iqj/database"
@@ -24,7 +25,7 @@ func GetNewsById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(news)
+	WriteJSON(w, http.StatusOK, news)
 }
 
 func main() {
@@ -39,4 +40,10 @@ func main() {
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func WriteJSON(w http.ResponseWriter, status int, v any) error {
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(status)
+	return json.NewEncoder(w).Encode(v)
 }
