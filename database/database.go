@@ -29,7 +29,7 @@ func (store *Storage) createStorage() {
 	db, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
-		panic("could not connect to the database")
+		panic(fmt.Sprintf("could not connect to the database: %v", err))
 	}
 
 	store.Db = db
