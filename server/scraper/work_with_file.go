@@ -26,7 +26,7 @@ func Exportbl(newsblarr []models.NewsBlock) []models.NewsBlock {
 	}
 
 	for i := range newsbl3 {
-		newsblarr = append(newsblarr, newsbl3[i])
+		newsblarr = append([]models.NewsBlock{newsbl3[i]}, newsblarr...)
 	}
 
 	if file, err = os.Create("newsblock.json"); err != nil {
@@ -54,7 +54,7 @@ func Export(newsarr []models.News) {
 		fmt.Println(err)
 	}
 	for i := range news3 {
-		newsarr = append(newsarr, news3[i])
+		newsarr = append([]models.News{news3[i]}, newsarr...)
 	}
 	if file, err = os.Create("news.json"); err != nil {
 		log.Fatal(err)

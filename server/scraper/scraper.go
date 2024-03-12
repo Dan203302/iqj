@@ -43,7 +43,7 @@ func scraper(url string) []models.NewsBlock {
 		// Работа с файлом
 		flag := checkbl(newsblock.ImageLink)
 		if flag == true {
-			newsblarr = append(newsblarr, newsblock)
+			newsblarr = append([]models.NewsBlock{newsblock}, newsblarr...)
 		}
 	})
 
@@ -88,7 +88,7 @@ func scraper2(newsblarr []models.NewsBlock) {
 		news.PublicationTime = newsblarr[i].PublicationTime
 		flag := check(news.ImageLink)
 		if flag == true {
-			newsarr = append(newsarr, news)
+			newsarr = append([]models.News{news}, newsarr...)
 			n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime}
 			err := database.Database.AddNews(n1, news.Text)
 			if err != nil {
