@@ -40,11 +40,7 @@ func scraper(url string) []models.NewsBlock {
 		newsblock.Link = "https://www.mirea.ru" + e.ChildAttr(".uk-link-reset", "href")
 		newsblock.PublicationTime = e.ChildText(".uk-margin-small-bottom.uk-text-small")
 		newsblock.ImageLink = "https://www.mirea.ru" + e.ChildAttr(".enableSrcset", "data-src")
-		// Работа с файлом
-		flag := checkbl(newsblock.ImageLink)
-		if flag == true {
-			newsblarr = append([]models.NewsBlock{newsblock}, newsblarr...)
-		}
+		newsblarr = append([]models.NewsBlock{newsblock}, newsblarr...)
 	})
 
 	// Переключение на следующую страницу
@@ -54,14 +50,11 @@ func scraper(url string) []models.NewsBlock {
 	//})
 
 	c.Visit(url)
-	x := newsblarr
-	Exportbl(newsblarr)
-	return x
+	return newsblarr
 }
 
 // Получаем данные из всех полных новостей
 func scraper2(newsblarr []models.NewsBlock) {
-	var newsarr []models.News
 	c := colly.NewCollector()
 	news := models.News{}
 	var title, text string
@@ -86,15 +79,10 @@ func scraper2(newsblarr []models.NewsBlock) {
 		news.ImageLink = strings.Join(mas, ", ")
 		mas = nil
 		news.PublicationTime = newsblarr[i].PublicationTime
-		flag := check(news.ImageLink)
-		if flag == true {
-			newsarr = append([]models.News{news}, newsarr...)
-			n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime}
-			err := database.Database.AddNews(n1, news.Text)
-			if err != nil {
-				fmt.Println(err)
-			}
+		n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime}
+		err := database.Database.AddNews(n1, news.Text)
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
-	Export(newsarr)
 }
