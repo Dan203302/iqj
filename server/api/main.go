@@ -11,11 +11,30 @@ import (
 	"strconv"
 )
 
-func GetNews(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello, niggas 2!"))
+func handleGetNews(w http.ResponseWriter, r *http.Request) {
+	// Получаем промежуток пропуска и количество блоков новостей
+	offsetStr := r.URL.Query().Get("offset")
+	countStr := r.URL.Query().Get("count")
+
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil {
+		http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+		return
+	}
+	count, err := strconv.Atoi(countStr)
+	if err != nil {
+		http.Error(w, "Invalid count parameter", http.StatusBadRequest)
+		return
+	}
+
+	latestnews, err := database.Database.GetLatestNewsBlocks(offset, count)
+	if err != nil {
+		fmt.Println(err)
+	}
+	WriteJSON(w, http.StatusOK, latestnews)
 }
 
-func GetNewsById(w http.ResponseWriter, r *http.Request) {
+func handleGetNewsById(w http.ResponseWriter, r *http.Request) {
 	idstr := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
@@ -35,8 +54,8 @@ func main() {
 	go scraper.ScrapTick()
 
 	router := mux.NewRouter()
-	router.HandleFunc("/news", GetNews)
-	router.HandleFunc("/news/{id}", GetNewsById)
+	router.HandleFunc("/news", handleGetNews)
+	router.HandleFunc("/news/{id}", handleGetNewsById)
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
 	}
