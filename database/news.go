@@ -8,17 +8,29 @@ import (
 
 func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 	publicationTime := time.Now().Format("2006-01-02 15:04:05")
-	_, err := st.Db.Exec("INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES ($1, $2, $3, $4, $5)",
-		newsBlock.Header, newsBlock.Link, newsText, newsBlock.ImageLink, publicationTime)
+
+	var count int
+	err := st.Db.QueryRow("SELECT COUNT(*) FROM news WHERE header = $1", newsBlock.Header).Scan(&count)
 	if err != nil {
 		return err
 	}
+
+	if count == 0 {
+		_, err = st.Db.Exec("INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES ($1, $2, $3, $4, $5)",
+			newsBlock.Header, newsBlock.Link, newsText, newsBlock.ImageLink, publicationTime)
+		if err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("news is already existing in database")
+	}
+
 	return nil
 }
 
 // Выдает блоки новостей от новых к старым, offset - промежуток пропуска (если первый запрос то 0), count - количество блоков
 func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]models.NewsBlock, error) {
-	query := fmt.Sprintf("SELECT header, link, image_link, publication_time FROM news ORDER BY publication_time DESC LIMIT %d OFFSET %d", count, offset)
+	query := fmt.Sprintf("SELECT id, header, link, image_link, publication_time FROM news ORDER BY publication_time DESC LIMIT %d OFFSET %d", count, offset)
 
 	rows, err := st.Db.Query(query)
 	if err != nil {
@@ -29,12 +41,13 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]models.NewsBlock, e
 	var latestNewsBlocks []models.NewsBlock
 
 	for rows.Next() {
-		var header, link, imageLink, publicationTime string
-		err := rows.Scan(&header, &link, &imageLink, &publicationTime)
+		var id, header, link, imageLink, publicationTime string
+		err := rows.Scan(&id, &header, &link, &imageLink, &publicationTime)
 		if err != nil {
 			return nil, err
 		}
 		newsBlock := models.NewsBlock{
+			ID:              id,
 			Header:          header,
 			Link:            link,
 			ImageLink:       imageLink,
