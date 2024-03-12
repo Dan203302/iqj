@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iqj/widgets/news/newsListGenerator.dart';
+import 'package:iqj/features/old/news/newsListGenerator.dart';
 import 'package:shimmer/shimmer.dart';
 
 class News extends StatefulWidget {
@@ -81,7 +81,9 @@ class _NewsState extends State<News> {
               child: Text('Нет новостей!'),
             );
           }
-          return buildNews(snapshot.data!);
+          return 
+          waitingForNewsAnim();
+          // buildNews(snapshot.data!);
         },
       ),
     );
@@ -185,9 +187,15 @@ void showFilterDialog(BuildContext context) {
 
 Widget waitingForNewsAnim() {
   return Shimmer.fromColors(
-    baseColor: const Color(0xFF898989),
+    baseColor: Colors.black12,
     highlightColor: Colors.white,
-    child: const Card(
+    child: SizedBox(
+      height: 323,
+      width: 200,
+      child: Container(decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),),
     ),
   );
 }
