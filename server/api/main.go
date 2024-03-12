@@ -11,6 +11,10 @@ import (
 	"strconv"
 )
 
+// Получает offset и count из запроса, вызывает функцию GetLatestNewsBlocks,
+// которая вернет массив с последними новостями.
+// Выдает новости пользователю в формате JSON.
+// Например при GET /news?offset=1&count=5 вернет новости с первой по 6.
 func handleGetNews(w http.ResponseWriter, r *http.Request) {
 	// Получаем промежуток пропуска и количество блоков новостей
 	offsetStr := r.URL.Query().Get("offset")
@@ -34,6 +38,10 @@ func handleGetNews(w http.ResponseWriter, r *http.Request) {
 	WriteJSON(w, http.StatusOK, latestnews)
 }
 
+// Извлекает id из параметров запроса,
+// вызывает функцию GetNewsByID, которая получает полную новость из бд.
+// Выдает полную новость пользователю в формате JSON.
+// Например при GET /news/13 вернет новость с id = 13.
 func handleGetNewsById(w http.ResponseWriter, r *http.Request) {
 	idstr := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idstr)
@@ -48,9 +56,10 @@ func handleGetNewsById(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
+	// БД
 	database.ConnectStorage()
 
+	// Запускает парсер новостей
 	go scraper.ScrapTick()
 
 	router := mux.NewRouter()
@@ -61,6 +70,7 @@ func main() {
 	}
 }
 
+// Отправляет данные пользователю в формате JSON через http ответ.
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
