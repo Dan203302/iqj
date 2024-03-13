@@ -12,7 +12,7 @@ const List<WelcomePanel> welcomePanelList = [
     imagePosition: 'bottom',
   ),
   WelcomePanel(
-    title: 'Добро поржаловать!',
+    title: 'Добро пожаловать!',
     text: 'Тут вроде должен будет быть еще какой-то текст, но тексты придумывать не моя задча, моя задача - размещать их на вступительном экране!',
   ),
 ];
