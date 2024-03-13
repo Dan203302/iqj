@@ -14,7 +14,7 @@ import (
 // Получает offset и count из запроса, вызывает функцию GetLatestNewsBlocks,
 // которая вернет массив с последними новостями.
 // Выдает новости пользователю в формате JSON.
-// Например при GET /news?offset=1&count=5 вернет новости с первой по 6.
+// Например при GET /news?offset=1&count=5 вернет новости с первой по шестую.
 func handleGetNews(w http.ResponseWriter, r *http.Request) {
 	// Получаем промежуток пропуска и количество блоков новостей
 	offsetStr := r.URL.Query().Get("offset")
