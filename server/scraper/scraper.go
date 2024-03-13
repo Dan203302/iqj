@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Тикер, который запускает функцию каждые 30 секунд
+// Тикер, который запускает главную функцию каждые 30 секунд.
 func ScrapTick() {
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
@@ -22,13 +22,13 @@ func ScrapTick() {
 	}
 }
 
-// Главная функция
+// Главная функция, которая вызывает парсеры блочной и полной новости.
 func Scraper() {
 	x := scraper("https://www.mirea.ru/news/index.php?set_filter=Y&arrFilter_ff%5BTAGS%5D=%D1%81%D0%BE%D1%82%D1%80%D1%83%D0%B4%D0%BD%D0%B8%D0%BA%D0%B0%D0%BC")
 	scraper2(x)
 }
 
-// Получаем данные из всех блочных новостей
+// Парсим блочные новости для сотрудников с первой страницы и добавляем их в массив.
 func scraper(url string) []models.NewsBlock {
 	var newsblarr []models.NewsBlock
 	c := colly.NewCollector()
@@ -53,7 +53,7 @@ func scraper(url string) []models.NewsBlock {
 	return newsblarr
 }
 
-// Получаем данные из всех полных новостей
+// Парсим полные новости для сотрудников по ссылкам из блочных и добавляем их в массив и базу данных.
 func scraper2(newsblarr []models.NewsBlock) {
 	c := colly.NewCollector()
 	news := models.News{}
