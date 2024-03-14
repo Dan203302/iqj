@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/welcome/data/welcome_data.dart';
+import 'package:iqj/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Welcome extends StatefulWidget {
@@ -14,6 +16,14 @@ class _WelcomeState extends State<Welcome> {
   final _controller = PageController();
   bool onFirstPage = true;
   bool onLastPage = false;
+
+  // Запись в память успешного прохождения начальных экранов.
+  void userWelcomed() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setBool('notAFirstLaunch', true);
+    },);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -85,7 +95,8 @@ class _WelcomeState extends State<Welcome> {
                     controller: _controller,
                     count: welcomePanelList.length,
                     effect: const JumpingDotEffect(
-                        activeDotColor: Color(0xFFEFAC00)),
+                      activeDotColor: Color(0xFFEFAC00),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   SizedBox(
@@ -129,14 +140,16 @@ class _WelcomeState extends State<Welcome> {
                           child: GestureDetector(
                             onTap: () {
                               onLastPage
-                                  ? Navigator.pushReplacement(
+                                  ? Navigator.push(
                                       context,
+                                      
                                       MaterialPageRoute(
-                                        builder: (context) {
-                                          return const AuthScreen();
+                                        builder: (_) {
+                                          userWelcomed();
+                                          return App();
                                         },
                                       ),
-                                  )
+                                    )
                                   : _controller.nextPage(
                                       duration:
                                           const Duration(milliseconds: 240),
@@ -158,10 +171,11 @@ class _WelcomeState extends State<Welcome> {
                                 child: Text(
                                   onLastPage ? 'Начнём!' : 'Дальше',
                                   style: const TextStyle(
-                                      fontFamily: 'Inter',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
+                                    fontFamily: 'Inter',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
