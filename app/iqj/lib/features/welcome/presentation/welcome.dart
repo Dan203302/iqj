@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/welcome/data/welcome_data.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -128,7 +129,14 @@ class _WelcomeState extends State<Welcome> {
                           child: GestureDetector(
                             onTap: () {
                               onLastPage
-                                  ? DoNothingAction() // Добавить переключение на home
+                                  ? Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return const AuthScreen();
+                                        },
+                                      ),
+                                  )
                                   : _controller.nextPage(
                                       duration:
                                           const Duration(milliseconds: 240),

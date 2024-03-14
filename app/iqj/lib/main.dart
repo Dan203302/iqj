@@ -5,9 +5,10 @@ import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
 import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
+import 'package:iqj/features/welcome/presentation/welcome.dart';
 
-// TEST 
-void main() => runApp(const MaterialApp(home: AuthScreen()));
+// Велкам -> логин -> приложение
+void main() => runApp(const MaterialApp(home: Welcome()));
 //void main() => runApp(const App());
 
 class App extends StatefulWidget {
