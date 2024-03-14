@@ -36,6 +36,8 @@ dependencies:
   flutter_bloc: ^8.1.4
   shimmer: ^3.0.0
   cached_network_image: ^3.3.1
+  shared_preferences: ^2.2.2
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -61,8 +63,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/welcome/welcome_1.png
-    - assets/images/welcome/welcome_2.png
+    - assets/images/welcome/
     - assets/icons/schedule/
     - assets/icons/news/
   # To add assets to your application, add an assets section, like this:
