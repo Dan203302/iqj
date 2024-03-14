@@ -6,7 +6,9 @@ import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
 import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 
-void main() => runApp(const AuthScreen());
+// TEST 
+void main() => runApp(const MaterialApp(home: AuthScreen()));
+//void main() => runApp(const App());
 
 class App extends StatefulWidget {
   const App({super.key});
