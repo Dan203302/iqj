@@ -1,7 +1,5 @@
-// Основной виджет - News
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -47,7 +45,7 @@ class _NewsState extends State<News> {
                   onPressed: () {
                     //TODO
                   },
-                  icon: Icon(Icons.bookmarks_outlined),
+                  icon: const Icon(Icons.bookmarks_outlined),
                 ),
                 const SizedBox(
                   width: 6,
@@ -63,8 +61,7 @@ class _NewsState extends State<News> {
           ),
         ],
       ),
-      body: //newsCard(),
-      FutureBuilder(
+      body: FutureBuilder<List<NewsArticle>>(
         future: newsList,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -76,75 +73,62 @@ class _NewsState extends State<News> {
               //child: Text("Ошибка загрузки.")
             );
           }
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text('Нет новостей!'),
             );
           }
-          return 
-          waitingForNewsAnim();
-          // buildNews(snapshot.data!);
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              final news = snapshot.data![index];
+              return NewsCard(
+                title: news.title,
+                description: news.description,
+              );
+            },
+          );
         },
       ),
     );
   }
 }
 
-// Important news alert
-Widget importantNews() {
-  return Container(
-    margin: const EdgeInsets.only(top: 12),
-    height: 80,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      color: const Color.fromARGB(255, 250, 228, 171),
-      border: Border.all(
-        color: const Color.fromARGB(255, 255, 166, 0),
-      ),
-      boxShadow: const [
-        BoxShadow(
-          blurRadius: 2,
-          color: Color.fromARGB(255, 239, 172, 0),
-          spreadRadius: 1,
-        ),
-      ],
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Flexible(
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/schedule/warning.svg',
-                semanticsLabel: 'warning',
-                height: 24,
-                width: 24,
-                allowDrawingOutsideViewBox: true,
-                // color: const Color.fromARGB(255, 239, 172, 0),
-              ),
-              const Expanded(
-                child: Text(
-                  'С 25 мая по 28 июня будет проводиться что-то очень важное.',
-                  softWrap: true,
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 18,
-                    fontWeight: FontWeight.normal,
-                    color: Color.fromARGB(255, 255, 166, 0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
+class NewsCard extends StatelessWidget {
+  final String title;
+  final String description;
 
+  const NewsCard({
+    super.key,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(description),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 void showFilterDialog(BuildContext context) {
   final Widget okButton = TextButton(
@@ -192,10 +176,12 @@ Widget waitingForNewsAnim() {
     child: SizedBox(
       height: 323,
       width: 200,
-      child: Container(decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
     ),
   );
 }

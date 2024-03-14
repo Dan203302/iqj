@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iqj/features/news/data/news_repository.dart';
+import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
 
@@ -18,12 +21,17 @@ class _AppState extends State<App> {
     const Schedule(),
     const Text('Здесь будет личный кабинет'),
     const Text('Здесь будут чаты'),
-    const News(),
+    BlocProvider(
+      create: (context) => NewsBloc(NewsRepository()),
+      child: const News(),
+    ),
     const Text('Здесь будут сервисы'),
   ];
 
   @override
   Widget build(BuildContext context) {
+    // final NewsRepository _newsRepository = NewsRepository();
+
     return MaterialApp(
       title: 'IQJ',
       debugShowCheckedModeBanner: false,
