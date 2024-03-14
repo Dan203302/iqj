@@ -4,9 +4,9 @@ import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
-import 'package:iqj/features/auth/presentation/auth.dart';
+import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 
-void main() => runApp(const App());
+void main() => runApp(const AuthScreen());
 
 class App extends StatefulWidget {
   const App({super.key});
