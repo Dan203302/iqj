@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/welcome/data/welcome_data.dart';
 import 'package:iqj/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,11 +17,13 @@ class _WelcomeState extends State<Welcome> {
   bool onLastPage = false;
 
   // Запись в память успешного прохождения начальных экранов.
-  void userWelcomed() async{
+  void userWelcomed() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      prefs.setBool('notAFirstLaunch', true);
-    },);
+    setState(
+      () {
+        prefs.setBool('notAFirstLaunch', true);
+      },
+    );
   }
 
   @override
@@ -142,7 +143,6 @@ class _WelcomeState extends State<Welcome> {
                               onLastPage
                                   ? Navigator.push(
                                       context,
-                                      
                                       MaterialPageRoute(
                                         builder: (_) {
                                           userWelcomed();
