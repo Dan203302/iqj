@@ -31,7 +31,8 @@ func handleGetNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	latestnews, err := database.Database.GetLatestNewsBlocks(offset, count)
+	latestnewsptr, err := database.Database.GetLatestNewsBlocks(offset, count)
+	latestnews := *latestnewsptr
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -48,7 +49,8 @@ func handleGetNewsById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	news, err := database.Database.GetNewsByID(id)
+	newsptr, err := database.Database.GetNewsByID(id)
+	news := *newsptr
 	if err != nil {
 		fmt.Println(err)
 	}

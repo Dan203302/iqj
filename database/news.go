@@ -29,7 +29,7 @@ func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 }
 
 // Выдает блоки новостей от новых к старым, offset - промежуток пропуска (если первый запрос то 0), count - количество блоков
-func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]models.NewsBlock, error) {
+func (st *Storage) GetLatestNewsBlocks(offset, count int) (*[]models.NewsBlock, error) {
 
 	rows, err := st.Db.Query("SELECT id, header, link, image_link, publication_time FROM news ORDER BY publication_time DESC LIMIT $1 OFFSET $2", count, offset)
 	if err != nil {
@@ -59,18 +59,18 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) ([]models.NewsBlock, e
 		return nil, err
 	}
 
-	return latestNewsBlocks, nil
+	return &latestNewsBlocks, nil
 }
 
 // Выдает полную новость по заданному ID
-func (st *Storage) GetNewsByID(id int) (models.News, error) {
+func (st *Storage) GetNewsByID(id int) (*models.News, error) {
 	row := st.Db.QueryRow("SELECT header, news_text, image_link, publication_time FROM news WHERE id = $1", id)
 
 	var header, text, imageLink, publicationTime string
 
 	err := row.Scan(&header, &text, &imageLink, &publicationTime)
 	if err != nil {
-		return models.News{}, err
+		return nil, err
 	}
 
 	news := models.News{
@@ -80,5 +80,5 @@ func (st *Storage) GetNewsByID(id int) (models.News, error) {
 		PublicationTime: publicationTime,
 	}
 
-	return news, nil
+	return &news, nil
 }
