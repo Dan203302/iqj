@@ -4,9 +4,7 @@ import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
-import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/welcome/presentation/welcome.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Велкам -> логин -> приложение
 void main() => runApp(const MaterialApp(home: Welcome()));
@@ -24,13 +22,13 @@ class _AppState extends State<App> {
   late bool notAFirstLaunch = false;
 
   final _pages = <Widget>[
-    const Schedule(),
-    const Text('Здесь будет личный кабинет'),
-    const Text('Здесь будут чаты'),
     BlocProvider(
       create: (context) => NewsBloc(NewsRepository()),
       child: const News(),
     ),
+    const Schedule(),
+    const Text('Здесь будут чаты'),
+    const Text('Здесь будет личный кабинет'),
     const Text('Здесь будут сервисы'),
   ];
 
@@ -65,20 +63,20 @@ class _AppState extends State<App> {
           type: BottomNavigationBarType.fixed,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Расписание',
+              icon: Icon(Icons.newspaper),
+              label: 'Новости',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'ЛК',
+              icon: Icon(Icons.calendar_today),
+              label: 'Расписание',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.chat_bubble),
               label: 'Чаты',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.newspaper),
-              label: 'Новости',
+              icon: Icon(Icons.account_circle),
+              label: 'ЛК',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.grid_view),
