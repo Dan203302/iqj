@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/welcome/data/welcome_data.dart';
 import 'package:iqj/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -141,12 +142,11 @@ class _WelcomeState extends State<Welcome> {
                           child: GestureDetector(
                             onTap: () {
                               onLastPage
-                                  ? Navigator.push(
+                                  ? Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) {
-                                          userWelcomed();
-                                          return App();
+                                        builder: (context) {
+                                          return const AuthScreen();
                                         },
                                       ),
                                     )

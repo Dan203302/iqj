@@ -9,7 +9,7 @@ import 'package:iqj/features/welcome/presentation/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Велкам -> логин -> приложение
-void main() => runApp(const App());
+void main() => runApp(const MaterialApp(home: Welcome()));
 //void main() => runApp(const App());
 
 class App extends StatefulWidget {
@@ -21,7 +21,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   var _currentPage = 0;
-  late bool notAFirstLaunch;
+  late bool notAFirstLaunch = false;
 
   final _pages = <Widget>[
     const Schedule(),
@@ -37,17 +37,17 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    _loadPreferences();
+    //_loadPreferences();
   }
 
-  void _loadPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(
-      () {
-        notAFirstLaunch = prefs.getBool('notAFirstLaunch') ?? false;
-      },
-    );
-  }
+  // void _loadPreferences() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(
+  //     () {
+  //       notAFirstLaunch = prefs.getBool('notAFirstLaunch') ?? false;
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -56,50 +56,43 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'IQJ',
       debugShowCheckedModeBanner: false,
-      initialRoute: notAFirstLaunch? '/' : 'welcome',
-      routes: {
-        '/': (context) => HomeScreen(),
-        'welcome': (context) => const Welcome(),
-      },
-    );
-  }
-
-  Scaffold HomeScreen() {
-    return Scaffold(
-      body: Center(
-        child: _pages.elementAt(_currentPage),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Расписание',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'ЛК',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Чаты',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper),
-            label: 'Новости',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: 'Сервисы',
-          ),
-        ],
-        currentIndex: _currentPage,
-        fixedColor: const Color(0xFFEFAC00),
-        onTap: (int index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
+      initialRoute: 'welcome',
+      home: Scaffold(
+        body: Center(
+          child: _pages.elementAt(_currentPage),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Расписание',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle),
+              label: 'ЛК',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat_bubble),
+              label: 'Чаты',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper),
+              label: 'Новости',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_view),
+              label: 'Сервисы',
+            ),
+          ],
+          currentIndex: _currentPage,
+          fixedColor: const Color(0xFFEFAC00),
+          onTap: (int index) {
+            setState(() {
+              _currentPage = index;
+            });
+          },
+        ),
       ),
     );
   }
