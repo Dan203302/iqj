@@ -69,7 +69,7 @@ func main() {
         // Вызов хэндлеров исходя из запроса.
         router.HandleFunc("/news", handleGetNews)
         router.HandleFunc("/news/{id}", handleGetNewsById)
-        // Запускает сервер на порту и "слушает" запросы.
+        // Запускает сервер на порту :3333  и "слушает" запросы.
         if err := http.ListenAndServe(":3333", router); err != nil {
                 log.Fatal(err)
         }
