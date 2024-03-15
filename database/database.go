@@ -17,7 +17,7 @@ func ConnectStorage() {
 	Database.createStorage()
 }
 
-func (store *Storage) createStorage() {
+func (st *Storage) createStorage() {
 	// TODO: В папке /iqj/config/ должен храниться файл с данными для запуска бд (хост, порт, имя и пароль от пользователя, а также название базы
 	/* пример содержания файла /iqj/config/config.go:
 	package config
@@ -32,14 +32,14 @@ func (store *Storage) createStorage() {
 		panic(fmt.Sprintf("could not connect to the database: %v", err))
 	}
 
-	store.Db = db
+	st.Db = db
 
 	err = db.Ping()
 	if err != nil {
 		panic(fmt.Sprintf("could not ping the database: %v", err))
 	}
 
-	store.initTables()
+	st.initTables()
 }
 
 func (st *Storage) initTables() {
@@ -110,7 +110,6 @@ func (st *Storage) initTeachersTable() {
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'teachers' table: %v", err))
 	}
-
 }
 
 func (st *Storage) initStudentGroupsTable() {

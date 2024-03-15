@@ -11,11 +11,30 @@ import (
 //		return err
 //	}
 //
-// Добавляет пользователя по полученной модели (необходимы name, password, role)
-func (st *Storage) AddUser(user *models.User) error {
+// Добавляет пользователя по полученной модели (необходимы name, password, role), добавление данных в таблицу о студенте/преподавателе
+func (st *Storage) AddUser(user *models.User, student *models.Student, teacher *models.Teacher) error {
 	//TODO: ребята пожалуйста организуйте подачу паролей через bcrypt
 	_, err := st.Db.Exec("INSERT INTO users (name, password,role) VALUES ($1, $2, $3)",
 		user.Name, user.Password, user.Role)
+	if err != nil {
+		return nil
+	}
+
+	// подавайте nil если не студент
+	if student != nil {
+		err = st.createStudent(student)
+		if err != nil {
+			return nil
+		}
+	}
+
+	// подавайте nil если не преподаватель
+	if teacher != nil {
+		err = st.createTeacher(teacher)
+		if err != nil {
+			return nil
+		}
+	}
 
 	return err
 }
