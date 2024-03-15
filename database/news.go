@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"iqj/server/models"
+	"iqj/models"
 	"time"
 )
 

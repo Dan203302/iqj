@@ -90,7 +90,7 @@ func (st *Storage) initStudentsTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
 			id SERIAL PRIMARY KEY,
-			group INT NOT NULL,
+			student_group INT NOT NULL,
 			teachers JSON		    
 		);
 	`)
@@ -104,7 +104,7 @@ func (st *Storage) initTeachersTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS teachers (
 			id SERIAL PRIMARY KEY,
-			groups JSON		    
+			student_groups JSON		    
 		);
 	`)
 	if err != nil {
@@ -137,7 +137,7 @@ func (st *Storage) initScheduleTable() {
 			teacher_id INT NOT NULL,
 		    weekday INT NOT NULL,
 		    discipline_name VARCHAR (128),
-		    count INT NOT NULL,		    
+		    lesson_count INT NOT NULL,		    
 		    location VARCHAR(12) NOT NULL
 		);
 	`)

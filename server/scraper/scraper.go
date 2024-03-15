@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gocolly/colly"
 	"iqj/database"
-	"iqj/server/models"
+	"iqj/models"
 	"strings"
 	"time"
 )
