@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -70,7 +69,7 @@ class _NewsState extends State<News> {
           if (snapshot.hasError) {
             return Center(
               child: Text(snapshot.error.toString()),
-              //child: Text("Ошибка загрузки.")
+              // child: Text("Ошибка загрузки.")
             );
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
