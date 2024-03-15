@@ -65,7 +65,7 @@ class _NewsState extends State<News> {
         future: newsList,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return waitingForNewsAnim();
+            return const Center (child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(
