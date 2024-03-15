@@ -5,6 +5,7 @@ import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
 import 'package:iqj/features/welcome/presentation/welcome.dart';
+import 'package:iqj/themes/color_schemes.dart';
 
 // Велкам -> логин -> приложение
 void main() => runApp(const MaterialApp(home: Welcome()));
@@ -54,6 +55,9 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'IQJ',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: lightColorScheme,
+      ),
       initialRoute: 'welcome',
       home: Scaffold(
         body: Center(
