@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"iqj/config"
+	"iqj"
+	//"iqj/config"
 )
 
 var Database Storage
@@ -24,7 +25,7 @@ func (st *Storage) createStorage() {
 
 	var DbData = []interface{}{"hostname", "port", "user", "password", "dbname"}
 	*/
-	connectionString := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", config.DbData...)
+	connectionString := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", iqj.DbData...)
 
 	db, err := sql.Open("postgres", connectionString)
 
