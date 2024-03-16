@@ -1,6 +1,5 @@
 package models
 
-// Структура блочной новости
 type NewsBlock struct {
 	ID              string `json:"id"`
 	Header          string `json:"header"`
@@ -9,7 +8,6 @@ type NewsBlock struct {
 	PublicationTime string `json:"publication_time"`
 }
 
-// Структура полной новости
 type News struct {
 	ID              string `json:"id"`
 	Header          string `json:"header"`
