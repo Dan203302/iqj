@@ -1,4 +1,4 @@
-package awesomeProject2
+package main
 
 type Message struct {
 	Author string `json:"author"`
