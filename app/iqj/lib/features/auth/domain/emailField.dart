@@ -1,28 +1,18 @@
 import 'package:flutter/material.dart';
 
-class PasswordField extends StatefulWidget {
+class EmailField extends StatefulWidget {
   @override
-  _PasswordFieldState createState() => _PasswordFieldState();
+  _EmailFieldState createState() => _EmailFieldState();
 }
 
-class _PasswordFieldState extends State<PasswordField> {
-  bool _ishidden = true;
+class _EmailFieldState extends State<EmailField> {
   Color boxFillColor = const Color(0xFFF6F6F6);
-
-  void _toggleVisibility() {
-    setState(
-      () {
-        _ishidden = !_ishidden;
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
-        obscureText: _ishidden,
-        keyboardType: TextInputType.visiblePassword,
+        keyboardType: TextInputType.emailAddress,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -31,7 +21,7 @@ class _PasswordFieldState extends State<PasswordField> {
           label: Container(
             margin: const EdgeInsets.only(left: 10),
             child: const Text(
-              "Пароль",
+              "Почта",
               style: TextStyle(
                 color: Color(0xFFBDBDBD),
                 fontSize: 20,
@@ -69,31 +59,18 @@ class _PasswordFieldState extends State<PasswordField> {
               width: 2,
             ),
           ),
-          suffixIcon: IconButton(
-            icon: Icon(_ishidden
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined),
-            onPressed: () {
-              setState(
-                () {
-                  _ishidden = !_ishidden;
-                },
-              );
-            },
-          ),
         ),
         onChanged: (value) {
           boxFillColor = const Color(0xFFF6F6F6);
         },
-        validator: (value) {
+        validator: (String? value) {
           // TODO сделать подсветку ошибок
-          if (value == null) {
+          if (value == null || value.isEmpty) {
             boxFillColor = Color(0xFFFFE5E5);
-            return 'Введите пароль';
-          } else if (value.length < 3) {
-            boxFillColor = Color(0xFFFFE5E5);
-            return 'Пароль должен содержать минимум 3 символа.';
+            return "Введите адрес почты.";
           }
+
+          return null;
         },
       ),
     );

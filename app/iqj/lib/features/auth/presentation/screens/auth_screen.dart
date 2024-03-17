@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:iqj/features/auth/domain/emailField.dart';
 import 'package:iqj/features/auth/domain/passwordField.dart';
 import 'package:iqj/main.dart';
 
@@ -59,6 +60,7 @@ class _LoginScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Color boxFillColor = const Color(0xFFF6F6F6);
     final GlobalKey<FormState> _formKey = GlobalKey();
 
     final FocusNode _focusNodePassword = FocusNode();
@@ -95,67 +97,7 @@ class _LoginScreenState extends State<AuthScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  child: TextFormField(
-                    controller: _controllerEmail,
-                    keyboardType: TextInputType.name,
-                    cursorColor: const Color.fromARGB(255, 239, 172, 0),
-                    decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      filled: true,
-                      fillColor: const Color(0xFFF6F6F6),
-                      label: Container(
-                        margin: const EdgeInsets.only(left: 10),
-                        child: const Text(
-                          "Почта",
-                          style: TextStyle(
-                            color: Color(0xFFBDBDBD),
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE8E8E8),
-                          width: 2,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFE8E8E8),
-                          width: 2,
-                        ),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                          color: Color(0xFFDC0000),
-                          width: 2,
-                        ),
-                      ),
-                      errorStyle: const TextStyle(
-                        color: Color(0xFFDC0000),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 239, 172, 0),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    onEditingComplete: () => _focusNodePassword.requestFocus(),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return "Введите адрес почты.";
-                      }
-
-                      return null;
-                    },
-                  ),
-                ),
+                EmailField(),
                 const SizedBox(height: 20),
                 PasswordField(),
                 const SizedBox(height: 20),
