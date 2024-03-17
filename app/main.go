@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"iqj/api/handlers"
+	"iqj/api/middleware"
 	"iqj/api/scraper"
 	"iqj/database"
 	"log"
@@ -21,6 +22,7 @@ func main() {
 	// Вызов хэндлеров исходя из запроса.
 	router.HandleFunc("/news", handlers.HandleGetNews)
 	router.HandleFunc("/news/{id}", handlers.HandleGetNewsById)
+	router.HandleFunc("/sign-in", middleware.SignIn)
 	// Запускает сервер на порту и "слушает" запросы.
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		log.Fatal(err)
