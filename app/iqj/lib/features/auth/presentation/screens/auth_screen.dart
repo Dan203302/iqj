@@ -60,12 +60,12 @@ class _LoginScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Color boxFillColor = const Color(0xFFF6F6F6);
+    //const Color boxFillColor =  Color(0xFFF6F6F6);
     final GlobalKey<FormState> _formKey = GlobalKey();
 
-    final FocusNode _focusNodePassword = FocusNode();
-    final TextEditingController _controllerEmail = TextEditingController();
-    final TextEditingController _controllerPassword = TextEditingController();
+    //final FocusNode _focusNodePassword = FocusNode();
+    //final TextEditingController _controllerEmail = TextEditingController();
+    //final TextEditingController _controllerPassword = TextEditingController();
 
     return MaterialApp(
       title: "Вход",

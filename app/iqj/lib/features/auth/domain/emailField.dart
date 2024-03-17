@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EmailField extends StatefulWidget {
+   const EmailField({super.key});
+
   @override
   _EmailFieldState createState() => _EmailFieldState();
 }

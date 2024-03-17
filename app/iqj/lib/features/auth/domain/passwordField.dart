@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class PasswordField extends StatefulWidget {
+  const PasswordField({super.key});
+
   @override
   _PasswordFieldState createState() => _PasswordFieldState();
 }
@@ -33,7 +35,7 @@ class _PasswordFieldState extends State<PasswordField> {
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
           fillColor: boxFillColor,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           label: Container(
             child: const Text(
               "Пароль",
@@ -79,7 +81,7 @@ class _PasswordFieldState extends State<PasswordField> {
             child: IconButton(
             icon: Icon(_ishidden
                 ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined),
+                : Icons.visibility_off_outlined,),
             onPressed: () {
               setState(
                 () {
@@ -96,12 +98,13 @@ class _PasswordFieldState extends State<PasswordField> {
         validator: (value) {
           // TODO сделать подсветку ошибок
           if (value == null) {
-            boxFillColor = Color(0xFFFFE5E5);
+            boxFillColor = const Color(0xFFFFE5E5);
             return 'Введите пароль';
           } else if (value.length < 3) {
-            boxFillColor = Color(0xFFFFE5E5);
+            boxFillColor = const Color(0xFFFFE5E5);
             return 'Пароль должен содержать минимум 3 символа.';
           }
+          return null;
         },
       ),
     );
