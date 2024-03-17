@@ -2,13 +2,13 @@ FROM golang:latest
 
 ENV PORT=22
 
-WORKDIR /server
+WORKDIR /iqj
 
 COPY . .
 
 RUN go mod download
-RUN go build server/api/main.go
+RUN go build iqj/app/main.go
 
 EXPOSE $PORT
 
-CMD ["./server/api/main"]
+CMD ["./iqj/app/main"]
