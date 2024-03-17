@@ -7,6 +7,7 @@ class EmailField extends StatefulWidget {
 
 class _EmailFieldState extends State<EmailField> {
   Color boxFillColor = const Color(0xFFF6F6F6);
+  bool isError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -14,17 +15,21 @@ class _EmailFieldState extends State<EmailField> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
+        style: const TextStyle(
+          fontSize: 24,
+          color: Color(0xFF2E2E2E),
+        ),
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
           fillColor: boxFillColor,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           label: Container(
-            margin: const EdgeInsets.only(left: 10),
             child: const Text(
               "Почта",
               style: TextStyle(
                 color: Color(0xFFBDBDBD),
-                fontSize: 20,
+                fontSize: 24,
               ),
             ),
           ),
@@ -59,17 +64,28 @@ class _EmailFieldState extends State<EmailField> {
               width: 2,
             ),
           ),
+          suffixIcon: Container(
+            margin: const EdgeInsets.only(right: 5),
+            child: Icon(isError ? Icons.warning_amber_outlined : null),
+          ),
         ),
         onChanged: (value) {
           boxFillColor = const Color(0xFFF6F6F6);
         },
         validator: (String? value) {
+          // RegExp regEx = RegExp("^[a-zA-Z0-9.a-zA-Z0-9.!#\$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"); // Regex [anything]@[anything].[anything]
+          final RegExp regEx = RegExp(r'^[a-zA-Z0-9~`!@#$%^&*()-_=+[\]{}|;:\"<,>.?\/]+@mirea\.ru$'); // Regex [anything]@mirea.ru
           // TODO сделать подсветку ошибок
           if (value == null || value.isEmpty) {
             boxFillColor = Color(0xFFFFE5E5);
+            isError = true;
             return "Введите адрес почты.";
+          } else if (!regEx.hasMatch(value)) {
+            boxFillColor = Color(0xFFFFE5E5);
+            isError = true;
+            return "Некорректный адрес почты.";
           }
-
+          isError = false;
           return null;
         },
       ),

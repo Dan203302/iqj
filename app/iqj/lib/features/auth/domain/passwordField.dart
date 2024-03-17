@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class PasswordField extends StatefulWidget {
   @override
@@ -24,17 +25,21 @@ class _PasswordFieldState extends State<PasswordField> {
         obscureText: _ishidden,
         keyboardType: TextInputType.visiblePassword,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
+        style: const TextStyle(
+          fontSize: 24,
+          color: Color(0xFF2E2E2E),
+        ),
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
           fillColor: boxFillColor,
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           label: Container(
-            margin: const EdgeInsets.only(left: 10),
             child: const Text(
               "Пароль",
               style: TextStyle(
                 color: Color(0xFFBDBDBD),
-                fontSize: 20,
+                fontSize: 24,
               ),
             ),
           ),
@@ -69,7 +74,9 @@ class _PasswordFieldState extends State<PasswordField> {
               width: 2,
             ),
           ),
-          suffixIcon: IconButton(
+          suffixIcon: Container(
+            margin: const EdgeInsets.only(right: 5),
+            child: IconButton(
             icon: Icon(_ishidden
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined),
@@ -81,6 +88,7 @@ class _PasswordFieldState extends State<PasswordField> {
               );
             },
           ),
+        ),
         ),
         onChanged: (value) {
           boxFillColor = const Color(0xFFF6F6F6);

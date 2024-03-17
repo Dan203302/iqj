@@ -102,26 +102,27 @@ class _LoginScreenState extends State<AuthScreen> {
                 PasswordField(),
                 const SizedBox(height: 20),
                 Container(
-                  // TODO: Передвинуть кнопку левее наравне с левыми краями полей
-                  // или убрать подсветку кнопки при нажатии
-                  child: TextButton(
-                    style: const ButtonStyle(
-                      //overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
-                      overlayColor:
-                          MaterialStatePropertyAll(Colors.transparent),
-                    ),
-                    child: const Text(
-                      "Забыли пароль?",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 239, 172, 0),
-                        fontFamily: 'Inter',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                  child: Transform.translate(
+                    offset: const Offset(-10, 0),
+                    child: TextButton(
+                      style: const ButtonStyle(
+                        overlayColor: MaterialStatePropertyAll(
+                            Color.fromARGB(64, 239, 172, 0)),
+                        //overlayColor: MaterialStatePropertyAll(Colors.transparent),
                       ),
+                      child: const Text(
+                        "Забыли пароль?",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 239, 172, 0),
+                          fontFamily: 'Inter',
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () {
+                        showChpwdDialog(context);
+                      },
                     ),
-                    onPressed: () {
-                      showChpwdDialog(context);
-                    },
                   ),
                 ),
                 const SizedBox(height: 60),
