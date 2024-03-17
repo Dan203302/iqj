@@ -1,13 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iqj/main.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+void showChpwdDialog(BuildContext context) { 
+              final Widget okButton = TextButton(
+                style: const ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+                ),
+                child: const Text(
+                  "Закрыть",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 239, 172, 0),
+                  ),),
+                onPressed: () { 
+                  Navigator.of(context).pop();
+                },
+              );
+
+              final AlertDialog alert = AlertDialog(
+                title: const Text("Смена пароля",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
+                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                content: const Text("Todo"),
+                actions: [
+                  okButton,
+                ],
+              );
+
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return alert;
+                },
+              );
+}
+
+
 class _LoginScreenState extends State<AuthScreen> {
+  bool passwordVisible=false; 
+  @override 
+    void initState(){ 
+      super.initState(); 
+      passwordVisible=true; 
+    }     
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey();
@@ -15,8 +62,6 @@ class _LoginScreenState extends State<AuthScreen> {
     final FocusNode _focusNodePassword = FocusNode();
     final TextEditingController _controllerUsername = TextEditingController();
     final TextEditingController _controllerPassword = TextEditingController();
-
-    bool _obscurePassword = true;
 
     return MaterialApp(
       title: "Вход",
@@ -30,13 +75,13 @@ class _LoginScreenState extends State<AuthScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 150),
+                const SizedBox(height: 72),
                 const Text(
                   "Вход",
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 48,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -44,21 +89,58 @@ class _LoginScreenState extends State<AuthScreen> {
                   "Введите почту в домене @mirea.ru",
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 16,
+                    fontSize: 18,
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _controllerUsername,
                   keyboardType: TextInputType.name,
+                  cursorColor: const Color.fromARGB(255, 239, 172, 0),
                   decoration: InputDecoration(
-                    fillColor: Color(0xF6F6F6FF),
-                    labelText: "Почта",
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    filled: true,
+                    fillColor: const Color(0xFFF6F6F6),
+                    label: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: const Text(
+                      "Почта",
+                      style: TextStyle(
+                        color: Color(0xFFBDBDBD),
+                        fontSize: 20,
+                      ),
+                    ),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE8E8E8),
+                        width: 2,
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE8E8E8),
+                        width: 2,
+                      ),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFDC0000),
+                        width: 2,
+                      ),
+                    ),
+                    errorStyle: const TextStyle(
+                      color: Color(0xFFDC0000),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 239, 172, 0),
+                        width: 2,
+                      ),
                     ),
                   ),
                   onEditingComplete: () => _focusNodePassword.requestFocus(),
@@ -74,44 +156,100 @@ class _LoginScreenState extends State<AuthScreen> {
                 TextFormField(
                   controller: _controllerPassword,
                   focusNode: _focusNodePassword,
-                  obscureText: _obscurePassword,
+                  obscureText: passwordVisible,
                   keyboardType: TextInputType.visiblePassword,
+                  cursorColor: const Color.fromARGB(255, 239, 172, 0),
                   decoration: InputDecoration(
-                    fillColor: Color(0xF6F6F6FF),
-                    labelText: "Пароль",
-                    suffixIcon: IconButton(
-                        padding: EdgeInsets.only(right: 10),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                        icon: _obscurePassword
-                            ? const Icon(Icons.visibility_outlined)
-                            : const Icon(Icons.visibility_off_outlined)),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    filled: true,
+                    fillColor: const Color(0xFFF6F6F6),
+                    label: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: const Text(
+                      "Пароль",
+                      style: TextStyle(
+                        color: Color(0xFFBDBDBD),
+                        fontSize: 20,
+                      ),
+                    ),
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE8E8E8),
+                        width: 2,
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE8E8E8),
+                        width: 2,
+                      ),
                     ),
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFDC0000),
+                        width: 2,
+                      ),
+                    ),
+                    errorStyle: const TextStyle(
+                      color: Color(0xFFDC0000),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color.fromARGB(255, 239, 172, 0),
+                        width: 2,
+                      ),
+                    ),
+                    suffixIcon: IconButton( 
+                      icon: Icon(passwordVisible 
+                          ? Icons.visibility_outlined 
+                          : Icons.visibility_off_outlined), 
+                      onPressed: () { 
+                        setState( 
+                          () { 
+                            passwordVisible = !passwordVisible; 
+                            print("pwd visibility changed to "+passwordVisible.toString());
+                          }, 
+                        ); 
+                      }, 
+                    ), 
                   ),
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Введите пароль.";
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Введите пароль';
+                    } else {
+                      if (value.length < 3) {
+                        return 'Пароль должен содержать минимум 3 символа.';
+                      }
                     }
-
-                    return null;
                   },
                 ),
-                const SizedBox(height: 30),
-                const Text(
-                  "Забыли пароль?",
-                  style: TextStyle(
-                    color: Color(0xFFEFAC00),
-                    fontFamily: 'Inter',
-                    fontSize: 20,
+                const SizedBox(height: 20),
+                Container(
+                  // TODO: Передвинуть кнопку левее наравне с левыми краями полей
+                  // или убрать подсветку кнопки при нажатии
+                child: TextButton(
+                  style: const ButtonStyle(
+                  //overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+                  overlayColor: MaterialStatePropertyAll(Colors.transparent),
+                ),
+
+                  child: const Text("Забыли пароль?",
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 239, 172, 0),
+                            fontFamily: 'Inter',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                    ),
                   ),
+                  onPressed:() {
+                    showChpwdDialog(context);
+                  },
+                ),
                 ),
                 const SizedBox(height: 60),
                 Row(
@@ -121,7 +259,7 @@ class _LoginScreenState extends State<AuthScreen> {
                       style: ElevatedButton.styleFrom(
                         //alignment: Alignment.center,
                         backgroundColor: const Color(0xFFEFAC00),
-                        fixedSize: Size(200, 80),
+                        fixedSize: Size(160, 60),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
                         ),
@@ -144,7 +282,7 @@ class _LoginScreenState extends State<AuthScreen> {
                           color: Colors.white,
                           fontFamily: 'Inter',
                           fontSize: 24,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
