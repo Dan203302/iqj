@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
+import 'package:iqj/features/news/presentation/screens/news_screen.dart';
 import 'package:iqj/features/old/news/news.dart';
 import 'package:iqj/features/old/schedule.dart';
 import 'package:iqj/features/welcome/presentation/welcome.dart';
@@ -23,10 +24,12 @@ class _AppState extends State<App> {
   late bool notAFirstLaunch = false;
 
   final _pages = <Widget>[
-    BlocProvider(
-      create: (context) => NewsBloc(NewsRepository()),
-      child: const News(),
-    ),
+    // BlocProvider(
+    //   create: (context) => NewsBloc(NewsRepository()),
+    //   child: const News(),
+    // ),
+    // ignore: prefer_const_constructors
+    const NewsScreen(),
     const Schedule(),
     const Text('Здесь будут чаты'),
     const Text('Здесь будет личный кабинет'),
