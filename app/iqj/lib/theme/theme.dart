@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:iqj/themes/color_schemes.dart';
-import 'package:iqj/themes/text_theme.dart';
+import 'package:iqj/theme/color_schemes.dart';
+import 'package:iqj/theme/text_theme.dart';
 
 ThemeData lightTheme = ThemeData(
   colorScheme: lightColorScheme,
