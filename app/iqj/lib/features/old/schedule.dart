@@ -67,13 +67,9 @@ class _ScheduleState extends State<Schedule> {
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
-        title: const Text(
+        title: Text(
           'Расписание',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 32,
-            fontWeight: FontWeight.w900,
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         centerTitle: false,
         actions: [
