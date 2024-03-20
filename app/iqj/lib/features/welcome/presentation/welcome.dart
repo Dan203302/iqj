@@ -169,7 +169,7 @@ class _WelcomeState extends State<Welcome> {
                               ),
                               child: Align(
                                 child: Text(
-                                  onLastPage ? 'Начнём!' : 'Дальше',
+                                  onLastPage ? 'Приступим!' : 'Далее',
                                   style: const TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 20,
