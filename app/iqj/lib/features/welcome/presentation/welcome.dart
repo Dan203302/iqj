@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/welcome/data/welcome_data.dart';
-import 'package:iqj/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -18,7 +16,7 @@ class _WelcomeState extends State<Welcome> {
   bool onLastPage = false;
 
   // Запись в память успешного прохождения начальных экранов.
-  void userWelcomed() async {
+  Future<void> userWelcomed() async {
     final prefs = await SharedPreferences.getInstance();
     setState(
       () {
@@ -29,7 +27,7 @@ class _WelcomeState extends State<Welcome> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Stack(
           children: [
             // Страницы
@@ -96,8 +94,10 @@ class _WelcomeState extends State<Welcome> {
                   SmoothPageIndicator(
                     controller: _controller,
                     count: welcomePanelList.length,
-                    effect: const JumpingDotEffect(
-                      activeDotColor: Color(0xFFEFAC00),
+                    effect: JumpingDotEffect(
+                      activeDotColor:
+                          Theme.of(context).colorScheme.inversePrimary,
+                      dotColor: Theme.of(context).colorScheme.surfaceVariant
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -123,14 +123,18 @@ class _WelcomeState extends State<Welcome> {
                             child: Container(
                               height: 60,
                               width: 60,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEFAC00),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(30)),
+                                    const BorderRadius.all(Radius.circular(30)),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.chevron_left_outlined,
-                                color: Colors.white,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
                                 size: 42,
                               ),
                             ),
@@ -141,20 +145,15 @@ class _WelcomeState extends State<Welcome> {
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () {
-                              onLastPage
-                                  ? Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return const AuthScreen();
-                                        },
-                                      ),
-                                    )
-                                  : _controller.nextPage(
-                                      duration:
-                                          const Duration(milliseconds: 240),
-                                      curve: Curves.ease,
-                                    );
+                              if (onLastPage) {
+                                Navigator.pushReplacementNamed(context, '/');
+                                userWelcomed();
+                              } else {
+                                _controller.nextPage(
+                                  duration: const Duration(milliseconds: 240),
+                                  curve: Curves.ease,
+                                );
+                              }
                             },
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
@@ -162,10 +161,12 @@ class _WelcomeState extends State<Welcome> {
                               width: onFirstPage
                                   ? 300
                                   : 225, //На первой странице кнопка "дальше" просто перекрывает "назад"
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEFAC00),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(30)),
+                                    const BorderRadius.all(Radius.circular(30)),
                               ),
                               child: Align(
                                 child: Text(
@@ -174,7 +175,9 @@ class _WelcomeState extends State<Welcome> {
                                     fontFamily: 'Inter',
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
                                   ),
                                 ),
                               ),
