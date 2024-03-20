@@ -171,7 +171,7 @@ class _WelcomeState extends State<Welcome> {
                               child: Align(
                                 child: Text(
                                   onLastPage ? 'Приступим!' : 'Далее',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
