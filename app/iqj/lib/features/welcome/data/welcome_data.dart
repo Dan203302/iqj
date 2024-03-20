@@ -14,8 +14,9 @@ const List<WelcomePanel> welcomePanelList = [
     imagePosition: 'bottom',
   ),
   WelcomePanel(
-    title: 'Добро пожаловать!',
-    text: 'Lorem ipsum dolor sit amet lorem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet orem ipsum dolor sit amet.',
+    title: 'Начнем работу!',
+    text: 'Здесь Вы сможете использовать все необходимые для работы ресурсы, /n
+    включая электронный журнал, расписание и многое другое.',
     image: 'assets/images/welcome/welcome_3.png',
     imagePosition: 'top',
   ),
