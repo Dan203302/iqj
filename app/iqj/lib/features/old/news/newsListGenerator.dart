@@ -1,41 +1,66 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 // Запрос к api и генерация списка новостных заголовков.
-Future<List<NewsArticle>> getNews() async {
+// Future<List<NewsArticle>> getNews() async {
+//   // TODO заменить API-пустышку!!!
+//   final response = await http.get(Uri.parse('https://dummyjson.com/products'));
+//   final List body =
+//       (json.decode(response.body) as Map<String, dynamic>)['products'] as List;
+//   return body
+//       .map((e) => NewsArticle.fromJson(e as Map<String, dynamic>))
+//       .toList();
+// }
+
+class NewsSmall extends Equatable{
+  final String thumbnail;
+  final String title;
+  final String date;
+  final String description;
+  const NewsSmall(
+      {required this.thumbnail,
+      required this.title,
+      required this.date,
+      required this.description,});
+  
+  @override
+  // TODO: implement props
+  List<Object?> get props => [thumbnail,title,date,description];
+  
+}
+
+// Новостной заголовок. Используется для генерации карточки с новостью в новостной ленте.
+class NewsArticle {
+  Future<List<NewsSmall>> getNews() async {
   // TODO заменить API-пустышку!!!
   final response = await http.get(Uri.parse('https://dummyjson.com/products'));
   final List body =
       (json.decode(response.body) as Map<String, dynamic>)['products'] as List;
   return body
-      .map((e) => NewsArticle.fromJson(e as Map<String, dynamic>))
+      // .map((e) => NewsArticle.fromJson(e as Map<String, dynamic>))
+      .map((e) {
+        final json = e as Map<String,dynamic>;
+        return NewsSmall(
+          title: json['title'] as String,
+          date: json['price'].toString(),
+          description: json['description'] as String, 
+          thumbnail: json['images'][0] as String,
+        );
+      },)
       .toList();
 }
 
-// Новостной заголовок. Используется для генерации карточки с новостью в новостной ленте.
-class NewsArticle {
-  final String thumbnail;
-  final String title;
-  final String date;
-  final String description;
-  NewsArticle(
-      {required this.thumbnail,
-      required this.title,
-      required this.date,
-      required this.description,});
-
-  factory NewsArticle.fromJson(Map<String, dynamic> json) {
-    return NewsArticle(
-      // ignore: avoid_dynamic_calls
-      thumbnail: json['images'][0] as String,
-      title: json['title'] as String,
-      date: json['price'].toString(),
-      description: json['description'] as String,
-    );
+  // factory NewsArticle.fromJson(Map<String, dynamic> json) {
+  //   return Article(
+  //     title: json['title'] as String,
+  //     date: json['price'].toString(),
+  //     description: json['description'] as String, 
+  //     thumbnail: json['images'][0] as String,
+  //   );
   }
-}
 
 // Генератор новостной ленты.
 Widget buildNews(List<NewsArticle> newsList) {
@@ -49,12 +74,12 @@ Widget buildNews(List<NewsArticle> newsList) {
     // TODO Добавить важное уведомление
     itemBuilder: (context, index) {
       final article = newsList[index];
-      return newsCardMobile(article);
+      return newsCardMobile(article as NewsSmall);
     },
   );
 }
 
-Card newsCardMobile(NewsArticle article) {
+Card newsCardMobile(NewsSmall article) {
   bool isBookmarked = false;
 
   return Card(

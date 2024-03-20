@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 //import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
+import 'package:iqj/features/old/news/newsListGenerator.dart';
+import 'package:shimmer/shimmer.dart';
 // import 'package:iqj/features/news/domain/news.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -20,7 +22,12 @@ class NewsScreen extends StatefulWidget {
 class _NewsBloc extends State<NewsScreen>{
   //final _newsbloc=NewsBloc(newsRepository)
     //List<News>? _news_list;
-    final _newsbloc=NewsBloc(NewsRepository());
+    // final newsList = getNews();
+    // final _newsbloc=NewsBloc(NewsArticle());
+    //final newsList=NewsSmall();
+    final _newsbloc=NewsBloc();
+    
+      static get title => null;
     
     @override
     void initState(){
@@ -52,13 +59,24 @@ class _NewsBloc extends State<NewsScreen>{
                 child: CircularProgressIndicator(),
               );
             } else if (state is NewsLoaded) {
+              // return ListView.builder(
+              //   itemCount: state.newsList.length,
+              //   itemBuilder: (context, index) {
+              //     final news = state.newsList[index];
+              //     return ListTile(
+              //       title: Text(news.title),
+              //       subtitle: Text(news.description),
+              //     );
+              //   },
+              // );
               return ListView.builder(
                 itemCount: state.newsList.length,
+                //itemCount: state.data!.length,
                 itemBuilder: (context, index) {
                   final news = state.newsList[index];
-                  return ListTile(
-                    title: Text(news.title),
-                    subtitle: Text(news.description),
+                  return NewsCard(
+                    title: news.title,
+                    description: news.description,
                   );
                 },
               );
@@ -71,6 +89,43 @@ class _NewsBloc extends State<NewsScreen>{
             // }
             return const Center(child: CircularProgressIndicator());
           },
+        ),
+      ),
+    );
+  }
+}
+
+
+class NewsCard extends StatelessWidget {
+  final String title;
+  final String description;
+
+  const NewsCard({
+    super.key,
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(description),
+          ],
         ),
       ),
     );

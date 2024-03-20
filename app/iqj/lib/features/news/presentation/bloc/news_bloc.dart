@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/domain/news.dart';
+import 'package:iqj/features/old/news/newsListGenerator.dart';
 
 // Events
 abstract class NewsEvent {}
@@ -25,7 +26,7 @@ class NewsInitial extends NewsState {}
 class NewsLoading extends NewsState {}
 
 class NewsLoaded extends NewsState {
-  final List<News> newsList;
+  final List<NewsSmall> newsList;
 
   NewsLoaded(this.newsList);
 }
@@ -45,7 +46,8 @@ class NewsListLoadingFail extends NewsState{
 
 // Bloc
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
-  final NewsRepository newsRepository;
+  //final NewsRepository newsRepository;
+  //final NewsArticle newsRepository;
 
   // NewsBloc(this.newsRepository) : super(NewsInitial());
 
@@ -60,13 +62,13 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   //     }
   //   }
   // }
-  NewsBloc(this.newsRepository): super(NewsInitial()){
+  NewsBloc(): super(NewsInitial()){
     on<LoadNewsList>((event,emit) async{
     try{
       if (state is !NewsLoaded){
         emit(NewsLoading());
       }
-      final List<News> newsList = await newsRepository.fetchNews();
+      final List<NewsSmall> newsList = await NewsArticle().getNews();
       emit(NewsLoaded(newsList));
     }catch(e){
       emit(NewsListLoadingFail(except: e));
