@@ -19,12 +19,19 @@ func main() {
 
 	// Создание роутера.
 	router := mux.NewRouter()
+
+	// Добавляет заголовки CORS к ответам сервера.
+	// Необходимо для того, чтобы клиентские приложения,
+	// работающие на других доменах, могли взаимодействовать с API.
+	handler := middleware.CORSMiddleware(router)
+
 	// Вызов хэндлеров исходя из запроса.
 	router.HandleFunc("/news", handlers.HandleGetNews)
-	router.HandleFunc("/news/{id}", handlers.HandleGetNewsById)
-	router.HandleFunc("/sign-in", middleware.SignIn)
+	router.HandleFunc("/newsid", handlers.HandleGetNewsById)
+
+	//router.HandleFunc("/sign-in", middleware.SignIn)
 	// Запускает сервер на порту и "слушает" запросы.
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	if err := http.ListenAndServe(":3333", handler); err != nil {
 		log.Fatal(err)
 	}
 }
