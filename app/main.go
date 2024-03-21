@@ -27,7 +27,7 @@ func main() {
 
 	// Вызов хэндлеров исходя из запроса.
 	router.HandleFunc("/news", handlers.HandleGetNews)
-	router.HandleFunc("/newsid", handlers.HandleGetNewsById)
+	router.HandleFunc("/news_id", handlers.HandleGetNewsById)
 
 	//router.HandleFunc("/sign-in", middleware.SignIn)
 	// Запускает сервер на порту и "слушает" запросы.

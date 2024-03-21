@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"iqj/database"
 	"net/http"
 	"strconv"
@@ -38,13 +37,15 @@ func HandleGetNews(w http.ResponseWriter, r *http.Request) {
 // Извлекает id из параметров запроса,
 // вызывает функцию GetNewsByID, которая получает полную новость из бд.
 // Выдает полную новость пользователю в формате JSON.
-// Например при GET /news/13 вернет новость с id = 13.
+// Например при GET /newsid?id=13 вернет новость с id = 13.
 func HandleGetNewsById(w http.ResponseWriter, r *http.Request) {
-	idstr := mux.Vars(r)["id"]
-	id, err := strconv.Atoi(idstr)
+	idStr := r.URL.Query().Get("id")
+
+	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	news, err := database.Database.GetNewsByID(id)
 	if err != nil {
 		fmt.Println(err)
