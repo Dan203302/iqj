@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
@@ -69,10 +68,10 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	// Получаем данные, введенные пользователем из тела запроса и записываем их в account
 	// TODO нужно создать переменную структуры куда записывать почту и пароль
-	err := json.NewDecoder(r.Body).Decode()
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-	}
+	//err := json.NewDecoder(r.Body).Decode()
+	//if err != nil {
+	//	w.WriteHeader(http.StatusBadRequest)
+	//}
 
 	// Проверяем существует ли такой пользователь
 	// TODO БД сделайте проверку сущестования пользователя
