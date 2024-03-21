@@ -1,4 +1,4 @@
-package main
+package chats
 
 import (
 	"fmt"
@@ -21,6 +21,17 @@ type Client struct {
 	doneCh chan bool
 }
 
+// из этой структуры будем брать id человека 
+// и засовывать его вместо maxId
+
+// type User struct {
+// 	Id       int
+// 	Name     string
+// 	Password string
+// 	Bio      string // федя решил что нам это нужно
+// 	Role     string
+// }
+
 // Create new chat client.
 func NewClient(ws *websocket.Conn, server *Server) *Client {
 
@@ -31,7 +42,6 @@ func NewClient(ws *websocket.Conn, server *Server) *Client {
 	if server == nil {
 		panic("server cannot be nil")
 	}
-
 	maxId++
 	ch := make(chan *Message, channelBufSize)
 	doneCh := make(chan bool)
