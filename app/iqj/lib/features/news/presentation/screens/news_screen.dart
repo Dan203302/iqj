@@ -4,6 +4,7 @@ import 'dart:async';
 //import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
@@ -11,6 +12,7 @@ import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 import 'package:iqj/features/old/schedule.dart';
+import 'package:iqj/theme/text_theme.dart';
 import 'package:shimmer/shimmer.dart';
 // import 'package:iqj/features/news/domain/news.dart';
 
@@ -107,9 +109,12 @@ class _NewsBloc extends State<NewsScreen>{
                 //itemCount: state.data!.length,
                 itemBuilder: (context, index) {
                   final news = state.newsList[index];
+                  //print(news.thumbnail);
                   return NewsCard(
                     title: news.title,
-                    description: news.description,
+                    description: news.description, 
+                    thumbnail: news.thumbnail, 
+                    date: news.date,
                   );
                 },
               );
@@ -130,14 +135,16 @@ class _NewsBloc extends State<NewsScreen>{
 
 
 class NewsCard extends StatelessWidget {
+  final String thumbnail;
   final String title;
+  final String date;
   final String description;
-
-  const NewsCard({
-    super.key,
-    required this.title,
-    required this.description,
-  });
+  const NewsCard(
+      {super.key, 
+      required this.thumbnail,
+      required this.title,
+      required this.date,
+      required this.description,});
 
   @override
   Widget build(BuildContext context) {
@@ -149,12 +156,27 @@ class NewsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Image.network(thumbnail),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      // title,
+                      // style: textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    // Обработка нажатия кнопки
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/bookmark.svg'),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Text(description),
