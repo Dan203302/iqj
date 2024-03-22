@@ -64,9 +64,14 @@ class _NewsBloc extends State<NewsScreen>{
               children: [
                 IconButton(
                   onPressed: () {
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/bookmark2.svg'),
+                ),
+                IconButton(
+                  onPressed: () {
                     showFilterDialog(context);
                   },
-                  icon: SvgPicture.asset('assets/icons/news/filter.svg'),
+                  icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
                 ),
               ],
             ),
