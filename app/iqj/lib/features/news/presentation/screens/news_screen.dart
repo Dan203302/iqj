@@ -174,7 +174,7 @@ class NewsCard extends StatelessWidget {
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         // title,
-                        // style: textTheme.titleLarge,
+                        // style: textTheme.titleLarge
                       ),
                     ),
                   ),
@@ -186,6 +186,7 @@ class NewsCard extends StatelessWidget {
                   ),
                 ],
               ),
+              Text(date),
               const SizedBox(height: 8),
               Text(description),
             ],
@@ -203,7 +204,7 @@ class NewsList extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Здесь будет news"),),
+      appBar: AppBar(title: const Text("Новости"),),
     );
   }
 
