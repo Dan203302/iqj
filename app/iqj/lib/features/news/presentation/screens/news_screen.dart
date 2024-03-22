@@ -5,10 +5,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 //import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
+import 'package:iqj/features/old/schedule.dart';
 import 'package:shimmer/shimmer.dart';
 // import 'package:iqj/features/news/domain/news.dart';
 
@@ -42,8 +44,34 @@ class _NewsBloc extends State<NewsScreen>{
     //final _newslistbloc=NewsBloc(context);
 
     return Scaffold(
+      // appBar: AppBar(
+      //   title: const Text('News'),
+      // ),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('News'),
+        toolbarHeight: 72,
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Новости',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        centerTitle: false,
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    showFilterDialog(context);
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/filter.svg'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
