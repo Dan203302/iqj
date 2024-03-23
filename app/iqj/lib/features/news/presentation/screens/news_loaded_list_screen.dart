@@ -35,9 +35,43 @@ class _NewsListState extends State<NewsList>{
   @override
   Widget build(BuildContext context) { 
     return Scaffold(
-      body: Container(
-        child: Text(news?.title ?? '...')
+      body: Card(
+        elevation: 2,
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(news?.thumbnail ?? '...'),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      news?.title ?? '...',
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        // title,
+                        // style: textTheme.titleLarge
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      // Обработка нажатия кнопки
+                    },
+                    icon: SvgPicture.asset('assets/icons/news/bookmark.svg'),
+                  ),
+                ],
+              ),
+              Text(news?.date ?? '...'),
+              const SizedBox(height: 8),
+              Text(news?.description ?? '...'),
+            ],
+          ),
         ),
+      ),
     );
   }
 
