@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 
+
 class NewsList extends StatefulWidget{
   const NewsList({super.key});
 
@@ -35,6 +36,29 @@ class _NewsListState extends State<NewsList>{
   @override
   Widget build(BuildContext context) { 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 72,
+        scrolledUnderElevation: 0,
+        title: const Text("Новости"),
+        actions: [Container(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/bookmark2.svg'),
+                ),
+                IconButton(
+                  onPressed: () {
+                    //searchfilter();
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                ),
+              ],
+            ),
+          ), ]
+        ),
       body: Card(
         elevation: 2,
         margin: const EdgeInsets.all(8),
@@ -61,7 +85,7 @@ class _NewsListState extends State<NewsList>{
                     onPressed: () {
                       // Обработка нажатия кнопки
                     },
-                    icon: SvgPicture.asset('assets/icons/news/bookmark.svg'),
+                    icon: SvgPicture.asset('assets/icons/news/bookmarkFilled.svg'),
                   ),
                 ],
               ),
