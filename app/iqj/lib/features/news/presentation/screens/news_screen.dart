@@ -40,12 +40,19 @@ class _NewsBloc extends State<NewsScreen>{
       _newsbloc.add(LoadNewsList(completer: null));
       super.initState();
     }
+    bool _isFilter = false;
+    void searchfilter(){
+      setState(() {
+        _isFilter = !_isFilter;
+      });
+    }
 
   @override
   Widget build(BuildContext context) {
     // final newsBloc = BlocProvider.of<NewsBloc>(context);
     // newsBloc.add(FetchNews());
     //final _newslistbloc=NewsBloc(context);
+
 
     return Scaffold(
       // appBar: AppBar(
@@ -56,12 +63,46 @@ class _NewsBloc extends State<NewsScreen>{
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
+        title: _isFilter ? Container(
+          width: 285,
+          height: 23,
+          margin: const EdgeInsets.only(left: 20.0, top: 20.0),
+          child: const TextField(
+            decoration: InputDecoration(
+              // border: OutlineInputBorder(
+              //   borderRadius: BorderRadius.circular(20.0),
+              // ),
+              //icon: Icon(Icons.search),
+              hintText: "Поиск по заголовку ...",
+              hintStyle: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 16.0,
+                height: 1.5,
+              ),
+              icon: Icon(Icons.search),
+            ),
+          ),
+        ) :  Text(
           'Новости',
           style: Theme.of(context).textTheme.titleLarge,
         ),
         centerTitle: false,
-        actions: [
+        actions: _isFilter? [
+          Container(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    searchfilter();
+                  },
+                  icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                ),
+              ],
+            ),
+          ),
+        ] : [
           Container(
             padding: const EdgeInsets.only(right: 12),
             child: Row(
@@ -73,7 +114,7 @@ class _NewsBloc extends State<NewsScreen>{
                 ),
                 IconButton(
                   onPressed: () {
-                    showFilterDialog(context);
+                    searchfilter();
                   },
                   icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
                 ),

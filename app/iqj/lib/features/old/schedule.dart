@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
+import 'package:iqj/features/news/presentation/screens/news_screen.dart';
 // import 'package:http/http.dart' as http;
 
 class Schedule extends StatefulWidget {
