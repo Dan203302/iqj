@@ -153,12 +153,7 @@ class _NewsBloc extends State<NewsScreen>{
                 itemBuilder: (context, index) {
                   final news = state.newsList[index];
                   //print(news.thumbnail);
-                  return NewsCard(
-                    title: news.title,
-                    description: news.description, 
-                    thumbnail: news.thumbnail, 
-                    date: news.date,
-                  );
+                  return NewsCard(news: news,);
                 },
               );
             } else if (state is NewsListLoadingFail) {

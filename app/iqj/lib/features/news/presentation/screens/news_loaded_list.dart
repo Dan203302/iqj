@@ -3,27 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
 import 'package:iqj/features/news/presentation/screens/news_screen.dart';
+import 'package:iqj/features/old/news/newsListGenerator.dart';
 
 class NewsCard extends StatelessWidget {
-  final String thumbnail;
-  final String title;
-  final String date;
-  final String description;
-  const NewsCard(
-      {super.key, 
-      required this.thumbnail,
-      required this.title,
-      required this.date,
-      required this.description,});
+  final NewsSmall news;
+
+  const NewsCard({super.key, required this.news});
+
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const NewsList()), 
-      );
+        Navigator.of(context).pushNamed(
+          'newslist',
+          arguments: news,
+        );
     },
       child: Card(
         elevation: 2,
@@ -33,12 +28,12 @@ class NewsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(thumbnail),
+              Image.network(news.thumbnail),
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      title,
+                      news.title,
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -55,9 +50,9 @@ class NewsCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(date),
+              Text(news.date),
               const SizedBox(height: 8),
-              Text(description),
+              Text(news.description),
             ],
           ),
         ),

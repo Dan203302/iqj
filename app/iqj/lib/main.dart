@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/homescreen/presentation/homescreen.dart';
+import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
 import 'package:iqj/features/welcome/presentation/welcome.dart';
 import 'package:iqj/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,6 +47,7 @@ class _AppState extends State<App> {
         '/' : (context) => const HomeScreen(),
         'welcome' : (context) => const Welcome(),
         'authorise' :(context) => const AuthScreen(),
+        'newslist' : (context) => const NewsList(),
       },
     );
   }
