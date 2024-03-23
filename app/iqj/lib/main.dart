@@ -17,7 +17,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
 
-  late bool notAFirstLaunch = false;
+  late bool firstLaunch = false;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _AppState extends State<App> {
     final prefs = await SharedPreferences.getInstance();
     setState(
       () {
-        notAFirstLaunch = prefs.getBool('notAFirstLaunch') ?? false;
+        firstLaunch = prefs.getBool('firstLaunch') ?? true;
       },
     );
   }
@@ -42,7 +42,7 @@ class _AppState extends State<App> {
       title: 'IQJ',
       theme: lightTheme,
       darkTheme: darkTheme,
-      initialRoute: notAFirstLaunch? '/' : 'welcome',
+      initialRoute: firstLaunch? 'welcome' : '/',
       routes: {
         '/' : (context) => const HomeScreen(),
         'welcome' : (context) => const Welcome(),

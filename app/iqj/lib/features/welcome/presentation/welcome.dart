@@ -18,11 +18,7 @@ class _WelcomeState extends State<Welcome> {
   // Запись в память успешного прохождения начальных экранов.
   Future<void> userWelcomed() async {
     final prefs = await SharedPreferences.getInstance();
-    setState(
-      () {
-        prefs.setBool('notAFirstLaunch', true);
-      },
-    );
+    prefs.setBool('firstLaunch', false);
   }
 
   @override
@@ -146,8 +142,8 @@ class _WelcomeState extends State<Welcome> {
                           child: GestureDetector(
                             onTap: () {
                               if (onLastPage) {
-                                Navigator.pushReplacementNamed(context, '/');
                                 userWelcomed();
+                                Navigator.pushReplacementNamed(context, '/');
                               } else {
                                 _controller.nextPage(
                                   duration: const Duration(milliseconds: 240),
