@@ -13,6 +13,8 @@ import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/announcement.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
+import 'package:iqj/features/news/presentation/screens/search_data.dart';
+import 'package:iqj/features/news/presentation/screens/search_tags.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 import 'package:iqj/features/old/schedule.dart';
 import 'package:iqj/main.dart';
@@ -234,7 +236,7 @@ class _NewsBloc extends State<NewsScreen>{
                           ),
                           child: TextButton(
                             onPressed: () {
-                              // Действия при нажатии на кнопку "По дате"
+                              searchdata(context);
                             },
                             child: const Text(
                               "По дате:                                  ",
@@ -257,7 +259,7 @@ class _NewsBloc extends State<NewsScreen>{
                           ),
                           child: TextButton(
                             onPressed: () {
-                              // Действия при нажатии на кнопку "По дате"
+                              searh_tags(context);
                             },
                             child: const Text(
                               "По тегам:                                ",
