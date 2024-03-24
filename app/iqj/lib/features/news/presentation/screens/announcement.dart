@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-Widget buildAnnouncement(){
-  return Container(
-            margin: const EdgeInsets.only(top: 12),
+class AnnouncementWidjet extends StatefulWidget{
+  const AnnouncementWidjet({super.key});
+
+  @override
+  _AnnouncementWidgetState createState() => _AnnouncementWidgetState();
+  
+}
+
+// желательно это использовать
+// сейчас если это вызвать не будет работать кнопка закрытия объявления
+// желательно пофиксить ...
+
+class _AnnouncementWidgetState extends State<AnnouncementWidjet>{
+  bool flag_close = true;
+    void announce_change(){
+      setState(() {
+        flag_close=false;
+      });
+    }
+
+  @override
+  Widget build(BuildContext context){
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
             padding: const EdgeInsets.only(left: 12, right: 12),
             height: 80,
             alignment: Alignment.center,
@@ -53,6 +74,9 @@ Widget buildAnnouncement(){
                         ),
                         IconButton(
                           onPressed: () {
+                            setState(() {
+                              announce_change();
+                            });
                           },
                           icon: SvgPicture.asset('assets/icons/news/close.svg'),
                         ),
@@ -61,5 +85,6 @@ Widget buildAnnouncement(){
                 ),
               ],
             ),
-          );
+    );
+  }
 }
