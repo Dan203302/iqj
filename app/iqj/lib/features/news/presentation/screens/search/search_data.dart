@@ -1,13 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void searh_tags(BuildContext context) { 
+void searchdata(BuildContext context) { 
               final Widget okButton = TextButton(
                 style: const ButtonStyle(
                   overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
                 ),
                 child: const Text(
-                  "Закрыть",
+                  "Отмена",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 239, 172, 0),
+                  ),),
+                onPressed: () { 
+                  Navigator.of(context).pop();
+                },
+              );
+              final Widget searchButton= TextButton(
+                style: const ButtonStyle(
+                  overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+                ),
+                child: const Text(
+                  "Поиск",
                   style: TextStyle(
                     color: Color.fromARGB(255, 239, 172, 0),
                   ),),
@@ -17,7 +30,7 @@ void searh_tags(BuildContext context) {
               );
 
               final AlertDialog alert = AlertDialog(
-                title: const Text("Фильтры",
+                title: const Text("Дата",
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -27,6 +40,7 @@ void searh_tags(BuildContext context) {
                 content: const Text("Todo"),
                 actions: [
                   okButton,
+                  searchButton,
                 ],
               );
 
