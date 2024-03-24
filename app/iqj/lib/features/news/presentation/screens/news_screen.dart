@@ -49,7 +49,7 @@ class _NewsBloc extends State<NewsScreen>{
       });
     }
     bool flag_close = true;
-    void announce_change(){
+    void announce_close(){
       setState(() {
         flag_close=false;
       });
@@ -103,6 +103,7 @@ class _NewsBloc extends State<NewsScreen>{
               children: [
                 IconButton(
                   onPressed: () {
+                    announce_close();
                     searchfilter();
                   },
                   icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
@@ -123,6 +124,7 @@ class _NewsBloc extends State<NewsScreen>{
                 IconButton(
                   onPressed: () {
                     searchfilter();
+                    
                   },
                   icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
                 ),
@@ -133,69 +135,117 @@ class _NewsBloc extends State<NewsScreen>{
       ),
       body: Column(
         children: [
-          if (flag_close) Container(
-      margin: const EdgeInsets.only(top: 12),
-            padding: const EdgeInsets.only(left: 12, right: 12),
-            height: 80,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: const Color.fromARGB(255, 250, 228, 171),
-              border: Border.all(
-                color: const Color.fromARGB(255, 255, 166, 0),
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 2,
-                  color: Color.fromARGB(255, 239, 172, 0),
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-            child: Row(  
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 12),
-                        child: SvgPicture.asset(
-                        'assets/icons/schedule/warning.svg',
-                          semanticsLabel: 'warning',
-                          height: 24,
-                          width: 24,
-                          allowDrawingOutsideViewBox: true,
-                          // color: const Color.fromARGB(255, 239, 172, 0),
-                        ),
+                if (flag_close) Container(
+            margin: const EdgeInsets.only(top: 12),
+                  padding: const EdgeInsets.only(left: 12, right: 12),
+                  height: 80,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: const Color.fromARGB(255, 250, 228, 171),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 255, 166, 0),
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 2,
+                        color: Color.fromARGB(255, 239, 172, 0),
+                        spreadRadius: 1,
                       ),
-                        const Expanded(
-                          child: Text(
-                            'С 35 нояктября по 64 апремая в корпусе В-78 будет закрыт главный вход. ',
-                            softWrap: true,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 255, 166, 0),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              announce_change();
-                            });
-                          },
-                          icon: SvgPicture.asset('assets/icons/news/close.svg'),
-                        ),
                     ],
                   ),
-                ),
-              ],
-            ),
-    ),
+                  child: Row(  
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 12),
+                              child: SvgPicture.asset(
+                              'assets/icons/schedule/warning.svg',
+                                semanticsLabel: 'warning',
+                                height: 24,
+                                width: 24,
+                                allowDrawingOutsideViewBox: true,
+                                // color: const Color.fromARGB(255, 239, 172, 0),
+                              ),
+                            ),
+                              const Expanded(
+                                child: Text(
+                                  'С 35 нояктября по 64 апремая в корпусе В-78 будет закрыт главный вход. ',
+                                  softWrap: true,
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    color: Color.fromARGB(255, 255, 166, 0),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    announce_close();
+                                  });
+                                },
+                                icon: SvgPicture.asset('assets/icons/news/close.svg'),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+          if (_isFilter) Container(
+            margin: const EdgeInsets.only(top: 12),
+                  padding: const EdgeInsets.only(left: 12, right: 12),
+                  height: 80,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: const Color.fromARGB(255, 250, 228, 171),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 255, 166, 0),
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 2,
+                        color: Color.fromARGB(255, 239, 172, 0),
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: const Row(  
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          children: [
+                                // IconButton(
+                                //   onPressed:() {
+                                //   },
+                                //   // icon: Text(
+                                //   //   'По дате: ',
+                                //   // softWrap: true,
+                                //   // style: TextStyle(
+                                //   //   fontFamily: 'Inter',
+                                //   //   fontSize: 12,
+                                //   //   fontWeight: FontWeight.normal,
+                                //   //   color: Color.fromARGB(255, 255, 166, 0),)
+                                //   //), 
+                                // ),
+                                Text("По дате: "),
+                              Text("По тегам: "),
+                              Text("Здесь будут кнопки"),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
