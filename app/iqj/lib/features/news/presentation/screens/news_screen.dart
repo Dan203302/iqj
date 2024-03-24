@@ -199,53 +199,84 @@ class _NewsBloc extends State<NewsScreen>{
                   ),
           ),
           if (_isFilter) Container(
-            margin: const EdgeInsets.only(top: 12),
-                  padding: const EdgeInsets.only(left: 12, right: 12),
-                  height: 80,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 250, 228, 171),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 255, 166, 0),
-                    ),
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 2,
-                        color: Color.fromARGB(255, 239, 172, 0),
-                        spreadRadius: 1,
-                      ),
-                    ],
+              margin: const EdgeInsets.only(top: 12),
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              height: 100,
+              //alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: const Color.fromARGB(255, 250, 228, 171),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 255, 166, 0),
+                ),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: 2,
+                    color: Color.fromARGB(255, 239, 172, 0),
+                    spreadRadius: 1,
                   ),
-                  child: const Row(  
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Column(
-                          children: [
-                                // IconButton(
-                                //   onPressed:() {
-                                //   },
-                                //   // icon: Text(
-                                //   //   'По дате: ',
-                                //   // softWrap: true,
-                                //   // style: TextStyle(
-                                //   //   fontFamily: 'Inter',
-                                //   //   fontSize: 12,
-                                //   //   fontWeight: FontWeight.normal,
-                                //   //   color: Color.fromARGB(255, 255, 166, 0),)
-                                //   //), 
-                                // ),
-                                Text("По дате: "),
-                              Text("По тегам: "),
-                              Text("Здесь будут кнопки"),
-                          ],
+                ],
+              ),
+              child: Row(  
+                //crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      //crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            //borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: const Color.fromRGBO(239, 172, 0, 1),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              // Действия при нажатии на кнопку "По дате"
+                            },
+                            child: const Text(
+                              "По дате:                                  ",
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color:Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            //borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: const Color.fromRGBO(239, 172, 0, 1),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              // Действия при нажатии на кнопку "По дате"
+                            },
+                            child: const Text(
+                              "По тегам:                                ",
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color:Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-          ),
+                ],
+              ),
+            ),
+
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {

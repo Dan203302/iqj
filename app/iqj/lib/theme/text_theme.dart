@@ -9,3 +9,13 @@ TextTheme textTheme = const TextTheme(
       fontWeight: FontWeight.w900,
     ),
 );
+
+TextTheme textTemeforsearch = const TextTheme(
+  
+  bodyText1: TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color:Color.fromARGB(255, 255, 255, 255),
+  ),
+);
