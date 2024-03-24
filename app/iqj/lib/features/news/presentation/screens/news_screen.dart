@@ -3,6 +3,7 @@
 import 'dart:async';
 //import 'dart:js';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 //import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
+import 'package:iqj/features/news/presentation/screens/announcement.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 import 'package:iqj/features/old/schedule.dart';
@@ -33,7 +35,7 @@ class _NewsBloc extends State<NewsScreen>{
     //final newsList=NewsSmall();
     final _newsbloc=NewsBloc();
     
-      static get title => null;
+    static get title => null;
     
     @override
     void initState(){
@@ -123,49 +125,56 @@ class _NewsBloc extends State<NewsScreen>{
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          final completer=Completer();
-          _newsbloc.add(LoadNewsList(completer: completer));
-          return completer.future;
-        },
-        child: BlocBuilder<NewsBloc, NewsState>(
-          bloc: _newsbloc,
-          builder: (context, state) {
-            if (state is NewsLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is NewsLoaded) {
-              // return ListView.builder(
-              //   itemCount: state.newsList.length,
-              //   itemBuilder: (context, index) {
-              //     final news = state.newsList[index];
-              //     return ListTile(
-              //       title: Text(news.title),
-              //       subtitle: Text(news.description),
-              //     );
-              //   },
-              // );
-              return ListView.builder(
-                itemCount: state.newsList.length,
-                //itemCount: state.data!.length,
-                itemBuilder: (context, index) {
-                  final news = state.newsList[index];
-                  //print(news.thumbnail);
-                  return NewsCard(news: news,);
+      body: Column(
+        children: [
+          buildAnnouncement(),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                final completer=Completer();
+                _newsbloc.add(LoadNewsList(completer: completer));
+                return completer.future;
+              },
+              child: BlocBuilder<NewsBloc, NewsState>(
+                bloc: _newsbloc,
+                builder: (context, state) {
+                  if (state is NewsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is NewsLoaded) {
+                    // return ListView.builder(
+                    //   itemCount: state.newsList.length,
+                    //   itemBuilder: (context, index) {
+                    //     final news = state.newsList[index];
+                    //     return ListTile(
+                    //       title: Text(news.title),
+                    //       subtitle: Text(news.description),
+                    //     );
+                    //   },
+                    // );
+                    return ListView.builder(
+                      itemCount: state.newsList.length,
+                      //itemCount: state.data!.length,
+                      itemBuilder: (context, index) {
+                        final news = state.newsList[index];
+                        //print(news.thumbnail);
+                        return NewsCard(news: news,);
+                      },
+                    );
+                  } else if (state is NewsListLoadingFail) {
+                    return Center(
+                      child: Text(state.except?.toString() ?? "Error"),
+                    );
+                  } // else {
+                  //   return Container();
+                  // }
+                  return const Center(child: CircularProgressIndicator());
                 },
-              );
-            } else if (state is NewsListLoadingFail) {
-              return Center(
-                child: Text(state.except?.toString() ?? "Error"),
-              );
-            } // else {
-            //   return Container();
-            // }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
