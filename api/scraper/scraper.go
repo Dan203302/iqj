@@ -5,7 +5,6 @@ import (
 	"github.com/gocolly/colly"
 	"iqj/database"
 	"iqj/models"
-	"strings"
 	"time"
 )
 
@@ -39,7 +38,8 @@ func scraper(url string) []models.NewsBlock {
 		newsblock.Header = x[:len(x)-18]
 		newsblock.Link = "https://www.mirea.ru" + e.ChildAttr(".uk-link-reset", "href")
 		newsblock.PublicationTime = e.ChildText(".uk-margin-small-bottom.uk-text-small")
-		newsblock.ImageLink = "https://www.mirea.ru" + e.ChildAttr(".enableSrcset", "data-src")
+		imgStr := "https://www.mirea.ru" + e.ChildAttr(".enableSrcset", "data-src")
+		newsblock.ImageLink = append(newsblock.ImageLink, imgStr)
 		newsblarr = append([]models.NewsBlock{newsblock}, newsblarr...)
 	})
 
@@ -76,7 +76,7 @@ func scraper2(newsblarr []models.NewsBlock) {
 		c.Visit(newsblarr[i].Link)
 		news.Header = title
 		news.Text = text
-		news.ImageLink = strings.Join(mas, ", ")
+		news.ImageLink = mas
 		mas = nil
 		news.PublicationTime = newsblarr[i].PublicationTime
 		n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime}
