@@ -1,11 +1,14 @@
 package middleware
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"iqj"
 	"iqj/api/handlers"
+	"iqj/config"
+	"iqj/database"
+	"iqj/models"
 	"net/http"
 	"strings"
 	"time"
@@ -44,7 +47,7 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, errors.New("invalid signing method")
 			}
-			return []byte(iqj.SigningKey), nil
+			return []byte(config.SigningKey), nil
 		})
 
 		if err != nil {
@@ -66,19 +69,20 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 // Вход в систему
 func SignIn(w http.ResponseWriter, r *http.Request) {
 
-	// Получаем данные, введенные пользователем из тела запроса и записываем их в account
-	// TODO нужно создать переменную структуры куда записывать почту и пароль
-	//err := json.NewDecoder(r.Body).Decode()
-	//if err != nil {
-	//	w.WriteHeader(http.StatusBadRequest)
-	//}
+	// TODO: сваггер подправить под это
 
-	// Проверяем существует ли такой пользователь
-	// TODO БД сделайте проверку сущестования пользователя
-	// Проверяем верный ли пароль
-	// TODO БД сделайте проверку введенного пароля
+	// Получаем данные, введенные пользователем из тела запроса и записываем их в signingUser
+	var signingUser models.User
+	err := json.NewDecoder(r.Body).Decode(&signingUser.Data)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+	}
 
-	// Если пользователя нет или пароль неверный вернем пустую строку и ошибку
+	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
+	err = database.Database.CheckUser(&signingUser)
+	if err != nil {
+		handlers.WriteJSON(w, http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
+	}
 
 	// Если все хорошо сделаем JWT токен
 
@@ -103,5 +107,5 @@ func GenerateJWT() (string, error) {
 	// Создание токена с параметрами записанными в claims и id пользователя
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Создание какой-то JWT строчки
-	return token.SignedString([]byte(iqj.SigningKey))
+	return token.SignedString([]byte(config.SigningKey))
 }
