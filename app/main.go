@@ -29,7 +29,7 @@ func main() {
 	router.HandleFunc("/news", handlers.HandleGetNews)
 	router.HandleFunc("/news_id", handlers.HandleGetNewsById)
 
-	//router.HandleFunc("/sign-in", middleware.SignIn)
+	router.HandleFunc("/sign-in", middleware.SignIn)
 	// Запускает сервер на порту и "слушает" запросы.
 	if err := http.ListenAndServe(":3333", handler); err != nil {
 		log.Fatal(err)

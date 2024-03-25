@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"iqj"
 	"iqj/api/handlers"
-	"iqj/config"
 	"iqj/database"
 	"iqj/models"
 	"net/http"
@@ -47,7 +47,7 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, errors.New("invalid signing method")
 			}
-			return []byte(config.SigningKey), nil
+			return []byte(iqj.SigningKey), nil
 		})
 
 		if err != nil {
@@ -67,6 +67,8 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 }
 
 // Вход в систему
+// Получаем данные, введенные пользователем из тела запроса и записываем их
+// Возвращаем JWT
 func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: сваггер подправить под это
@@ -107,5 +109,5 @@ func GenerateJWT() (string, error) {
 	// Создание токена с параметрами записанными в claims и id пользователя
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// Создание какой-то JWT строчки
-	return token.SignedString([]byte(config.SigningKey))
+	return token.SignedString([]byte(iqj.SigningKey))
 }
