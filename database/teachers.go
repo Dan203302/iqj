@@ -8,6 +8,8 @@ import (
 )
 
 func (st *Storage) createTeacher(teacher *models.Teacher) error {
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
 	jsongroups, err := json.Marshal(teacher.Groups)
 	if err != nil {
 		return err

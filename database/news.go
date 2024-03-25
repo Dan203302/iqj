@@ -7,6 +7,8 @@ import (
 )
 
 func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
 	publicationTime := time.Now().Format("2006-01-02 15:04:05")
 
 	var count int

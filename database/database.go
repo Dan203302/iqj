@@ -5,13 +5,15 @@ import (
 	"fmt"
 	_ "github.com/lib/pq"
 	"iqj/config"
+	"sync"
 	//"iqj/config"
 )
 
 var Database Storage
 
 type Storage struct {
-	Db *sql.DB
+	Db    *sql.DB
+	Mutex sync.Mutex
 }
 
 func ConnectStorage() {
@@ -34,6 +36,7 @@ func (st *Storage) createStorage() {
 	}
 
 	st.Db = db
+	st.Mutex = sync.Mutex{}
 
 	err = db.Ping()
 	if err != nil {

@@ -17,6 +17,9 @@ import (
 // Добавляет пользователя по полученной модели (необходимы name, password, role), добавление данных в таблицу о студенте/преподавателе
 func (st *Storage) AddUser(user *models.User, student *models.Student, teacher *models.Teacher) error {
 	//TODO: ребята пожалуйста организуйте подачу паролей через bcrypt
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
+
 	_, err := st.Db.Exec("INSERT INTO users (name, email,password,role) VALUES ($1, $2, $3,$4)",
 		user.Name, user.Data.Email, user.Data.Password, user.Role)
 	if err != nil {
@@ -44,6 +47,8 @@ func (st *Storage) AddUser(user *models.User, student *models.Student, teacher *
 
 // Возвращает "incorrect password" при отсутствии пользователя в бд или неправильном пароле, nil при правильности пароля
 func (st *Storage) CheckUser(user *models.User) error {
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
 	var passFromData string
 	err := st.Db.QueryRow("SELECT password FROM users WHERE email = $1", user.Data.Email).Scan(&passFromData)
 	if errors.Is(err, sql.ErrNoRows) || passFromData != user.Data.Password {
@@ -54,6 +59,8 @@ func (st *Storage) CheckUser(user *models.User) error {
 
 // Меняет био пользователя по полученной модели (необходимы bio и id)
 func (st *Storage) ChangeBio(user *models.User) error {
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
 	_, err := st.Db.Exec("UPDATE users SET bio = $1 WHERE ID = $2", user.Bio, user.Id)
 
 	return err
@@ -61,6 +68,8 @@ func (st *Storage) ChangeBio(user *models.User) error {
 
 // Меняет имя пользователя по полученной модели (необходимы name и id)
 func (st *Storage) ChangeName(user *models.User) error {
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
 	_, err := st.Db.Exec("UPDATE users SET name = $1 WHERE ID = $2", user.Name, user.Id)
 
 	return err
