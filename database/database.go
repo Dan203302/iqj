@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"iqj"
+	"iqj/config"
 	//"iqj/config"
 )
 
@@ -25,7 +25,7 @@ func (st *Storage) createStorage() {
 
 	var DbData = []interface{}{"hostname", "port", "user", "password", "dbname"}
 	*/
-	connectionString := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", iqj.DbData...)
+	connectionString := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", config.DbData...)
 
 	db, err := sql.Open("postgres", connectionString)
 
@@ -44,8 +44,8 @@ func (st *Storage) createStorage() {
 }
 
 func (st *Storage) initTables() {
-	st.initNewsTable()
-	st.initUsersTable()
+	st.initNewsTable()  // TODO: drop table news;
+	st.initUsersTable() // TODO: drop table users;
 	st.initScheduleTable()
 	st.initStudentGroupsTable()
 	st.initTeachersTable()
@@ -59,7 +59,7 @@ func (st *Storage) initNewsTable() {
 			header VARCHAR(255) NOT NULL,
 			link VARCHAR(255) NOT NULL,
 		    news_text TEXT not null,
-		    image_link TEXT,
+		    image_link TEXT[],
 		    publication_time TIMESTAMP
 		    
 		);
@@ -75,6 +75,7 @@ func (st *Storage) initUsersTable() {
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
 			name VARCHAR(255) NOT NULL,
+		    email VARCHAR(255) NOT NULL,
 			password TEXT NOT NULL,
 		    bio TEXT,
 		    role VARCHAR(20) NOT NULL

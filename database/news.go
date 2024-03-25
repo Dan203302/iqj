@@ -40,7 +40,8 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) (*[]models.NewsBlock, 
 	var latestNewsBlocks []models.NewsBlock
 
 	for rows.Next() {
-		var id, header, link, imageLink, publicationTime string
+		var id, header, link, publicationTime string
+		var imageLink []string
 		err := rows.Scan(&id, &header, &link, &imageLink, &publicationTime)
 		if err != nil {
 			return nil, err
@@ -66,7 +67,8 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) (*[]models.NewsBlock, 
 func (st *Storage) GetNewsByID(id int) (*models.News, error) {
 	row := st.Db.QueryRow("SELECT header, news_text, image_link, publication_time FROM news WHERE id = $1", id)
 
-	var header, text, imageLink, publicationTime string
+	var header, text, publicationTime string
+	var imageLink []string
 
 	err := row.Scan(&header, &text, &imageLink, &publicationTime)
 	if err != nil {
