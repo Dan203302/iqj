@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/lib/pq"
 	"iqj/models"
 	"time"
 )
@@ -19,7 +20,7 @@ func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 
 	if count == 0 {
 		_, err = st.Db.Exec("INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES ($1, $2, $3, $4, $5)",
-			newsBlock.Header, newsBlock.Link, newsText, newsBlock.ImageLink, publicationTime)
+			newsBlock.Header, newsBlock.Link, newsText, pq.Array(newsBlock.ImageLink), publicationTime)
 		if err != nil {
 			return err
 		}
@@ -43,8 +44,8 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) (*[]models.NewsBlock, 
 
 	for rows.Next() {
 		var id, header, link, publicationTime string
-		var imageLink []string
-		err := rows.Scan(&id, &header, &link, &imageLink, &publicationTime)
+		var imageLinks []string
+		err := rows.Scan(&id, &header, &link, pq.Array(&imageLinks), &publicationTime)
 		if err != nil {
 			return nil, err
 		}
@@ -52,7 +53,7 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) (*[]models.NewsBlock, 
 			ID:              id,
 			Header:          header,
 			Link:            link,
-			ImageLink:       imageLink,
+			ImageLink:       imageLinks,
 			PublicationTime: publicationTime,
 		}
 		latestNewsBlocks = append(latestNewsBlocks, newsBlock)
