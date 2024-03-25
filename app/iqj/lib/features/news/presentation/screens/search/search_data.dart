@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
 
 void searchdata(BuildContext context) { 
               final Widget okButton = TextButton(
@@ -31,13 +32,14 @@ void searchdata(BuildContext context) {
 
               final AlertDialog alert = AlertDialog(
                 title: const Text("Дата",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                ),
-                backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                content: const Text("Todo"),
+                backgroundColor: Colors.white,
+                surfaceTintColor: Colors.white,
+                content: create_body_data(),
                 actions: [
                   okButton,
                   searchButton,
