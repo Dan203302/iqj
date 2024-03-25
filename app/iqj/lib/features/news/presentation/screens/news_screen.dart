@@ -259,7 +259,7 @@ class _NewsBloc extends State<NewsScreen>{
                           ),
                           child: TextButton(
                             onPressed: () {
-                              searh_tags(context);
+                              search_tags(context);
                             },
                             child: const Text(
                               "По тегам:                                ",
