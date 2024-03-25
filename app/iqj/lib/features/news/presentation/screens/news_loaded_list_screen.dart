@@ -23,6 +23,13 @@ class _NewsListState extends State<NewsList>{
   // String? decoration;
   NewsSmall? news;
 
+  bool flag_open_tags = false;
+  void open_close_tags(){
+    setState(() {
+      flag_open_tags = !flag_open_tags;
+    });
+  }
+
   @override
   void didChangeDependencies(){
     final args = ModalRoute.of(context)?.settings.arguments;
@@ -39,7 +46,7 @@ class _NewsListState extends State<NewsList>{
       appBar: AppBar(
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
-        title: const Text("Новости"),
+        //title: const Text("Новости"),
         actions: [Container(
             padding: const EdgeInsets.only(right: 12),
             child: Row(
@@ -53,7 +60,7 @@ class _NewsListState extends State<NewsList>{
                   onPressed: () {
                     //searchfilter();
                   },
-                  icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                  icon: SvgPicture.asset('assets/icons/news/filter3.svg'),
                 ),
               ],
             ),
@@ -81,16 +88,38 @@ class _NewsListState extends State<NewsList>{
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      // Обработка нажатия кнопки
-                    },
-                    icon: SvgPicture.asset('assets/icons/news/bookmarkFilled.svg'),
-                  ),
                 ],
               ),
-              Text(news?.date ?? '...'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(news?.date ?? '...'),
+                  const Spacer(),
+                  if (!flag_open_tags) IconButton(
+                    onPressed:() {
+                      open_close_tags();
+                    }, 
+                    icon: SvgPicture.asset('assets/icons/news/open_tags.svg'),
+                  ) else IconButton(
+                    onPressed:() {
+                      open_close_tags();
+                    }, 
+                    icon: SvgPicture.asset('assets/icons/news/open_tags_yel.svg'),
+                  ) 
+                ],
+              ),
+              if (flag_open_tags) const  Text("Здесь будут теги"),
               const SizedBox(height: 8),
+              Container(
+                height: 1,
+                decoration: const BoxDecoration(
+                color: Colors.white, 
+                border: Border(
+                  top: BorderSide(color: Color.fromRGBO(209, 209, 209, 1), width: 2),
+                  //bottom: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
+                ),
+                ),
+              ),
               Text(news?.description ?? '...'),
             ],
           ),
