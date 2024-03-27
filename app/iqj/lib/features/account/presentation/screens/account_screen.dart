@@ -14,13 +14,13 @@ class AccountScreen extends StatefulWidget {
   _AccountScreenState createState() => _AccountScreenState();
 }
 
-void showChpwdDialog(BuildContext context) {
+void showExitDialog(BuildContext context) {
   final Widget okButton = TextButton(
     style: const ButtonStyle(
       overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
     ),
     child: const Text(
-      "Закрыть",
+      "Выйти",
       style: TextStyle(
         color: Color.fromARGB(255, 239, 172, 0),
       ),
@@ -30,17 +30,33 @@ void showChpwdDialog(BuildContext context) {
     },
   );
 
+  final Widget cancelButton = TextButton(
+    style: const ButtonStyle(
+      overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+    ),
+    child: const Text(
+      "Закрыть",
+      style: TextStyle(
+        color: Color.fromARGB(255, 193, 85, 78),
+      ),
+    ),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
   final AlertDialog alert = AlertDialog(
     title: const Text(
-      "Смена пароля",
+      "Выйти?",
       style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
       ),
     ),
     backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-    content: const Text("Todo"),
+    content: const Text("Вы действительно желаете выйти?"),
     actions: [
+      cancelButton,
       okButton,
     ],
   );
@@ -65,12 +81,46 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-      title: "Вход",
+      title: "Личный кабинет",
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Container(
-          
+          padding: const EdgeInsets.only(left: 15, top: 14),
+          alignment: Alignment.topLeft,
+          child: Column(
+            children: [
+              const Text(
+                "Личный кабинет",
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Container(
+                alignment: Alignment.center,
+                child: const ProfilePicture(),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                alignment: Alignment.center,
+                child: const ProfileInfo(),
+              ),
+              const SizedBox(height: 24),
+              ListButton(),
+              const SizedBox(height: 24),
+              ListButton(),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  //EditButton(),
+                  //LogoffButton(),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
