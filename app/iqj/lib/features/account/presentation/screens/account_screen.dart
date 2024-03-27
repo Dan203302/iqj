@@ -109,16 +109,19 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: const ProfileInfo(),
               ),
               const SizedBox(height: 24),
-              ListButton(),
+              const ListButton(),
               const SizedBox(height: 24),
-              ListButton(),
+              const ListButton(),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  //EditButton(),
-                  LogoffButton(),
-                ],
-              )
+              Container(
+                alignment: Alignment.center,
+                child: const Row(
+                  children: [
+                    EditButton(),
+                    LogoffButton(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

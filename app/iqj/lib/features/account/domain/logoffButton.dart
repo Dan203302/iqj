@@ -74,9 +74,9 @@ class _LogoffButtonState extends State<LogoffButton> {
           style: ElevatedButton.styleFrom(
             //alignment: Alignment.center,
             backgroundColor: const Color.fromARGB(255, 193, 85, 78),
-            fixedSize: Size(160, 60),
+            fixedSize: Size(280, 100),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(60),
             ),
           ),
           onPressed: () {

@@ -53,21 +53,32 @@ class _ListButtonState extends State<ListButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(right: 10),
+      child: Align(
       alignment: Alignment.center,
-      width: double.infinity,
-      height: 30,
-      child: TextButton(
-
-        child: const Text(
-          "СДО",
-          style: TextStyle(
-            fontSize: 12,
+        child: TextButton(
+          style: ElevatedButton.styleFrom(
+            //alignment: Alignment.center,
+            backgroundColor: Colors.black26,
+            fixedSize: Size(480, 100),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          onPressed: () {
+            showMenuDialog(context);
+          },
+          child: const Text(
+            "Элемент меню",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Inter',
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
-        onPressed: () {
-          showMenuDialog(context);
-        },
-      ),
+    ),
     );
   }
 }
