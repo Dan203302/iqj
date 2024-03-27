@@ -116,7 +116,7 @@ class _AccountScreenState extends State<AccountScreen> {
               Row(
                 children: [
                   //EditButton(),
-                  //LogoffButton(),
+                  LogoffButton(),
                 ],
               )
             ],

@@ -23,7 +23,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
           child: ClipOval(
             child: SizedBox.fromSize(
               size: Size.fromRadius(128), // Image radius
-              child: Image.network('../../../assets/images/welcome/welcome_1.png', fit: BoxFit.cover),
+              child: Image.network('https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg', fit: BoxFit.cover),
             ),
           ),
         ),
