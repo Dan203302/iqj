@@ -3,7 +3,7 @@ package middleware
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"iqj/api/handlers"
+	"iqj/api"
 	"iqj/config"
 	"net/http"
 	"strings"
@@ -47,13 +47,13 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		})
 
 		if err != nil {
-			handlers.WriteJSON(w, http.StatusForbidden, err.Error())
+			api.WriteJSON(w, http.StatusForbidden, err.Error())
 			return
 		}
 
 		// Проверяем что токен действителен
 		if !token.Valid {
-			handlers.WriteJSON(w, http.StatusForbidden, "bad token")
+			api.WriteJSON(w, http.StatusForbidden, "bad token")
 			return
 		}
 

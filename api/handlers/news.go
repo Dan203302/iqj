@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"iqj/api"
 	"iqj/database"
 	"net/http"
 	"strconv"
@@ -31,7 +32,7 @@ func HandleGetNews(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	WriteJSON(w, http.StatusOK, latestnews)
+	api.WriteJSON(w, http.StatusOK, latestnews)
 }
 
 // Извлекает id из параметров запроса,
@@ -50,5 +51,5 @@ func HandleGetNewsById(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	WriteJSON(w, http.StatusOK, news)
+	api.WriteJSON(w, http.StatusOK, news)
 }

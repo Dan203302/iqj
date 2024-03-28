@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"iqj/api"
 	"iqj/api/middleware"
 	"iqj/database"
 	"iqj/models"
@@ -26,7 +26,8 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
 	err = database.Database.CheckUser(&signingUser)
 	if err != nil {
-		WriteJSON(w, http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
+		api.WriteJSON(w, http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
+		return
 	}
 
 	// Если все хорошо сделаем JWT токен
@@ -34,9 +35,10 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	// Получаем токен для пользователя
 	token, err := middleware.GenerateJWT()
 	if err != nil {
-		fmt.Println(err)
+		api.WriteJSON(w, http.StatusInternalServerError, "")
+		return
 	}
 
 	//Выводим токен в формате JSON
-	WriteJSON(w, http.StatusOK, token)
+	api.WriteJSON(w, http.StatusOK, token)
 }

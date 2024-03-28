@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
+	"iqj/api"
 	"iqj/models"
 	"net/http"
 )
@@ -20,5 +21,5 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 	user.Password = string(hashedpassword)
 	// TODO сделать добавление email и password в бд
-	WriteJSON(w, http.StatusOK, user)
+	api.WriteJSON(w, http.StatusOK, user)
 }
