@@ -6,7 +6,6 @@ import (
 	_ "github.com/lib/pq"
 	"iqj/config"
 	"sync"
-	//"iqj/config"
 )
 
 var Database Storage
