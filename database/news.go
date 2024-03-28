@@ -73,7 +73,7 @@ func (st *Storage) GetNewsByID(id int) (*models.News, error) {
 	var header, text, publicationTime string
 	var imageLink []string
 
-	err := row.Scan(&header, &text, &imageLink, &publicationTime)
+	err := row.Scan(&header, &text, pq.Array(&imageLink), &publicationTime)
 	if err != nil {
 		return nil, err
 	}
