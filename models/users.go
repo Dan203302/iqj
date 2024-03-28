@@ -3,12 +3,12 @@ package models
 type User struct {
 	Id   int      `json:"id"`
 	Name string   `json:"name"`
-	Data userData `json:"data"`
+	Data UserData `json:"data"`
 	Bio  string   `json:"bio"` // федя решил что нам это нужно
 	Role string   `json:"role"`
 }
 
-type userData struct {
+type UserData struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
