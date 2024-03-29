@@ -6,6 +6,9 @@
   },
   "servers": [
     {
+      "url": "http://92.63.105.190:3333"
+    },
+    {
       "url": "http://localhost:3333"
     }
   ],
@@ -24,7 +27,8 @@
             "name": "offset",
             "schema": {
               "type": "integer",
-              "description": "Сколько новостей нужно пропустить"
+              "description": "Сколько новостей нужно пропустить",
+              "default": 0
             }
           },
           {
@@ -32,7 +36,8 @@
             "name": "count",
             "schema": {
               "type": "integer",
-              "description": "Количество новостей, которые нужно получить"
+              "description": "Количество новостей, которые нужно получить",
+              "default": 5
             }
           }
         ],
@@ -65,7 +70,7 @@
         "tags": [
           "News"
         ],
-        "summary": "Получает полную версию новости по id.",
+        "summary": "Получает полную версию новости по id",
         "operationId": "GetNewsById",
         "parameters":[
           {
@@ -73,7 +78,8 @@
             "name": "id",
             "schema": {
               "type": "integer",
-              "description": "Сколько новостей нужно пропустить"
+              "description": "Сколько новостей нужно пропустить",
+              "default": 1
             }
           }
         ],
@@ -93,6 +99,76 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sign-up":{
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Регистрация пользователя",
+        "description": "Получает email и password, добавляет в бд нового пользователя с переданной почтой и захэшированным паролем.",
+        "operationId": "UserRegistration",
+        "parameters": [
+
+        ],
+        "responses":{
+          "201":{
+            "description": "Пользователь добавлен",
+            "content":{
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Проблемка",
+            "content": {
+              "application/json": {
+                "schema":{
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sign-in":{
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Аутентификация",
+        "description": "Получает email и password, добавляет проверяет в бд данные, если все хорошо возвращает JWT.",
+        "operationId": "UserAuthentification",
+        "parameters": [
+
+        ],
+        "responses":{
+          "200": {
+            "description": "Аутентификация прошла успешно",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JWT"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Проблемка",
+            "content": {
+              "application/json": {
+                "schema":{
                   "$ref": "#/components/schemas/Error"
                 }
               }
@@ -157,6 +233,28 @@
           "publication_time": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "ivanovivan@yandex.ru"
+          },
+          "password": {
+            "type": "string",
+            "example": "qwerty1234"
+          }
+        }
+      },
+      "JWT": {
+        "type": "object",
+        "properties": {
+          "jwt": {
+            "type": "string",
+            "example": "nqhbdqLKVWLBlbaddwvad.advIdwkvdkavdvauvdw.davgjdvadvamddmvgad"
           }
         }
       },
