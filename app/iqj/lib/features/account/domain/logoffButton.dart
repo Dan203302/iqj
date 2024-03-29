@@ -68,13 +68,12 @@ class _LogoffButtonState extends State<LogoffButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Align(
-      alignment: Alignment.center,
+      
         child: TextButton(
           style: ElevatedButton.styleFrom(
             //alignment: Alignment.center,
             backgroundColor: const Color.fromARGB(255, 193, 85, 78),
-            fixedSize: Size(280, 100),
+            fixedSize: Size(280, 80),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(60),
             ),
@@ -92,7 +91,6 @@ class _LogoffButtonState extends State<LogoffButton> {
             ),
           ),
         ),
-    ),
     );
   }
 

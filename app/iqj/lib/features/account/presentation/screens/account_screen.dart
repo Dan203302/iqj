@@ -80,52 +80,55 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-      title: "Личный кабинет",
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        toolbarHeight: 72,
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.white,
-        body: Container(
-          padding: const EdgeInsets.only(left: 15, top: 14),
-          alignment: Alignment.topLeft,
-          child: Column(
+        title: Text(
+          'Личный кабинет',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        centerTitle: false,
+      ),
+      body: const Center(
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                "Личный кабинет",
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                alignment: Alignment.center,
-                child: const ProfilePicture(),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                alignment: Alignment.center,
-                child: const ProfileInfo(),
-              ),
-              const SizedBox(height: 24),
-              const ListButton(),
-              const SizedBox(height: 24),
-              const ListButton(),
-              const SizedBox(height: 24),
-              Container(
-                alignment: Alignment.center,
-                child: const Row(
+              SizedBox(height: 0),
+              ProfilePicture(),
+              SizedBox(height: 8),
+              ProfileInfo(),
+              SizedBox(height: 12),
+              Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    EditButton(),
-                    LogoffButton(),
+                    ListButton(),
+                    SizedBox(height: 12),
+                    ListButton(),
                   ],
                 ),
+              ),
+              ),
+              SizedBox(height: 24),
+              Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  EditButton(),
+                  LogoffButton(),
+                ],
+              ),
               ),
             ],
           ),
         ),
-      ),
     );
   }
 }

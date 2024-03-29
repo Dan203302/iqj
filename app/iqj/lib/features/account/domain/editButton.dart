@@ -52,14 +52,12 @@ class _EditButtonState extends State<EditButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
-      child: Align(
-      alignment: Alignment.center,
+      margin: const EdgeInsets.only(right: 10),
         child: TextButton(
           style: ElevatedButton.styleFrom(
             //alignment: Alignment.center,
             backgroundColor: Colors.black45,
-            fixedSize: Size(100, 100),
+            fixedSize: Size(100, 80),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(60),
             ),
@@ -77,7 +75,6 @@ class _EditButtonState extends State<EditButton> {
             ),
           ),
         ),
-    ),
     );
   }
 

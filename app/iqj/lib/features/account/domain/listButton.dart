@@ -53,14 +53,11 @@ class _ListButtonState extends State<ListButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
-      child: Align(
-      alignment: Alignment.center,
+      margin: const EdgeInsets.only(left:10, right: 10),
         child: TextButton(
           style: ElevatedButton.styleFrom(
-            //alignment: Alignment.center,
             backgroundColor: Colors.black26,
-            fixedSize: Size(480, 100),
+            minimumSize: const Size.fromHeight(100),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -78,7 +75,6 @@ class _ListButtonState extends State<ListButton> {
             ),
           ),
         ),
-    ),
     );
   }
 }
