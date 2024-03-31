@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"iqj/api"
+	"github.com/gin-gonic/gin"
 	"iqj/database"
 	"net/http"
 	"strconv"
@@ -12,19 +12,19 @@ import (
 // которая вернет массив с последними новостями.
 // Выдает новости пользователю в формате JSON.
 // Например при GET /news?offset=1&count=5 вернет новости с первой по шестую.
-func HandleGetNews(w http.ResponseWriter, r *http.Request) {
+func HandleGetNews(c *gin.Context) {
 	// Получаем промежуток пропуска и количество блоков новостей
-	offsetStr := r.URL.Query().Get("offset")
-	countStr := r.URL.Query().Get("count")
+	offsetStr := c.Query("offset")
+	countStr := c.Query("count")
 
 	offset, err := strconv.Atoi(offsetStr)
 	if err != nil {
-		http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	count, err := strconv.Atoi(countStr)
 	if err != nil {
-		http.Error(w, "Invalid count parameter", http.StatusBadRequest)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -32,24 +32,24 @@ func HandleGetNews(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	api.WriteJSON(w, http.StatusOK, latestnews)
+	c.JSON(http.StatusOK, latestnews)
 }
 
 // Извлекает id из параметров запроса,
 // вызывает функцию GetNewsByID, которая получает полную новость из бд.
 // Выдает полную новость пользователю в формате JSON.
 // Например при GET /newsid?id=13 вернет новость с id = 13.
-func HandleGetNewsById(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Query().Get("id")
+func HandleGetNewsById(c *gin.Context) {
+	idStr := c.Query("id")
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		fmt.Println(err)
+		c.String(http.StatusBadRequest, err.Error())
 	}
 
 	news, err := database.Database.GetNewsByID(id)
 	if err != nil {
 		fmt.Println(err)
 	}
-	api.WriteJSON(w, http.StatusOK, news)
+	c.JSON(http.StatusOK, news)
 }

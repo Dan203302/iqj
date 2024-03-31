@@ -1,13 +1,12 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"iqj/api/handlers"
 	"iqj/api/middleware"
 	"iqj/api/scraper"
 	"iqj/database"
 	"log"
-	"net/http"
 )
 
 func main() {
@@ -18,21 +17,29 @@ func main() {
 	go scraper.ScrapTick()
 
 	// Создание роутера.
-	router := mux.NewRouter()
+	r := gin.Default()
 
 	// Добавляет заголовки CORS к ответам сервера.
 	// Необходимо для того, чтобы клиентские приложения,
 	// работающие на других доменах, могли взаимодействовать с API.
-	handler := middleware.CORSMiddleware(router)
+	r.Use(middleware.CORSMiddleware())
 
 	// Вызов хэндлеров исходя из запроса.
-	router.HandleFunc("/news", handlers.HandleGetNews)
-	router.HandleFunc("/news_id", handlers.HandleGetNewsById)
+	r.GET("/news", handlers.HandleGetNews)
+	r.GET("/news_id", handlers.HandleGetNewsById)
 
-	router.HandleFunc("/sign-up", handlers.HandleSignUp)
-	router.HandleFunc("/sign-in", handlers.HandleSignIn)
+	r.POST("/sign-up", handlers.HandleSignUp)
+	r.GET("/sign-up", handlers.HandleSignIn)
+
+	// Группа функций, которая доступна только после аутентификации
+	authGroup := r.Group("/api")
+	authGroup.Use(middleware.WithJWTAuth())
+	{
+
+	}
+
 	// Запускает сервер на порту и "слушает" запросы.
-	if err := http.ListenAndServe(":3333", handler); err != nil {
+	if err := r.Run(":3333"); err != nil {
 		log.Fatal(err)
 	}
 }

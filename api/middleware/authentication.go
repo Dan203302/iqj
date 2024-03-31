@@ -3,7 +3,7 @@ package middleware
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
-	"iqj/api"
+	"github.com/gin-gonic/gin"
 	"iqj/config"
 	"net/http"
 	"strings"
@@ -17,14 +17,14 @@ type tokenclaims struct {
 
 // Если с токеном все хорошо,вызовется функция, которая находится внутри.
 // Например для WithJWTAuth(handleHello) при правильном токене следом сработает handleHello
-func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func WithJWTAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
 		// Получаем значение заголовка Authorization
-		header := r.Header.Get("Authorization")
+		header := c.GetHeader("Authorization")
 
 		// Проверяем не пустое ли значение в поле заголовка
 		if header == "" {
-			http.Error(w, "Missing auth token", http.StatusUnauthorized)
+			c.String(http.StatusUnauthorized, "Missing auth token")
 			return
 		}
 
@@ -33,7 +33,7 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		tokenstring := strings.Split(header, " ")
 		// Проверяем, что у нас есть и тип и сам токен
 		if len(tokenstring) != 2 {
-			http.Error(w, "Invalid auth header", http.StatusUnauthorized)
+			c.String(http.StatusUnauthorized, "Invalid auth header")
 			return
 		}
 
@@ -47,18 +47,18 @@ func WithJWTAuth(handlerFunc http.HandlerFunc) http.HandlerFunc {
 		})
 
 		if err != nil {
-			api.WriteJSON(w, http.StatusForbidden, err.Error())
+			c.JSON(http.StatusForbidden, err.Error())
 			return
 		}
 
 		// Проверяем что токен действителен
 		if !token.Valid {
-			api.WriteJSON(w, http.StatusForbidden, "bad token")
+			c.JSON(http.StatusForbidden, "bad token")
 			return
 		}
 
 		// Если все хорошо, у нас вызывается функция, которая передавалась в WithJWTAuth
-		handlerFunc(w, r)
+		c.Next()
 	}
 }
 

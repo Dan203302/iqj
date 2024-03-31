@@ -1,8 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
-	"iqj/api"
+	"github.com/gin-gonic/gin"
 	"iqj/api/middleware"
 	"iqj/database"
 	"iqj/models"
@@ -12,21 +11,21 @@ import (
 // Вход в систему
 // Получаем данные, введенные пользователем из тела запроса и записываем их
 // Возвращаем JWT
-func HandleSignIn(w http.ResponseWriter, r *http.Request) {
+func HandleSignIn(c *gin.Context) {
 
 	// TODO: сваггер подправить под это
 
 	// Получаем данные, введенные пользователем из тела запроса и записываем их в signingUser
 	var signingUser models.User
-	err := json.NewDecoder(r.Body).Decode(&signingUser.Data)
+	err := c.BindJSON(&signingUser.Data)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		c.String(http.StatusBadRequest, err.Error())
 	}
 
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
 	err = database.Database.CheckUser(&signingUser)
 	if err != nil {
-		api.WriteJSON(w, http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
+		c.String(http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
 		return
 	}
 
@@ -35,10 +34,10 @@ func HandleSignIn(w http.ResponseWriter, r *http.Request) {
 	// Получаем токен для пользователя
 	token, err := middleware.GenerateJWT()
 	if err != nil {
-		api.WriteJSON(w, http.StatusInternalServerError, "")
+		c.String(http.StatusInternalServerError, "")
 		return
 	}
 
 	//Выводим токен в формате JSON
-	api.WriteJSON(w, http.StatusOK, token)
+	c.JSON(http.StatusOK, token)
 }

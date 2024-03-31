@@ -1,25 +1,25 @@
 package handlers
 
 import (
-	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
-	"iqj/api"
 	"iqj/models"
 	"net/http"
 )
 
-func HandleSignUp(w http.ResponseWriter, r *http.Request) {
+func HandleSignUp(c *gin.Context) {
 	var user models.UserData
-	err := json.NewDecoder(r.Body).Decode(&user)
+
+	err := c.BindJSON(&user)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		c.String(http.StatusBadRequest, err.Error())
 	}
 	password := user.Password
-	hashedpassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		c.String(http.StatusInternalServerError, err.Error())
 	}
-	user.Password = string(hashedpassword)
+	user.Password = string(hashedPassword)
 	// TODO сделать добавление email и password в бд
-	api.WriteJSON(w, http.StatusOK, user)
+	c.JSON(http.StatusOK, user)
 }
