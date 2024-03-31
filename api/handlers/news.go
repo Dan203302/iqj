@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"iqj/database"
+	"iqj/models"
 	"net/http"
 	"strconv"
 )
@@ -51,5 +52,24 @@ func HandleGetNewsById(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	c.JSON(http.StatusOK, news)
+}
+
+func HandleAddNews(c *gin.Context) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, "User ID not found")
+		return
+	}
+
+	// TODO сделать проверку роли пользователя из бд
+
+	var news struct {
+		Header string `json:"header"`
+		Text   string `json:"text"`
+	}
+	c.BindJSON(&news)
+	newsbl := models.NewsBlock{Header: news.Header, ImageLink: []string{}, Link: "", PublicationTime: ""}
+	database.Database.AddNews(newsbl, news.Text)
 	c.JSON(http.StatusOK, news)
 }

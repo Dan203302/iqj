@@ -13,8 +13,6 @@ import (
 // Возвращаем JWT
 func HandleSignIn(c *gin.Context) {
 
-	// TODO: сваггер подправить под это
-
 	// Получаем данные, введенные пользователем из тела запроса и записываем их в signingUser
 	var signingUser models.User
 	err := c.BindJSON(&signingUser.Data)
@@ -22,6 +20,7 @@ func HandleSignIn(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 	}
 
+	// TODO получать id пользователя из бд
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
 	err = database.Database.CheckUser(&signingUser)
 	if err != nil {
@@ -32,7 +31,8 @@ func HandleSignIn(c *gin.Context) {
 	// Если все хорошо сделаем JWT токен
 
 	// Получаем токен для пользователя
-	token, err := middleware.GenerateJWT()
+	// TODO передать id пользователя из бд в функцию
+	token, err := middleware.GenerateJWT(id)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "")
 		return

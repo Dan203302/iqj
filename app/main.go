@@ -29,13 +29,13 @@ func main() {
 	r.GET("/news_id", handlers.HandleGetNewsById)
 
 	r.POST("/sign-up", handlers.HandleSignUp)
-	r.GET("/sign-up", handlers.HandleSignIn)
+	r.POST("/sign-in", handlers.HandleSignIn)
 
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
 	authGroup.Use(middleware.WithJWTAuth())
 	{
-
+		r.POST("/add_news", handlers.HandleAddNews)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.
