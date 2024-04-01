@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"iqj/database"
+	"iqj/models"
 	"net/http"
 	"strconv"
 )
@@ -12,19 +13,19 @@ import (
 // которая вернет массив с последними новостями.
 // Выдает новости пользователю в формате JSON.
 // Например при GET /news?offset=1&count=5 вернет новости с первой по шестую.
-func HandleGetNews(w http.ResponseWriter, r *http.Request) {
+func HandleGetNews(c *gin.Context) {
 	// Получаем промежуток пропуска и количество блоков новостей
-	offsetStr := r.URL.Query().Get("offset")
-	countStr := r.URL.Query().Get("count")
+	offsetStr := c.Query("offset")
+	countStr := c.Query("count")
 
 	offset, err := strconv.Atoi(offsetStr)
 	if err != nil {
-		http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 	count, err := strconv.Atoi(countStr)
 	if err != nil {
-		http.Error(w, "Invalid count parameter", http.StatusBadRequest)
+		c.String(http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -32,22 +33,43 @@ func HandleGetNews(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	WriteJSON(w, http.StatusOK, latestnews)
+	c.JSON(http.StatusOK, latestnews)
 }
 
 // Извлекает id из параметров запроса,
 // вызывает функцию GetNewsByID, которая получает полную новость из бд.
 // Выдает полную новость пользователю в формате JSON.
-// Например при GET /news/13 вернет новость с id = 13.
-func HandleGetNewsById(w http.ResponseWriter, r *http.Request) {
-	idstr := mux.Vars(r)["id"]
-	id, err := strconv.Atoi(idstr)
+// Например при GET /newsid?id=13 вернет новость с id = 13.
+func HandleGetNewsById(c *gin.Context) {
+	idStr := c.Query("id")
+
+	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		fmt.Println(err)
+		c.String(http.StatusBadRequest, err.Error())
 	}
+
 	news, err := database.Database.GetNewsByID(id)
 	if err != nil {
 		fmt.Println(err)
 	}
-	WriteJSON(w, http.StatusOK, news)
+	c.JSON(http.StatusOK, news)
+}
+
+func HandleAddNews(c *gin.Context) {
+	userId, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, "User ID not found")
+		return
+	}
+
+	// TODO сделать проверку роли пользователя из бд
+
+	var news struct {
+		Header string `json:"header"`
+		Text   string `json:"text"`
+	}
+	c.BindJSON(&news)
+	newsbl := models.NewsBlock{Header: news.Header, ImageLink: []string{}, Link: "", PublicationTime: ""}
+	database.Database.AddNews(newsbl, news.Text)
+	c.JSON(http.StatusOK, news)
 }
