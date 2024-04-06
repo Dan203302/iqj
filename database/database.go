@@ -20,12 +20,13 @@ func ConnectStorage() {
 }
 
 func (st *Storage) createStorage() {
-	// TODO: В папке /iqj/config/ должен храниться файл с данными для запуска бд (хост, порт, имя и пароль от пользователя, а также название базы
+
 	/* пример содержания файла /iqj/config/config.go:
 	package config
 
 	var DbData = []interface{}{"hostname", "port", "user", "password", "dbname"}
 	*/
+
 	connectionString := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable", config.DbData...)
 
 	db, err := sql.Open("postgres", connectionString)
@@ -46,8 +47,8 @@ func (st *Storage) createStorage() {
 }
 
 func (st *Storage) initTables() {
-	st.initNewsTable()  // TODO: drop table news;
-	st.initUsersTable() // TODO: drop table users;
+	st.initNewsTable()
+	st.initUsersTable()
 	st.initScheduleTable()
 	st.initStudentGroupsTable()
 	st.initTeachersTable()

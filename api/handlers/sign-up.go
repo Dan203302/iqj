@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"iqj/database"
 	"iqj/models"
 	"net/http"
 )
@@ -20,6 +21,8 @@ func HandleSignUp(c *gin.Context) {
 		c.String(http.StatusInternalServerError, err.Error())
 	}
 	user.Password = string(hashedPassword)
-	// TODO сделать добавление email и password в бд
+
+	database.Database.AddUser(user) // и тип тут поменяйте, функция рабочая просто впихните нужные данные
+	// TODO: передайте фронтенду чтобы у них регистрация была полноценная, чтобы он только после получения всех данных отправлял сюда запрос
 	c.JSON(http.StatusOK, user)
 }

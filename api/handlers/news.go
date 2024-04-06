@@ -62,7 +62,14 @@ func HandleAddNews(c *gin.Context) {
 		return
 	}
 
-	// TODO сделать проверку роли пользователя из бд
+	// TODO: Разберитесь с типами пж мне лень, там на стаковерфлоу есть решение я даже нашел но мне было лень
+	user, err := database.Database.GetRole( // у этого юзера будет роль, все хорошо -> user.Role
+		&models.User{
+			Id: int(userId), // вот тут с типом проблема
+		})
+	if err != nil { // TODO:подправить обработку ошибки
+		c.JSON(http.StatusInternalServerError, "")
+	}
 
 	var news struct {
 		Header string `json:"header"`
