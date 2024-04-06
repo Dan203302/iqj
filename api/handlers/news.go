@@ -56,11 +56,11 @@ func HandleGetNewsById(c *gin.Context) {
 }
 
 func HandleAddNews(c *gin.Context) {
-	userId, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, "User ID not found")
-		return
-	}
+	//userId, exists := c.Get("userId")
+	//if !exists {
+	//	c.JSON(http.StatusUnauthorized, "User ID not found")
+	//	return
+	//}
 
 	// TODO сделать проверку роли пользователя из бд
 

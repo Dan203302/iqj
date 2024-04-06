@@ -5,6 +5,7 @@ import (
 	"iqj/api/handlers"
 	"iqj/api/middleware"
 	"iqj/api/scraper"
+	"iqj/config"
 	"iqj/database"
 	"log"
 )
@@ -39,7 +40,7 @@ func main() {
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.
-	if err := r.Run(":3333"); err != nil {
+	if err := r.RunTLS(":3333", config.SertificatePath, config.KeyPath); err != nil {
 		log.Fatal(err)
 	}
 }

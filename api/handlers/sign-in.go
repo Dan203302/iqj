@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"iqj/api/middleware"
 	"iqj/database"
 	"iqj/models"
 	"net/http"
@@ -32,12 +31,12 @@ func HandleSignIn(c *gin.Context) {
 
 	// Получаем токен для пользователя
 	// TODO передать id пользователя из бд в функцию
-	token, err := middleware.GenerateJWT(id)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "")
-		return
-	}
+	//token, err := middleware.GenerateJWT(id)
+	//if err != nil {
+	//	c.String(http.StatusInternalServerError, "")
+	//	return
+	//}
 
 	//Выводим токен в формате JSON
-	c.JSON(http.StatusOK, token)
+	//c.JSON(http.StatusOK, token)
 }
