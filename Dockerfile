@@ -6,6 +6,8 @@ WORKDIR /iqj
 
 COPY . .
 
+# init db
+
 RUN go mod download
 RUN go build /iqj/app/main.go
 

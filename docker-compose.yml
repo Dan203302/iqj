@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres
+      - postgres # env db values maybe?
     networks:
       - postgres
     restart: unless-stopped
