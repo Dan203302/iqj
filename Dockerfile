@@ -7,7 +7,7 @@ WORKDIR /iqj
 COPY . .
 
 RUN go mod download
-RUN go build iqj/app/main.go
+RUN go build /iqj/app/main.go
 
 EXPOSE $PORT
 
