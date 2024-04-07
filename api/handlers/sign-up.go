@@ -22,7 +22,7 @@ func HandleSignUp(c *gin.Context) {
 	}
 	user.Password = string(hashedPassword)
 
-	database.Database.AddUser(user) // и тип тут поменяйте, функция рабочая просто впихните нужные данные
+	database.Database.AddUser(user) // и тип тут поменяйте, функция рабочая просто впихните нужные данные, если не разберетесь с userRole то напишите мне
 	// TODO: передайте фронтенду чтобы у них регистрация была полноценная, чтобы он только после получения всех данных отправлял сюда запрос
 	c.JSON(http.StatusOK, user)
 }
