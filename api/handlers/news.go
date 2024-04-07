@@ -56,11 +56,11 @@ func HandleGetNewsById(c *gin.Context) {
 }
 
 func HandleAddNews(c *gin.Context) {
-	userId, exists := c.Get("userId")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, "User ID not found")
-		return
-	}
+	//userId, exists := c.Get("userId")
+	//if !exists {
+	//	c.JSON(http.StatusUnauthorized, "User ID not found")
+	//	return
+	//}
 
 	// TODO: Разберитесь с типами пж мне лень, там на стаковерфлоу есть решение я даже нашел но мне было лень
 	user, err := database.Database.GetRole( // у этого юзера будет роль, все хорошо -> user.Role
