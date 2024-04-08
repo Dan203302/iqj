@@ -56,27 +56,29 @@ func HandleGetNewsById(c *gin.Context) {
 }
 
 func HandleAddNews(c *gin.Context) {
-	//userId, exists := c.Get("userId")
-	//if !exists {
-	//	c.JSON(http.StatusUnauthorized, "User ID not found")
-	//	return
-	//}
-
-	// TODO: Разберитесь с типами пж мне лень, там на стаковерфлоу есть решение я даже нашел но мне было лень
+	userIdToConv, exists := c.Get("userId")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, "User ID not found")
+		return
+	}
+	userId := userIdToConv.(int)
 	user, err := database.Database.GetRole( // у этого юзера будет роль, все хорошо -> user.Role
 		&models.User{
-			Id: int(userId), // вот тут с типом проблема
+			Id: userId,
 		})
 	if err != nil { // TODO:подправить обработку ошибки
 		c.JSON(http.StatusInternalServerError, "")
 	}
-
-	var news struct {
-		Header string `json:"header"`
-		Text   string `json:"text"`
+	if user.Role == "moderator" {
+		var news struct {
+			Header string `json:"header"`
+			Text   string `json:"text"`
+		}
+		c.BindJSON(&news)
+		newsbl := models.NewsBlock{Header: news.Header, ImageLink: []string{}, Link: "", PublicationTime: ""}
+		database.Database.AddNews(newsbl, news.Text)
+		c.JSON(http.StatusOK, news)
+	} else {
+		c.JSON(http.StatusForbidden, "")
 	}
-	c.BindJSON(&news)
-	newsbl := models.NewsBlock{Header: news.Header, ImageLink: []string{}, Link: "", PublicationTime: ""}
-	database.Database.AddNews(newsbl, news.Text)
-	c.JSON(http.StatusOK, news)
 }

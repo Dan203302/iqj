@@ -29,4 +29,4 @@ type UserRole interface {
 }
 
 func (st *Student) Role() string  { return "student" }
-func (tch *Teacher) Role() string { return "student" }
+func (tch *Teacher) Role() string { return "teacher" }

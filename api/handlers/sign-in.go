@@ -21,7 +21,7 @@ func HandleSignIn(c *gin.Context) {
 	}
 
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
-	userId, err := database.Database.CheckUser(&signingUser)
+	user, err := database.Database.CheckUser(&signingUser)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
 		return
@@ -30,7 +30,7 @@ func HandleSignIn(c *gin.Context) {
 	// Если все хорошо сделаем JWT токен
 
 	// Получаем токен для пользователя
-	token, err := middleware.GenerateJWT(userId)
+	token, err := middleware.GenerateJWT(user.Id)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "")
 		return
