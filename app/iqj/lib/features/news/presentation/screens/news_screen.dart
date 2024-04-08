@@ -60,9 +60,11 @@ class _NewsBloc extends State<NewsScreen>{
 
   @override
   Widget build(BuildContext context) {
-    // final newsBloc = BlocProvider.of<NewsBloc>(context);
+    //final newsBloc = BlocProvider.of<NewsBloc>(context);
     // newsBloc.add(FetchNews());
     //final _newslistbloc=NewsBloc(context);
+    final newsBloc = NewsBloc();
+    GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
 
     return Scaffold(
@@ -121,7 +123,7 @@ class _NewsBloc extends State<NewsScreen>{
               children: [
                 IconButton(
                   onPressed: () {
-                    admin_button(context);
+                    admin_button(context,newsBloc);
                   },
                   icon: const Icon(Icons.edit),
                 ),
@@ -287,6 +289,7 @@ class _NewsBloc extends State<NewsScreen>{
 
           Expanded(
             child: RefreshIndicator(
+              key: _refreshIndicatorKey,
               onRefresh: () async {
                 final completer=Completer();
                 _newsbloc.add(LoadNewsList(completer: completer));

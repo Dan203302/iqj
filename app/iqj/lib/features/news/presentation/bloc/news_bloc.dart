@@ -18,6 +18,13 @@ class LoadNewsList extends NewsEvent{
   
 }
 
+class AddNewsEvent extends NewsEvent{
+  final NewsSmall news;
+
+  AddNewsEvent({required this.news});
+}
+
+
 // States
 abstract class NewsState {}
 
@@ -46,35 +53,47 @@ class NewsListLoadingFail extends NewsState{
 
 // Bloc
 class NewsBloc extends Bloc<NewsEvent, NewsState> {
-  //final NewsRepository newsRepository;
-  //final NewsArticle newsRepository;
-
-  // NewsBloc(this.newsRepository) : super(NewsInitial());
-
-  // Stream<NewsState> mapEventToState(NewsEvent event) async* {
-  //   if (event is FetchNews) {
-  //     yield NewsLoading();
-  //     try {
-  //       final List<News> newsList = await newsRepository.fetchNews();
-  //       yield NewsLoaded(newsList);
-  //     } catch (e) {
-  //       yield NewsError("Failed to fetch news: $e");
-  //     }
-  //   }
-  // }
   NewsBloc(): super(NewsInitial()){
     on<LoadNewsList>((event,emit) async{
-    try{
-      if (state is !NewsLoaded){
-        emit(NewsLoading());
+      try {
+        if (state is! NewsLoaded) {
+          emit(NewsLoading());
+        }
+        final List<NewsSmall> newsList = await NewsArticle().getNews();
+        emit(NewsLoaded(newsList));
+      } catch (e) {
+        emit(NewsListLoadingFail(except: e));
+      } finally {
+        event.completer?.complete();
       }
-      final List<NewsSmall> newsList = await NewsArticle().getNews();
-      emit(NewsLoaded(newsList));
-    }catch(e){
-      emit(NewsListLoadingFail(except: e));
-    }finally{
-      event.completer?.complete();
-    }
-  });
+    });
+  
+    // on<AddNewsEvent>((event, emit) async{
+    //   try {
+    //     if (state is! NewsLoaded) {
+    //       emit(NewsLoading());
+    //     }
+    //     final List<NewsSmall> newsList = await NewsArticle().getNews();
+    //     final updatedNewsList = newsList + [event.news];
+    //     //final updatedNewsList = [event.news];
+    //     emit(NewsLoaded(updatedNewsList));
+    //   } catch (e) {
+    //     emit(NewsListLoadingFail(except: e));
+    //   }
+    // });
+on<AddNewsEvent>((event, emit) {
+  try {
+    if (state is! NewsLoaded) {
+          emit(NewsLoading());
+        }
+      final NewsLoaded currentState = state as NewsLoaded;
+      final List<NewsSmall> updatedNewsList = List.from(currentState.newsList); // Создаем копию текущего списка новостей
+      updatedNewsList.add(event.news); // Добавляем новую новость
+      emit(NewsLoaded(updatedNewsList)); // Отправляем обновленный список новостей
+  } catch (e) {
+    emit(NewsError("Error while adding news: $e"));
+  }
+});
+
   }
 }
