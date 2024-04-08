@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iqj/features/news/admin/admin_button.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 //import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
@@ -120,13 +121,18 @@ class _NewsBloc extends State<NewsScreen>{
               children: [
                 IconButton(
                   onPressed: () {
+                    admin_button(context);
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: () {
                   },
                   icon: SvgPicture.asset('assets/icons/news/bookmark2.svg'),
                 ),
                 IconButton(
                   onPressed: () {
                     searchfilter();
-                    
                   },
                   icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
                 ),
@@ -138,7 +144,7 @@ class _NewsBloc extends State<NewsScreen>{
       body: Column(
         children: [
                 if (flag_close) Container(
-            margin: const EdgeInsets.only(top: 12),
+                  margin: const EdgeInsets.only(top: 12),
                   padding: const EdgeInsets.only(left: 12, right: 12),
                   height: 80,
                   alignment: Alignment.center,
