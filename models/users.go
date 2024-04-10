@@ -23,10 +23,3 @@ type Teacher struct {
 	Id     int   `json:"id"`     // Совпадает с User.Id
 	Groups []int `json:"groups"` // id групп
 }
-
-type UserRole interface {
-	Role() string
-}
-
-func (st *Student) Role() string  { return "student" }
-func (tch *Teacher) Role() string { return "teacher" }
