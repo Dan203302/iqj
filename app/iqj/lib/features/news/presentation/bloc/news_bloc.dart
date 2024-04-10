@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iqj/features/news/data/news_repository.dart';
+import 'package:iqj/features/news/data/fake_news_repository.dart';
 import 'package:iqj/features/news/domain/news.dart';
 
 // Events

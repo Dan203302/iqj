@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iqj/features/news/domain/news.dart';
 
+
 class NewsCard extends StatelessWidget {
   final News news;
 
@@ -49,7 +50,7 @@ class NewsCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(DateFormat.yMMMd('ru_RU').format(news.publicationTime)),
+              Text(DateFormat('yyyy.MM.dd').format(news.publicationTime)),
             ],
           ),
         ),

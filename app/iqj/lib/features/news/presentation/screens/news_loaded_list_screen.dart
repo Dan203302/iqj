@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
-import 'package:iqj/features/old/news/newsListGenerator.dart';
 
 
 class NewsList extends StatefulWidget{
@@ -21,7 +22,7 @@ class _NewsListState extends State<NewsList>{
   // String? title;
   // String? date;
   // String? decoration;
-  NewsSmall? news;
+  late News news;
 
   bool flag_open_tags = false;
   void open_close_tags(){
@@ -33,8 +34,8 @@ class _NewsListState extends State<NewsList>{
   @override
   void didChangeDependencies(){
     final args = ModalRoute.of(context)?.settings.arguments;
-    assert(args!=null && args is NewsSmall , "Check args");
-    news = args as NewsSmall;
+    assert(args!=null && args is News , "Check args");
+    news = args as News;
     //title = args as String;
     setState(() {
     });
@@ -74,12 +75,12 @@ class _NewsListState extends State<NewsList>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(news?.thumbnail ?? '...'),
+              Image.network(news.thumbnail),
               Row(
                 children: [
                   Expanded(
                     child: Text(
-                      news?.title ?? '...',
+                      news.title,
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -93,7 +94,7 @@ class _NewsListState extends State<NewsList>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(news?.date ?? '...'),
+                  Text(DateFormat('yyyy.MM.dd').format(news.publicationTime)),
                   const Spacer(),
                   if (!flag_open_tags) IconButton(
                     onPressed:() {
