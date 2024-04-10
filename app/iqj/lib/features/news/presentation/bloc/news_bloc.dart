@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/domain/news.dart';
-import 'package:iqj/features/old/news/newsListGenerator.dart';
 
 // Events
 abstract class NewsEvent {}
@@ -19,7 +18,7 @@ class LoadNewsList extends NewsEvent{
 }
 
 class AddNewsEvent extends NewsEvent{
-  final NewsSmall news;
+  final News news;
 
   AddNewsEvent({required this.news});
 }
@@ -33,7 +32,7 @@ class NewsInitial extends NewsState {}
 class NewsLoading extends NewsState {}
 
 class NewsLoaded extends NewsState {
-  final List<NewsSmall> newsList;
+  final List<News> newsList;
 
   NewsLoaded(this.newsList);
 }
@@ -59,7 +58,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
         if (state is! NewsLoaded) {
           emit(NewsLoading());
         }
-        final List<NewsSmall> newsList = await NewsArticle().getNews();
+        final List<News> newsList = await getNews();
         emit(NewsLoaded(newsList));
       } catch (e) {
         emit(NewsListLoadingFail(except: e));
@@ -73,7 +72,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     //     if (state is! NewsLoaded) {
     //       emit(NewsLoading());
     //     }
-    //     final List<NewsSmall> newsList = await NewsArticle().getNews();
+    //     final List<News> newsList = await NewsArticle().getNews();
     //     final updatedNewsList = newsList + [event.news];
     //     //final updatedNewsList = [event.news];
     //     emit(NewsLoaded(updatedNewsList));
@@ -87,7 +86,7 @@ on<AddNewsEvent>((event, emit) {
           emit(NewsLoading());
         }
       final NewsLoaded currentState = state as NewsLoaded;
-      final List<NewsSmall> updatedNewsList = List.from(currentState.newsList); // Создаем копию текущего списка новостей
+      final List<News> updatedNewsList = List.from(currentState.newsList); // Создаем копию текущего списка новостей
       updatedNewsList.add(event.news); // Добавляем новую новость
       emit(NewsLoaded(updatedNewsList)); // Отправляем обновленный список новостей
   } catch (e) {

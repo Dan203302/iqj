@@ -8,7 +8,7 @@ Future<List<News>> getNews() async {
       scheme: 'https',
       host: 'mireaiqj.ru',
       path: '/news',
-      queryParameters: {'offset': 0, 'count': 15},
+      queryParameters: {'offset': '0', 'count': '15'},
     ),
   );
   //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы

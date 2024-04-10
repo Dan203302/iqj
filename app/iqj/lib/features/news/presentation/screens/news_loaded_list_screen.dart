@@ -120,7 +120,7 @@ class _NewsListState extends State<NewsList>{
                 ),
                 ),
               ),
-              Text(news?.description ?? '...'),
+              // Text(news?.description ?? '...'),
             ],
           ),
         ),

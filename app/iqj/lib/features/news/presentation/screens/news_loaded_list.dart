@@ -1,12 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
-import 'package:iqj/features/news/presentation/screens/news_screen.dart';
-import 'package:iqj/features/old/news/newsListGenerator.dart';
+import 'package:intl/intl.dart';
+import 'package:iqj/features/news/domain/news.dart';
 
 class NewsCard extends StatelessWidget {
-  final NewsSmall news;
+  final News news;
 
   const NewsCard({super.key, required this.news});
 
@@ -50,9 +49,7 @@ class NewsCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(news.date),
-              const SizedBox(height: 8),
-              Text(news.description),
+              Text(DateFormat.yMMMd('ru_RU').format(news.publicationTime)),
             ],
           ),
         ),
