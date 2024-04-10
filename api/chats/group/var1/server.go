@@ -1,4 +1,4 @@
-packges var1
+package var1
 
 import (
 	"fmt"

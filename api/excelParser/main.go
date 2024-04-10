@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	_ "fmt"
 	"strings"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
