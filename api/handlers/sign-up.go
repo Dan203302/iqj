@@ -19,7 +19,7 @@ func HandleSignUp(c *gin.Context) {
 	password := user.Data.Password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		c.String(http.StatusInternalServerError, err.Error())
+		c.String(http.StatusBadRequest, err.Error())
 	}
 	user.Data.Password = string(hashedPassword)
 
