@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"github.com/lib/pq"
 	"iqj/models"
 	"time"
@@ -32,7 +31,7 @@ func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 		}
 
 	} else {
-		return fmt.Errorf("news is already existing in database")
+		return nil
 	}
 
 	return nil
