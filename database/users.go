@@ -15,7 +15,7 @@ import (
 //	}
 //
 // Добавляет пользователя по полученной модели (необходимы name, password, role), добавление данных в таблицу о студенте/преподавателе
-func (st *Storage) AddUser(user *models.User, userRole models.UserRole) error {
+func (st *Storage) AddUser(user *models.User) error {
 	st.Mutex.Lock()
 	defer st.Mutex.Unlock()
 
@@ -24,24 +24,6 @@ func (st *Storage) AddUser(user *models.User, userRole models.UserRole) error {
 		user.Name, user.Data.Email, user.Data.Password, user.Role)
 	if err != nil {
 		return nil
-	}
-
-	switch userRole.Role() {
-	case "student":
-		err = st.createStudent(userRole.(*models.Student))
-		if err != nil {
-			return nil
-		}
-	case "teacher":
-		err = st.createTeacher(userRole.(*models.Teacher))
-		if err != nil {
-			return nil
-		}
-	default:
-		if user.Role == "moderator" {
-			return nil
-		}
-		return fmt.Errorf("wrong data (userRole)")
 	}
 
 	return err
