@@ -20,7 +20,7 @@ Future<List<News>> getNews() async {
       return News(
         id: json['id'] as String,
         title: json['header'] as String,
-        publication_time: DateTime.parse(['publication_time'] as String),
+        publicationTime: DateTime.parse(['publication_time'] as String),
         thumbnail: (json['image_link'] as List<String>)[0],
         link: json['link'] as String,
       );
