@@ -76,7 +76,7 @@ class _NewsBloc extends State<NewsScreen>{
         height: 50.0, // Задаем высоту
         decoration: BoxDecoration(
           color: const Color.fromRGBO(239, 172, 0, 1), // Цвет кнопки
-          borderRadius: BorderRadius.circular(10.0), // Задаем скругленные углы, чтобы квадрат выглядел как кнопка
+          borderRadius: BorderRadius.circular(10.0), 
         ),
         child: IconButton(
           onPressed: () {

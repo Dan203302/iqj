@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iqj/features/news/admin/news/general_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
@@ -80,7 +81,7 @@ void admin_button(BuildContext context) {
                 ),
                 backgroundColor: Colors.white,
                 surfaceTintColor: Colors.white,
-                content: two_button_add_news(),
+                content: two_button_add_news(context),
                 );
 
               showDialog(
@@ -91,7 +92,7 @@ void admin_button(BuildContext context) {
               );
 }
 
-Widget two_button_add_news(){
+Widget two_button_add_news(BuildContext context){
   return Container(
     height: 140,
     width: 325,
@@ -113,7 +114,9 @@ Widget two_button_add_news(){
                     elevation: 5.0,
                     child: InkWell(
                       onTap: () {
-                        // Действие при нажатии на кнопку
+                        Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => GeneralNews())  // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
+                        );
                       },
                       child: const Center(
                         //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -140,7 +143,9 @@ Widget two_button_add_news(){
                     elevation: 5.0,
                     child: InkWell(
                       onTap: () {
-                        // Действие при нажатии на кнопку
+                        Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => GeneralNews())
+                        );
                       },
                       child: const Center(
                         //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
