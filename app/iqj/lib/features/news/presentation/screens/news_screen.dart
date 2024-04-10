@@ -71,6 +71,21 @@ class _NewsBloc extends State<NewsScreen>{
       // appBar: AppBar(
       //   title: const Text('News'),
       // ),
+      floatingActionButton: Container(
+        width: 50.0, // Задаем ширину
+        height: 50.0, // Задаем высоту
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(239, 172, 0, 1), // Цвет кнопки
+          borderRadius: BorderRadius.circular(10.0), // Задаем скругленные углы, чтобы квадрат выглядел как кнопка
+        ),
+        child: IconButton(
+          onPressed: () {
+            admin_button(context);
+          },
+          icon: const Icon(Icons.edit),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 72,
@@ -121,12 +136,6 @@ class _NewsBloc extends State<NewsScreen>{
             padding: const EdgeInsets.only(right: 12),
             child: Row(
               children: [
-                IconButton(
-                  onPressed: () {
-                    admin_button(context,newsBloc);
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
                 IconButton(
                   onPressed: () {
                   },
