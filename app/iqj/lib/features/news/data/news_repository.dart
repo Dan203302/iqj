@@ -1,13 +1,29 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:iqj/features/news/domain/news.dart';
 
-class NewsRepository {
-  Future<List<News>> fetchNews() async {
-    return Future.delayed(const Duration(seconds: 1), () {
-      return [
-        News(title: "Новость 1", description: "Описание новости 1"),
-        News(title: "Новость 2", description: "Описание новости 2"),
-        News(title: "Новость 3", description: "Описание новости 3"),
-      ];
-    });
-  }
+Future<List<News>> getNews() async {
+  final response = await http.get(
+    Uri(
+      scheme: 'https',
+      host: 'mireaiqj.ru',
+      path: '/news',
+      queryParameters: {'offset': 0, 'count': 15},
+    ),
+  );
+  //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
+  final List body =
+      (json.decode(response.body) as Map<String, dynamic>)['products'] as List;
+  return body.map(
+    (e) {
+      final json = e as Map<String, dynamic>;
+      return News(
+        id: json['id'] as String,
+        title: json['header'] as String,
+        publication_time: DateTime.parse(['publication_time'] as String),
+        thumbnail: (json['image_link'] as List<String>)[0],
+        link: json['link'] as String,
+      );
+    },
+  ).toList();
 }
