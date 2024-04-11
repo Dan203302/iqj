@@ -18,7 +18,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
 
-  late bool firstLaunch = false;
+  late bool firstLaunch = true;
 
   @override
   void initState() {

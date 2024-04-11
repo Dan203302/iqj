@@ -19,4 +19,9 @@ const List<WelcomePanel> welcomePanelList = [
     image: 'assets/images/welcome/welcome_3.png',
     imagePosition: 'top',
   ),
+  WelcomePanel(
+    title: 'Последний \nштрих!',
+    image: 'assets/images/welcome/welcome_4.png',
+    imagePosition: 'top',
+  ),
 ];

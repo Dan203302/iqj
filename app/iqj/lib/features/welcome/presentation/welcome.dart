@@ -143,7 +143,7 @@ class _WelcomeState extends State<Welcome> {
                             onTap: () {
                               if (onLastPage) {
                                 userWelcomed();
-                                Navigator.pushReplacementNamed(context, '/');
+                                Navigator.pushReplacementNamed(context, 'authorise');
                               } else {
                                 _controller.nextPage(
                                   duration: const Duration(milliseconds: 240),
@@ -154,7 +154,7 @@ class _WelcomeState extends State<Welcome> {
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
                               curve: Curves.easeOut,
-                              width: onFirstPage
+                              width: (onFirstPage || onLastPage)
                                   ? 300
                                   : 225, //На первой странице кнопка "дальше" просто перекрывает "назад"
                               decoration: BoxDecoration(
@@ -166,7 +166,7 @@ class _WelcomeState extends State<Welcome> {
                               ),
                               child: Align(
                                 child: Text(
-                                  onLastPage ? 'Приступим!' : 'Далее',
+                                  onLastPage ? 'Вход' : 'Далее',
                                   style: TextStyle(
                                     fontFamily: 'Inter',
                                     fontSize: 20,
