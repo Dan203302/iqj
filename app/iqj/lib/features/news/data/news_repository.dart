@@ -4,9 +4,10 @@ import 'package:iqj/features/news/domain/news.dart';
 
 Future<List<News>> getNews() async {
   final response = await http.get(
+    //https://92.63.105.190/news?offset=0&count=200
     Uri(
-      scheme: 'https',
-      host: 'mireaiqj.ru',
+      scheme: 'https', 
+      host: '92.63.105.190',
       path: '/news',
       queryParameters: {'offset': '0', 'count': '15'},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы

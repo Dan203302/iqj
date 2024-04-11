@@ -86,11 +86,11 @@ class _NewsBloc extends State<NewsScreen>{
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: _isFilter ? Container(
           width: 285,
           height: 23,
@@ -161,7 +161,8 @@ class _NewsBloc extends State<NewsScreen>{
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 250, 228, 171),
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    // В дизайне же нет рамки вроде не было рамки 🤨
                     border: Border.all(
                       color: const Color.fromARGB(255, 255, 166, 0),
                     ),

@@ -64,11 +64,11 @@ class _ScheduleState extends State<Schedule> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
           'Расписание',
           style: Theme.of(context).textTheme.titleLarge,
@@ -102,7 +102,7 @@ class _ScheduleState extends State<Schedule> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: const Color.fromARGB(255, 250, 228, 171),
+              color: Theme.of(context).colorScheme.primaryContainer,
               border: Border.all(
                 color: const Color.fromARGB(255, 255, 166, 0),
               ),
