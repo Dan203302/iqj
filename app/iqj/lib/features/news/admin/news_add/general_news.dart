@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iqj/features/news/admin/news_add/news_add_button.dart';
+import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 
 class GeneralNews extends StatelessWidget {
   @override
@@ -121,7 +123,7 @@ class GeneralNews extends StatelessWidget {
           ),
           Container(
             height: 90,
-            margin: EdgeInsets.only(top: 10, left: 5,right: 5),
+            margin: EdgeInsets.only(top: 10, left: 5,right: 5,bottom: 30),
             decoration: BoxDecoration(
               color: Color.fromRGBO(44, 45, 47, 1),
               borderRadius: BorderRadius.circular(12),
@@ -147,6 +149,65 @@ class GeneralNews extends StatelessWidget {
               ),
             ),
           ),
+          Container(
+            //padding: EdgeInsets.only(top: 40),
+            width: 328,
+            height: 427,
+            //color: Color.fromRGBO(44, 45, 47, 1),
+            //color: Colors.blue,
+            margin: EdgeInsets.only(top: 10, left: 5,right: 5),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(44, 45, 47, 1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(width: 1),
+            ),
+            child: Column(
+              children: [
+                Text('Теги'),
+                create_body_tags_black(),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 10,top: 25),
+            child: Text('Дата публикации',
+            textAlign: TextAlign.left,
+            style: 
+            TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 16, color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10, left: 5,right: 5),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(44, 45, 47, 1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(width: 1),
+            ),
+            child: const TextField(
+              decoration: InputDecoration(
+                // border: OutlineInputBorder(
+                //   borderRadius: BorderRadius.circular(20.0),
+                // ),
+                //icon: Icon(Icons.search),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent)
+                ),
+                hintText: "  01.03.24",
+                hintStyle: TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.0,
+                  height: 1.5,
+                  color: Color.fromRGBO(255, 255, 255, 0.6),
+                ),
+              ),
+            ),
+          ),
+          news_add_button(),
         ],
       ),
     );

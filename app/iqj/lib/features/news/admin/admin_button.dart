@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iqj/features/news/admin/news/general_news.dart';
+import 'package:iqj/features/news/admin/news_add/general_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
@@ -116,6 +116,7 @@ Widget two_button_add_news(BuildContext context){
                       onTap: () {
                         Navigator.push(context, 
                         MaterialPageRoute(builder: (context) => GeneralNews())  // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
+                        // и да, кнопку создать уже сделал, она лежит в файле news_add_button
                         );
                       },
                       child: const Center(
