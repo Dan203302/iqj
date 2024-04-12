@@ -24,7 +24,6 @@ void showMenuDialog(BuildContext context) {
         fontWeight: FontWeight.bold,
       ),
     ),
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
     content: const Text("Todo"),
     actions: [
       okButton,
@@ -56,8 +55,8 @@ class _EditButtonState extends State<EditButton> {
         child: TextButton(
           style: ElevatedButton.styleFrom(
             //alignment: Alignment.center,
-            backgroundColor: Colors.black45,
-            fixedSize: Size(100, 80),
+            backgroundColor: Color.fromARGB(255, 239, 172, 0),
+            fixedSize: Size(195, 60),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(60),
             ),
@@ -66,11 +65,11 @@ class _EditButtonState extends State<EditButton> {
             showMenuDialog(context);
           },
           child: const Text(
-            "Ред.",
+            "Редактировать",
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Inter',
-              fontSize: 24,
+              fontSize: 21,
               fontWeight: FontWeight.w500,
             ),
           ),

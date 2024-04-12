@@ -22,7 +22,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
           decoration: BoxDecoration(color: const Color(0xFFEFAC00), shape: BoxShape.circle),
           child: ClipOval(
             child: SizedBox.fromSize(
-              size: Size.fromRadius(128), // Image radius
+              size: Size.fromRadius(72), // Image radius
               child: Image.network('https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg', fit: BoxFit.cover),
             ),
           ),

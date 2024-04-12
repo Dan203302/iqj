@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:iqj/features/account/domain/mailButton.dart';
 import 'package:iqj/features/account/domain/profilePicture.dart';
 import 'package:iqj/features/account/domain/profileInfo.dart';
 import 'package:iqj/features/account/domain/listButton.dart';
 import 'package:iqj/features/account/domain/editButton.dart';
 import 'package:iqj/features/account/domain/logoffButton.dart';
-import 'package:iqj/main.dart';
+// import 'package:iqj/main.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -81,11 +82,9 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
-        backgroundColor: Colors.white,
         title: Text(
           'Личный кабинет',
           style: Theme.of(context).textTheme.titleLarge,
@@ -97,10 +96,30 @@ class _AccountScreenState extends State<AccountScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 0),
-              ProfilePicture(),
-              SizedBox(height: 8),
-              ProfileInfo(),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ProfilePicture(), 
+                  SizedBox(width: 24),
+                  ProfileInfo(),
+                ],
+              ),
+              Expanded(
+                child: Column(
+                children: [
+                  SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      EditButton(),
+                      SizedBox(width: 10),
+                      MailButton(),
+                    ]
+                  ),
+                ],
+              )
+              ),
               SizedBox(height: 12),
               Expanded(
               child: Center(
@@ -121,9 +140,8 @@ class _AccountScreenState extends State<AccountScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  EditButton(),
                   LogoffButton(),
-                ],
+                ]
               ),
               ),
             ],

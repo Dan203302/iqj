@@ -31,7 +31,6 @@ void showMenuDialog(BuildContext context) {
         fontWeight: FontWeight.bold,
       ),
     ),
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
     content: const Text("Todo"),
     actions: [
       okButton,
