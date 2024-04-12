@@ -56,10 +56,13 @@ class _WelcomeState extends State<Welcome> {
                             textAlign: welcomePanelList[index].text == null
                                 ? TextAlign.center
                                 : TextAlign.left,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 36,
                               fontWeight: FontWeight.w700,
+                              color: Theme.of(context)
+                                .colorScheme
+                                .onBackground,
                             ),
                           ),
                         ),
