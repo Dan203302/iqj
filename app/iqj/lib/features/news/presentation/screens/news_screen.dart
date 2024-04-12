@@ -1,27 +1,14 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:async';
-//import 'dart:js';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/admin_button.dart';
-import 'package:iqj/features/news/data/news_repository.dart';
-//import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
-import 'package:iqj/features/news/presentation/screens/announcement.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_data.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_tags.dart';
-import 'package:iqj/features/old/news/newsListGenerator.dart';
-import 'package:iqj/features/old/schedule.dart';
-import 'package:iqj/main.dart';
-import 'package:iqj/theme/text_theme.dart';
-import 'package:shimmer/shimmer.dart';
-// import 'package:iqj/features/news/domain/news.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:iqj/features/auth/domain/emailField.dart';
 import 'package:iqj/features/auth/domain/passwordField.dart';
 import 'package:iqj/main.dart';
@@ -35,7 +34,6 @@ void showChpwdDialog(BuildContext context) {
         fontWeight: FontWeight.bold,
       ),
     ),
-    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
     content: const Text("Todo"),
     actions: [
       okButton,
@@ -67,11 +65,7 @@ class _LoginScreenState extends State<AuthScreen> {
     //final TextEditingController _controllerEmail = TextEditingController();
     //final TextEditingController _controllerPassword = TextEditingController();
 
-    return MaterialApp(
-      title: "Вход",
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.white,
+    return  Scaffold(
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -133,7 +127,7 @@ class _LoginScreenState extends State<AuthScreen> {
                       style: ElevatedButton.styleFrom(
                         //alignment: Alignment.center,
                         backgroundColor: const Color(0xFFEFAC00),
-                        fixedSize: Size(160, 60),
+                        fixedSize: const Size(160, 60),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
                         ),
@@ -166,7 +160,6 @@ class _LoginScreenState extends State<AuthScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
