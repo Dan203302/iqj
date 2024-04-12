@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iqj/features/welcome/data/welcome_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -87,15 +89,56 @@ class _WelcomeState extends State<Welcome> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Индикатор
-                  SmoothPageIndicator(
-                    controller: _controller,
-                    count: welcomePanelList.length,
-                    effect: JumpingDotEffect(
-                      activeDotColor:
-                          Theme.of(context).colorScheme.inversePrimary,
-                      dotColor: Theme.of(context).colorScheme.surfaceVariant
+                  if (!onLastPage)
+                    SmoothPageIndicator(
+                      controller: _controller,
+                      count: welcomePanelList.length - 1,
+                      effect: JumpingDotEffect(
+                        activeDotColor:
+                            Theme.of(context).colorScheme.inversePrimary,
+                        dotColor: Theme.of(context).colorScheme.surfaceVariant
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 32),
+                  if (onLastPage)
+                    SizedBox(
+                      height: 60,
+                      width: 300,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: GestureDetector(
+                          onTap: () {
+                            userWelcomed();
+                            Navigator.pushReplacementNamed(context, '/');
+                          },
+                          child: Container(
+                            height: 60,
+                            width: 300,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inversePrimary,
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(30)),
+                              ),
+                            child: Align( 
+                              alignment: Alignment.center, 
+                              child: Text(
+                                'Регистрация',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   const SizedBox(height: 32),
                   SizedBox(
                     height: 60,
