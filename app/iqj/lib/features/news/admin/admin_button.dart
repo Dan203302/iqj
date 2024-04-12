@@ -5,7 +5,7 @@ import 'package:iqj/features/news/admin/general_news.dart';
 import 'package:iqj/features/news/admin/special_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
-import 'package:iqj/features/old/news/newsListGenerator.dart';
+
 
 // не удаляйте плиз :) нужно потом будет
 
