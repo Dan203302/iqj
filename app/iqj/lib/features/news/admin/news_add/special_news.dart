@@ -238,6 +238,81 @@ class SpecialNews extends StatelessWidget {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(right: 5, left: 8),
+                    height: 35,
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(24.0),
+                      color: const Color.fromRGBO(44, 45, 47, 1),
+                    ),
+                    child: TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "1 день",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    margin: const EdgeInsets.only(right: 5),
+                    height: 35,
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(24.0),
+                      color: const Color.fromRGBO(44, 45, 47, 1),
+                    ),
+                    child: TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "3 дня",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(right: 5),
+                    height: 35,
+                    decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(24.0),
+                      color: const Color.fromRGBO(44, 45, 47, 1),
+                    ),
+                    child: TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "Неделя",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           const Padding(
             padding: EdgeInsets.only(left: 10, top: 25),
             child: Text(
