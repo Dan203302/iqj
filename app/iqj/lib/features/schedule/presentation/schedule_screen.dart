@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:iqj/features/schedule/presentation/calendar.dart';
-import 'package:iqj/features/schedule/presentation/classes.dart';
+import 'package:iqj/features/schedule/presentation/widgets/calendar.dart';
+import 'package:iqj/features/schedule/presentation/widgets/lesson_list.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -21,7 +21,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       body: ListView(
         children:[
           Calendar(),
-          Classes(),
+          Lessons(),
         ]
       ),
     );
