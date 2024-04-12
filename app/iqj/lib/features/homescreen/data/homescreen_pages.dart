@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iqj/features/account/presentation/screens/account_screen.dart';
 import 'package:iqj/features/homescreen/domain/homescreen_page.dart';
 import 'package:iqj/features/news/presentation/screens/news_screen.dart';
-import 'package:iqj/features/old/schedule.dart';
+import 'package:iqj/features/schedule/presentation/schedule_screen.dart';
 
 const pages = <HomeScreenPage>[
   HomeScreenPage(
@@ -13,7 +13,7 @@ const pages = <HomeScreenPage>[
   HomeScreenPage(
     label: 'Рассписание',
     icon: Icon(Icons.calendar_today),
-    widget: Schedule(),
+    widget: ScheduleScreen(),
   ),
   HomeScreenPage(
     label: 'Чаты',
