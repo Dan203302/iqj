@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iqj/features/news/admin/news_add/general_news.dart';
-import 'package:iqj/features/news/admin/news_add/special_news.dart';
+import 'package:iqj/features/news/admin/general_news.dart';
+import 'package:iqj/features/news/admin/special_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
