@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/admin/news_add/general_news.dart';
+import 'package:iqj/features/news/admin/news_add/special_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
 import 'package:iqj/features/old/news/newsListGenerator.dart';
 
 // не удаляйте плиз :) нужно потом будет
 
-// void admin_button(BuildContext context,NewsBloc newsBloc) { 
+// void admin_button(BuildContext context,NewsBloc newsBloc) {
 //   TextEditingController _titleController = TextEditingController();
 //   TextEditingController _contentController = TextEditingController();
 //   // final _newsBloc = newsBloc.BlocProvider(
@@ -51,9 +52,9 @@ import 'package:iqj/features/old/news/newsListGenerator.dart';
 //                 // );
 //                 // newsBloc.add(AddNews(news));
 //                 final NewsSmall news = NewsSmall(
-//                   thumbnail: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg", 
-//                 title: _titleController.text, 
-//                 date: "13.12.2005 :)", 
+//                   thumbnail: "https://cdn.dummyjson.com/product-images/1/thumbnail.jpg",
+//                 title: _titleController.text,
+//                 date: "13.12.2005 :)",
 //                 description: _contentController.text,
 //                 );
 //                 //newsbloc.add(AddNewsEvent(news: news));
@@ -70,36 +71,37 @@ import 'package:iqj/features/old/news/newsListGenerator.dart';
 //     );
 // }
 
+void admin_button(BuildContext context) {
+  final AlertDialog alert = AlertDialog(
+    title: const Text(
+      "Создать новость",
+      style: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.white,
+    content: two_button_add_news(context),
+  );
 
-void admin_button(BuildContext context) { 
-              final AlertDialog alert = AlertDialog(
-                title: const Text("Создать новость",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
-                content: two_button_add_news(context),
-                );
-
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return alert;
-                },
-              );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
 
-Widget two_button_add_news(BuildContext context){
+Widget two_button_add_news(BuildContext context) {
   return Container(
     height: 140,
     width: 325,
     decoration: const BoxDecoration(
-      color: Colors.white, 
+      color: Colors.white,
       border: Border(
-        top: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),      ),
+        top: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
+      ),
     ),
     child: Column(
       children: [
@@ -107,60 +109,63 @@ Widget two_button_add_news(BuildContext context){
           height: 65,
           width: 277,
           child: Padding(
-                  padding: const EdgeInsets.only(top: 8,left: 8,right: 8,bottom: 8),
-                  child: Material(
-                    color: const Color.fromRGBO(239, 172, 0, 1),
-                    shape: StadiumBorder(),
-                    elevation: 5.0,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => GeneralNews())  // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
-                        // и да, кнопку создать уже сделал, она лежит в файле news_add_button
-                        );
-                      },
-                      child: const Center(
-                        //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                        child: Text('Важную',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        
-                        ),
-                      ),
+            padding:
+                const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
+            child: Material(
+              color: const Color.fromRGBO(239, 172, 0, 1),
+              shape: StadiumBorder(),
+              elevation: 5.0,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              SpecialNews()) // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
+                      // и да, кнопку создать уже сделал, она лежит в файле news_add_button
+                      );
+                },
+                child: const Center(
+                  //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  child: Text(
+                    'Важную',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
                     ),
                   ),
                 ),
+              ),
+            ),
+          ),
         ),
         SizedBox(
           height: 65,
           width: 277,
           child: Padding(
-                  padding: const EdgeInsets.only(top: 15,left: 8,right: 8),
-                  child: Material(
-                    color: const Color.fromRGBO(239, 172, 0, 1),
-                    shape: StadiumBorder(),
-                    elevation: 5.0,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, 
-                        MaterialPageRoute(builder: (context) => GeneralNews())
-                        );
-                      },
-                      child: const Center(
-                        //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                        child: Text('Общую',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        
-                        ),
-                      ),
+            padding: const EdgeInsets.only(top: 15, left: 8, right: 8),
+            child: Material(
+              color: const Color.fromRGBO(239, 172, 0, 1),
+              shape: StadiumBorder(),
+              elevation: 5.0,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => GeneralNews()));
+                },
+                child: const Center(
+                  //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  child: Text(
+                    'Общую',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
                     ),
                   ),
                 ),
+              ),
+            ),
+          ),
         ),
       ],
     ),
