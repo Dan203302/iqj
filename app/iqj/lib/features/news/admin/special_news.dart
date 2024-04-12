@@ -5,10 +5,11 @@ import 'package:iqj/features/news/admin/news_add_button.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 
 class SpecialNews extends StatelessWidget {
-  const SpecialNews({super.key});
-
+  SpecialNews({super.key});
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _controller = TextEditingController();
+    final FocusNode _focusNode = FocusNode();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -75,11 +76,11 @@ class SpecialNews extends StatelessWidget {
                                 // color: const Color.fromARGB(255, 239, 172, 0),
                               ),
                             ),
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'С 25 мая по 28 июня будет проводиться что-то очень важное.',
+                                '${_controller.text}',
                                 softWrap: true,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 18,
                                   fontWeight: FontWeight.normal,
@@ -118,10 +119,12 @@ class SpecialNews extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(width: 1),
             ),
-            child: const TextField(
+            child: TextField(
+              controller: _controller,
+              focusNode: _focusNode,
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 // border: OutlineInputBorder(
                 //   borderRadius: BorderRadius.circular(20.0),
                 // ),
@@ -138,6 +141,7 @@ class SpecialNews extends StatelessWidget {
                   color: Color.fromRGBO(255, 255, 255, 0.6),
                 ),
               ),
+              onChanged: (text) {},
             ),
           ),
           const Padding(
