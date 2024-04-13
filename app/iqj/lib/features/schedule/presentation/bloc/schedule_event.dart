@@ -3,6 +3,8 @@ abstract class ScheduleEvent {
   const ScheduleEvent();
 }
 
-class LoadScheduleEvent extends ScheduleEvent {}
+class LoadSchedule extends ScheduleEvent {} // Загрузка расписания из базы
 
-class SelectScheduleEvent extends ScheduleEvent {}
+class SelectSchedule extends ScheduleEvent {} // Выбор расписания (конкретного преподавателя, группы или аудитории)
+
+class SelectDay extends ScheduleEvent{} // Выбор дня для расписания
