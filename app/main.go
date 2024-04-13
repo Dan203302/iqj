@@ -29,6 +29,8 @@ func main() {
 	r.GET("/news", handlers.HandleGetNews)
 	r.GET("/news_id", handlers.HandleGetNewsById)
 
+	r.GET("/ad", handlers.HandleGetAd)
+
 	r.POST("/sign-up", handlers.HandleSignUp)
 	r.POST("/sign-in", handlers.HandleSignIn)
 
@@ -37,10 +39,11 @@ func main() {
 	authGroup.Use(middleware.WithJWTAuth())
 	{
 		r.POST("/add_news", handlers.HandleAddNews)
+		r.POST("/ad", handlers.HandlePostAd)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.
-	if err := r.RunTLS(":8443", config.SertificatePath, config.KeyPath); err != nil {
+	if err := r.RunTLS(":443", config.SertificatePath, config.KeyPath); err != nil {
 		log.Fatal(err)
 	}
 
