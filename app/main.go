@@ -31,9 +31,11 @@ func main() {
 
 	r.GET("/ad", handlers.HandleGetAd)
 
+	r.GET("/lessons", handlers.Lessons)
+
 	r.POST("/sign-up", handlers.HandleSignUp)
 	r.POST("/sign-in", handlers.HandleSignIn)
-
+	
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
 	authGroup.Use(middleware.WithJWTAuth())
