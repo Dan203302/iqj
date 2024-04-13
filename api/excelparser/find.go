@@ -2,7 +2,6 @@ package excelparser
 
 import (
 	"errors"
-	"strings"
 )
 
 // Получение критерия, значения и таблицы, возвращение массива уроков
@@ -21,7 +20,7 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 			}
 		}
 		if n == 0 {
-			return nil, errors.New("group not found")
+			return nil, nil
 		}
 
 		for i := 3; i < 87; i++ {
@@ -63,7 +62,7 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 			}
 		}
 		if len(pairs) == 0 {
-			return nil, errors.New("tutor not found")
+			return nil, nil
 		}
 		var rowNum int
 		var colNum int
@@ -116,7 +115,7 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 			}
 		}
 		if len(pairs) == 0 {
-			return nil, errors.New("classroom not found")
+			return nil, nil
 		}
 		var rowNum int
 		var colNum int
