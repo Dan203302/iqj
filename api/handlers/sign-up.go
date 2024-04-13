@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"iqj/database"
@@ -11,9 +12,9 @@ import (
 func HandleSignUp(c *gin.Context) {
 	var user models.User
 
-	err := c.BindJSON(&user)
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+	ok := c.BindJSON(&user)
+	if ok != nil {
+		c.String(http.StatusBadRequest, ok.Error())
 	}
 	password := user.Data.Password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -22,7 +23,8 @@ func HandleSignUp(c *gin.Context) {
 	}
 	user.Data.Password = string(hashedPassword)
 
-	database.Database.AddUser(&user) // и тип тут поменяйте, функция рабочая просто впихните нужные данные, если не разберетесь с userRole то напишите мне
-	// TODO: передайте фронтенду чтобы у них регистрация была полноценная, чтобы он только после получения всех данных отправлял сюда запрос
+	if err2 := database.Database.AddUser(&user); err2 != nil {
+		fmt.Println(err2)
+	}
 	c.JSON(http.StatusOK, user)
 }
