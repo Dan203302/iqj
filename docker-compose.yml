@@ -8,10 +8,22 @@ services:
     depends_on:
       - postgres # env db values maybe?
     ports:
-      - ":8443"
+      - "8443:8443"
     networks:
       - postgres
     restart: unless-stopped
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "443:443"  # Порт, на котором будет прослушиваться HTTPS
+    volumes:
+      - /etc/nginx/certs/certificate.crt:/etc/nginx/certs/certificate.crt
+      - /etc/nginx/certs/key.crt:/etc/nginx/certs/key.crt
+    depends_on:
+      - iqj-api
 
   postgres:
     container_name: iqj_postgres_container
