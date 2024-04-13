@@ -1,6 +1,6 @@
 FROM golang:latest
 
-ENV PORT=22
+#ENV PORT=443
 
 WORKDIR /iqj
 
@@ -13,6 +13,6 @@ COPY /docker_scripts/create-db.sql /docker-entrypoint-initdb.d/create-db.sql
 RUN go mod download
 RUN go build /iqj/app/main.go
 
-EXPOSE $PORT
+#EXPOSE $PORT
 
 CMD ["./main"]
