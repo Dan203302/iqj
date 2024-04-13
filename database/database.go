@@ -155,3 +155,16 @@ func (st *Storage) initScheduleTable() {
 	}
 
 }
+
+func (st *Storage) initAdTable() {
+	_, err := st.Db.Exec(`
+		CREATE TABLE ad (
+			id SERIAL PRIMARY KEY, 
+			text VARCHAR(255) NOT NULL,
+			flag boolean
+		);
+	`)
+	if err != nil {
+		panic(fmt.Sprintf("could not create 'ad' table: %v", err))
+	}
+}
