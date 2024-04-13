@@ -43,7 +43,7 @@ func main() {
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.
-	if err := r.RunTLS(":443", config.SertificatePath, config.KeyPath); err != nil {
+	if err := r.RunTLS(":8443", config.SertificatePath, config.KeyPath); err != nil {
 		log.Fatal(err)
 	}
 
