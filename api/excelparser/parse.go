@@ -5,13 +5,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"iqj/api/handlers"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
 // Парсинг всех Excel файлов директории
-func Parse(criterion string, value string) ([]Lesson, error) {
-	var tables []Lesson
+func Parse(criterion string, value string) ([]handlers.Lesson, error) {
+	var tables []handlers.Lesson
 	directory := "excelFiles"
 	files, err := os.ReadDir(directory)
 	if err != nil {
