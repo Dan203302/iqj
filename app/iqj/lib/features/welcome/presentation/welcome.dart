@@ -112,7 +112,7 @@ class _WelcomeState extends State<Welcome> {
                         child: GestureDetector(
                           onTap: () {
                             userWelcomed();
-                            Navigator.pushReplacementNamed(context, '/');
+                            Navigator.pushReplacementNamed(context, 'registration');
                           },
                           child: Container(
                             height: 60,
