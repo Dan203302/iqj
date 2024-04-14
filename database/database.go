@@ -85,8 +85,7 @@ func (st *Storage) initUsersTable() {
 			name VARCHAR(255) NOT NULL,
 		    email VARCHAR(255) NOT NULL,
 			password TEXT NOT NULL,
-		    bio TEXT,
-		    role VARCHAR(20) NOT NULL
+		    role VARCHAR(20)
 		    
 		);
 	`)
@@ -99,7 +98,7 @@ func (st *Storage) initUsersTable() {
 func (st *Storage) initStudentsTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS students (
-			id SERIAL PRIMARY KEY,
+			id INT PRIMARY KEY,
 			student_group INT NOT NULL,
 			teachers JSON		    
 		);
@@ -113,7 +112,7 @@ func (st *Storage) initStudentsTable() {
 func (st *Storage) initTeachersTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS teachers (
-			id SERIAL PRIMARY KEY,
+			id INT PRIMARY KEY,
 			student_groups JSON		    
 		);
 	`)
@@ -158,12 +157,12 @@ func (st *Storage) initScheduleTable() {
 
 func (st *Storage) initAdTable() {
 	_, err := st.Db.Exec(`
-		CREATE TABLE ad (
+		CREATE TABLE IF NOT EXISTS ad (
 			id SERIAL PRIMARY KEY, 
-			text VARCHAR(255) NOT NULL,
+			content TEXT NOT NULL,
 			flag boolean
 		);
-	`)
+	`) // что за флаг
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'ad' table: %v", err))
 	}
