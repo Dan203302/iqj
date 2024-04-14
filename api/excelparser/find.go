@@ -2,13 +2,14 @@ package excelparser
 
 import (
 	"strings"
+	"iqj/models"
 )
 
 //TODO: Заменить заглушку на GroupID и TeacherID на поиск из БД
 
 // Получение критерия, значения и таблицы, возвращение массива уроков
-func find(criterion string, value string, table [][]string) ([]Lesson, error) {
-	var valueTable []Lesson
+func find(criterion string, value string, table [][]string) ([]models.Lesson, error) {
+	var valueTable []models.Lesson
 	weekdayIndex := []int{3, 17, 31, 45, 59, 73, 87}
 	var id, groupid, teacherid int
 	//Поиск по группе
