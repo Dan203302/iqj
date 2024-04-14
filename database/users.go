@@ -23,10 +23,10 @@ func (st *Storage) AddUser(user *models.User) error {
 		"INSERT INTO users (name, email,password,role) VALUES ($1, $2, $3,$4)",
 		user.Name, user.Data.Email, user.Data.Password, user.Role)
 	if err != nil {
-		return nil
+		return err
 	}
 
-	return err
+	return nil
 }
 
 // Возвращает "incorrect password" при отсутствии пользователя в бд или неправильном пароле, nil при правильности пароля
