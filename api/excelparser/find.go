@@ -1,20 +1,22 @@
 package excelparser
 
 import (
- "strings"
+	"strings"
 )
+
+//TODO: Заменить заглушку на GroupID и TeacherID на поиск из БД
 
 // Получение критерия, значения и таблицы, возвращение массива уроков
 func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 	var valueTable []Lesson
-	weekdayIndex := []int{3, 17, 31, 45, 59, 73}
-	id := 0
+	weekdayIndex := []int{3, 17, 31, 45, 59, 73, 87}
+	var id, groupid, teacherid int
 	//Поиск по группе
 	if criterion == "group" {
 		n := 0
 		// Запоминание номера столбца с нужной группой
 		for i := 0; i < len(table[1]); i++ {
-			if strings.Contains(table[1][i], value) {
+			if table[1][i] == value {
 				n = i
 				break
 			}
@@ -23,22 +25,24 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 			return nil, nil
 		}
 
-		for i := 3; i < 87; i++ {
+		for i := 3; i < 88; i++ {
 			var row Lesson
 			for j := 0; j < len(weekdayIndex); j++ {
 				if weekdayIndex[j] > i {
-					row.Weekday = j - 1
+					row.Weekday = j
 					break
 				}
 			}
-			row.Id = 1
-			row.Group = value
-			row.LessonName = table[i][n] + ", " + table[i][n+1]
-			row.Teacher = table[i][n+2]
+			row.Id = id
+			row.GroupID = groupid //table[1][n]
+			row.LessonName = table[i][n]
+			row.TeacherID = teacherid //[i][n+2]
 			row.Location = table[i][n+3]
 
 			valueTable = append(valueTable, row)
 			id++
+			groupid++
+			teacherid++
 		}
 		//Поиск по преподавателю
 	} else if criterion == "tutor" {
@@ -48,7 +52,7 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 		// Запоминание ячеек с именем препода
 		for i := 0; i < 87; i++ {
 			for j := 7; j < len(table[2]); j += iter {
-				if strings.Contains(table[i][j], value) {
+				if (strings.Contains(table[i][j], value) && strings.Contains(table[i][j], "\n")) || table[i][j] == value {
 					pair = append(pair, i, j)
 					pairs = append(pairs, pair)
 					pair = nil
@@ -80,20 +84,22 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 			// Парсинг в зависимости от положения группы в таблице
 			if table[rowNum][colNum-3] == "I" || table[rowNum][colNum-3] == "II" {
 				row.Id = id
-				row.Teacher = value
-				row.Group = table[1][colNum-2]
+				row.TeacherID = teacherid //table[rowNum][colNum]
+				row.GroupID = groupid     //table[1][colNum-2]
 				row.LessonName = table[rowNum][colNum-2]
 				row.Location = table[rowNum][colNum+1]
 				valueTable = append(valueTable, row)
 			} else {
 				row.Id = id
-				row.Teacher = value
-				row.Group = table[1][colNum-2]
+				row.TeacherID = teacherid //table[rowNum][colNum]
+				row.GroupID = groupid     //table[1][colNum-2]
 				row.LessonName = table[rowNum][colNum-2]
 				row.Location = table[rowNum][colNum+1]
 				valueTable = append(valueTable, row)
 			}
 			id++
+			groupid++
+			teacherid++
 		}
 		//Поиск по аудитории
 	} else if criterion == "classroom" {
@@ -102,7 +108,7 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 		iter := 5
 		for i := 0; i < 87; i++ {
 			for j := 8; j < len(table[2]); j += iter {
-				if strings.Contains(table[i][j], value) {
+				if (strings.Contains(table[i][j], value) && strings.Contains(table[i][j], "\n")) || table[i][j] == value {
 					pair = append(pair, i, j)
 					pairs = append(pairs, pair)
 					pair = nil
@@ -131,20 +137,22 @@ func find(criterion string, value string, table [][]string) ([]Lesson, error) {
 			}
 			if table[rowNum][colNum-4] == "I" || table[rowNum][colNum-4] == "II" {
 				row.Id = id
-				row.Teacher = table[rowNum][colNum-1]
-				row.Group = table[1][colNum-3]
+				row.TeacherID = teacherid //table[rowNum][colNum-1]
+				row.GroupID = groupid     //table[1][colNum-3]
 				row.LessonName = table[rowNum][colNum-3]
-				row.Location = value
+				row.Location = table[rowNum][colNum]
 				valueTable = append(valueTable, row)
 			} else {
 				row.Id = id
-				row.Teacher = table[rowNum][colNum-1]
-				row.Group = table[1][colNum-3]
+				row.TeacherID = teacherid //table[rowNum][colNum-1]
+				row.GroupID = groupid     //table[1][colNum-3]
 				row.LessonName = table[rowNum][colNum-3]
-				row.Location = value
+				row.Location = table[rowNum][colNum]
 				valueTable = append(valueTable, row)
 			}
 			id++
+			groupid++
+			teacherid++
 		}
 	}
 
