@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"iqj/api/models"
+	"iqj/models"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
