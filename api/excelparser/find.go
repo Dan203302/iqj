@@ -1,7 +1,7 @@
 package excelparser
 
 import (
-	"errors"
+ "strings"
 )
 
 // Получение критерия, значения и таблицы, возвращение массива уроков
