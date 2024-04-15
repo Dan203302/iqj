@@ -21,11 +21,6 @@ func ConnectStorage() {
 
 func (st *Storage) createStorage() {
 
-	/* пример содержания файла /iqj/config/config.go:
-	package config
-
-	var DbData = []interface{}{"hostname", "port", "user", "password", "dbname"}
-	*/
 	connectionString := fmt.Sprintf(
 		"host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
 		config.DbData["host"],
@@ -54,6 +49,7 @@ func (st *Storage) createStorage() {
 func (st *Storage) initTables() {
 	st.initNewsTable()
 	st.initUsersTable()
+	st.initUsersDataTable()
 	st.initScheduleTable()
 	st.initStudentGroupsTable()
 	st.initTeachersTable()
@@ -82,6 +78,20 @@ func (st *Storage) initUsersTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
+		    email VARCHAR(255) NOT NULL UNIQUE,
+			password TEXT NOT NULL		    
+		);
+	`)
+	if err != nil {
+		panic(fmt.Sprintf("could not create 'users' table: %v", err))
+	}
+
+}
+
+func (st *Storage) initUsersDataTable() {
+	_, err := st.Db.Exec(`
+		CREATE TABLE IF NOT EXISTS usersdata (
+			id INT PRIMARY KEY,
 			name VARCHAR(255) NOT NULL,
 		    email VARCHAR(255) NOT NULL UNIQUE,
 			password TEXT NOT NULL,
@@ -90,7 +100,7 @@ func (st *Storage) initUsersTable() {
 		);
 	`)
 	if err != nil {
-		panic(fmt.Sprintf("could not create 'users' table: %v", err))
+		panic(fmt.Sprintf("could not create 'usersdata' table: %v", err))
 	}
 
 }
