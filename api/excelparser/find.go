@@ -1,8 +1,8 @@
 package excelparser
 
 import (
-	"strings"
 	"iqj/models"
+	"strings"
 )
 
 //TODO: Заменить заглушку на GroupID и TeacherID на поиск из БД
@@ -27,7 +27,7 @@ func find(criterion string, value string, table [][]string) ([]models.Lesson, er
 		}
 
 		for i := 3; i < 88; i++ {
-			var row Lesson
+			var row models.Lesson
 			for j := 0; j < len(weekdayIndex); j++ {
 				if weekdayIndex[j] > i {
 					row.Weekday = j
@@ -75,7 +75,7 @@ func find(criterion string, value string, table [][]string) ([]models.Lesson, er
 		for i := 0; i < len(pairs); i++ {
 			rowNum = pairs[i][0]
 			colNum = pairs[i][1]
-			var row Lesson
+			var row models.Lesson
 			for j := 0; j < len(weekdayIndex); j++ {
 				if weekdayIndex[j] > rowNum {
 					row.Weekday = j - 1
@@ -129,7 +129,7 @@ func find(criterion string, value string, table [][]string) ([]models.Lesson, er
 		for i := 0; i < len(pairs); i++ {
 			rowNum = pairs[i][0]
 			colNum = pairs[i][1]
-			var row Lesson
+			var row models.Lesson
 			for j := 0; j < len(weekdayIndex); j++ {
 				if weekdayIndex[j] > rowNum {
 					row.Weekday = j - 1
