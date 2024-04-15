@@ -3,14 +3,13 @@ package database
 import (
 	"github.com/lib/pq"
 	"iqj/models"
-	"time"
 )
 
 func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 	st.Mutex.Lock()
 	defer st.Mutex.Unlock()
 
-	publicationTime := time.Now().Format("2006-01-02 15:04:05")
+	// формат времени - Format("2006-01-02 15:04:05")
 
 	var count int
 	err := st.Db.QueryRow(
@@ -25,7 +24,7 @@ func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 	if count == 0 {
 		_, err = st.Db.Exec(
 			"INSERT INTO news (header, link, news_text, image_link, publication_time) VALUES ($1, $2, $3, $4, $5)",
-			newsBlock.Header, newsBlock.Link, newsText, pq.Array(newsBlock.ImageLink), publicationTime)
+			newsBlock.Header, newsBlock.Link, newsText, pq.Array(newsBlock.ImageLink), newsBlock.PublicationTime)
 		if err != nil {
 			return err
 		}
