@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 	"iqj/models"
 )
 
@@ -40,9 +41,12 @@ func (st *Storage) CheckUser(user *models.User) (*models.User, error) {
 		user.Data.Email).
 		Scan(&passFromData, &user.Id)
 
-	if errors.Is(err, sql.ErrNoRows) || passFromData != user.Data.Password {
+	if errHash := bcrypt.CompareHashAndPassword([]byte(passFromData), []byte(user.Data.Password)); errors.Is(err, sql.ErrNoRows) || errHash != nil {
 		return nil, fmt.Errorf("incorrect password")
 	}
+	//if errors.Is(err, sql.ErrNoRows) || passFromData != user.Data.Password {
+	//	return nil, fmt.Errorf("incorrect password")
+	//}
 
 	return user, nil
 }

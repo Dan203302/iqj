@@ -22,7 +22,6 @@ func HandleSignUp(c *gin.Context) {
 		c.String(http.StatusBadRequest, err.Error())
 	}
 	user.Data.Password = string(hashedPassword)
-
 	if err2 := database.Database.AddUser(&user); err2 != nil {
 		fmt.Println(err2)
 	}

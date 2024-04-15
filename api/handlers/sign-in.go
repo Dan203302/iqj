@@ -21,6 +21,7 @@ func HandleSignIn(c *gin.Context) {
 	}
 
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
+
 	user, err := database.Database.CheckUser(&signingUser)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку

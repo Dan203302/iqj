@@ -35,7 +35,7 @@ func main() {
 
 	r.POST("/sign-up", handlers.HandleSignUp)
 	r.POST("/sign-in", handlers.HandleSignIn)
-	
+
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
 	authGroup.Use(middleware.WithJWTAuth())
@@ -48,5 +48,4 @@ func main() {
 	if err := r.RunTLS(":8443", config.SertificatePath, config.KeyPath); err != nil {
 		log.Fatal(err)
 	}
-
 }
