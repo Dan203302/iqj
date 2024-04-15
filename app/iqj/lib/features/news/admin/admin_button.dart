@@ -88,7 +88,13 @@ void admin_button(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return alert;
+      return WillPopScope(
+        onWillPop: () async {
+          Navigator.of(context).pop(); 
+          return true;
+        },
+        child: alert,
+        );
     },
   );
 }
@@ -124,6 +130,7 @@ Widget two_button_add_news(BuildContext context) {
                               SpecialNews()) // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
                       // и да, кнопку создать уже сделал, она лежит в файле news_add_button
                       );
+                      //Navigator.of(context).pop();
                 },
                 child: const Center(
                   //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
