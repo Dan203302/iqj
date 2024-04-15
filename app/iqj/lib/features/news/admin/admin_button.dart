@@ -80,7 +80,7 @@ void admin_button(BuildContext context) {
         fontWeight: FontWeight.bold,
       ),
     ),
-    backgroundColor: Colors.white,
+    backgroundColor: Theme.of(context).colorScheme.background,
     surfaceTintColor: Colors.white,
     content: two_button_add_news(context),
   );
@@ -95,16 +95,19 @@ void admin_button(BuildContext context) {
 
 Widget two_button_add_news(BuildContext context) {
   return Container(
-    height: 140,
+    height: 144,
     width: 325,
-    decoration: const BoxDecoration(
-      color: Colors.white,
+    decoration: BoxDecoration(
+      color: Colors.transparent,
       border: Border(
-        top: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
+        top: BorderSide(color: Theme.of(context).colorScheme.surfaceVariant, width: 1),
       ),
     ),
     child: Column(
       children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 12),
+        ),
         SizedBox(
           height: 65,
           width: 277,
