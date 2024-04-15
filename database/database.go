@@ -49,7 +49,7 @@ func (st *Storage) createStorage() {
 func (st *Storage) initTables() {
 	st.initNewsTable()
 	st.initUsersTable()
-	st.initUsersDataTable()
+	// st.initUsersDataTable() TODO:Переделать структуру пользователей
 	st.initScheduleTable()
 	st.initStudentGroupsTable()
 	st.initTeachersTable()
@@ -64,8 +64,8 @@ func (st *Storage) initNewsTable() {
 			link VARCHAR(255) NOT NULL,
 		    news_text TEXT not null,
 		    image_link TEXT[],
+		    tags VARCHAR(255)[],
 		    publication_time TIMESTAMP
-		    
 		);
 	`)
 	if err != nil {
@@ -78,8 +78,10 @@ func (st *Storage) initUsersTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
+			name VARCHAR(255) NOT NULL,
 		    email VARCHAR(255) NOT NULL UNIQUE,
-			password TEXT NOT NULL		    
+			password TEXT NOT NULL,
+		    role VARCHAR(20),
 		);
 	`)
 	if err != nil {
@@ -88,22 +90,23 @@ func (st *Storage) initUsersTable() {
 
 }
 
+/*
 func (st *Storage) initUsersDataTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS usersdata (
 			id INT PRIMARY KEY,
 			name VARCHAR(255) NOT NULL,
-		    email VARCHAR(255) NOT NULL UNIQUE,
-			password TEXT NOT NULL,
+			bio TEXT,
+			?useful_data TEXT,
 		    role VARCHAR(20)
-		    
+
 		);
 	`)
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'usersdata' table: %v", err))
 	}
 
-}
+}*/
 
 func (st *Storage) initStudentsTable() {
 	_, err := st.Db.Exec(`
