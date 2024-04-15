@@ -5,6 +5,7 @@ type NewsBlock struct {
 	Header          string   `json:"header"`
 	Link            string   `json:"link"`
 	ImageLink       []string `json:"image_link"`
+	Tags            []string `json:"tags"`
 	PublicationTime string   `json:"publication_time"`
 }
 
@@ -13,5 +14,6 @@ type News struct {
 	Header          string   `json:"header"`
 	Text            string   `json:"text"`
 	ImageLink       []string `json:"image_link"`
+	Tags            []string `json:"tags"`
 	PublicationTime string   `json:"publication_time"`
 }
