@@ -56,7 +56,7 @@ func (st *Storage) GetLatestNewsBlocks(offset, count int) (*[]models.NewsBlock, 
 	for rows.Next() {
 		var id, header, link, publicationTime string
 		var imageLinks, tags []string
-		err := rows.Scan(&id, &header, &link, pq.Array(&imageLinks), pq.Array(&tags)&publicationTime)
+		err := rows.Scan(&id, &header, &link, pq.Array(&imageLinks), pq.Array(&tags), &publicationTime)
 
 		if err != nil {
 			return nil, err
