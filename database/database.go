@@ -159,10 +159,9 @@ func (st *Storage) initAdTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS ad (
 			id SERIAL PRIMARY KEY, 
-			content TEXT NOT NULL,
-			flag boolean
+			content TEXT NOT NULL
 		);
-	`) // что за флаг
+	`)
 	if err != nil {
 		panic(fmt.Sprintf("could not create 'ad' table: %v", err))
 	}
