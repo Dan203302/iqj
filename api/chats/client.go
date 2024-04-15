@@ -21,11 +21,11 @@ type Client struct {
 	doneCh chan bool
 }
 
-// из этой структуры будем брать id человека 
+// из этой структуры будем брать id человека
 // и засовывать его вместо maxId
 
 // type User struct {
-// 	Id       int
+// 	ID       int
 // 	Name     string
 // 	Password string
 // 	Bio      string // федя решил что нам это нужно

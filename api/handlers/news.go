@@ -20,18 +20,18 @@ func HandleGetNews(c *gin.Context) {
 
 	offset, err := strconv.Atoi(offsetStr)
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	count, err := strconv.Atoi(countStr)
 	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
 	latestnews, err := database.Database.GetLatestNewsBlocks(offset, count)
 	if err != nil {
-		fmt.Println(err)
+		c.JSON(http.StatusInternalServerError, "")
 	}
 	c.JSON(http.StatusOK, latestnews)
 }
@@ -66,19 +66,25 @@ func HandleAddNews(c *gin.Context) {
 		&models.User{
 			Id: userId,
 		})
-	if err != nil { // TODO:подправить обработку ошибки
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, "")
 	}
 	if user.Role == "moderator" {
 		var news struct {
-			Header string `json:"header"`
-			Text   string `json:"text"`
+			models.NewsBlock
+			Text string
 		}
-		c.BindJSON(&news)
-		newsbl := models.NewsBlock{Header: news.Header, ImageLink: []string{}, Link: "", PublicationTime: ""}
-		database.Database.AddNews(newsbl, news.Text)
+		err := c.BindJSON(&news)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err.Error())
+		}
+		newsBl := models.NewsBlock{Header: news.Header, ImageLink: news.ImageLink, Link: "", PublicationTime: news.PublicationTime}
+		ok := database.Database.AddNews(newsBl, news.Text)
+		if ok != nil {
+			c.JSON(http.StatusInternalServerError, ok.Error())
+		}
 		c.JSON(http.StatusOK, news)
 	} else {
-		c.JSON(http.StatusForbidden, "")
+		c.JSON(http.StatusForbidden, "There are not enough rights for this action")
 	}
 }

@@ -26,6 +26,10 @@ func main() {
 	r.Use(middleware.CORSMiddleware())
 
 	// Вызов хэндлеров исходя из запроса.
+
+	r.POST("/sign-up", handlers.HandleSignUp)
+	r.POST("/sign-in", handlers.HandleSignIn)
+
 	r.GET("/news", handlers.HandleGetNews)
 	r.GET("/news_id", handlers.HandleGetNewsById)
 
@@ -33,14 +37,11 @@ func main() {
 
 	r.GET("/lessons", handlers.Lessons)
 
-	r.POST("/sign-up", handlers.HandleSignUp)
-	r.POST("/sign-in", handlers.HandleSignIn)
-	
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
 	authGroup.Use(middleware.WithJWTAuth())
 	{
-		r.POST("/add_news", handlers.HandleAddNews)
+		r.POST("/news", handlers.HandleAddNews)
 		r.POST("/ad", handlers.HandlePostAd)
 	}
 
@@ -48,5 +49,4 @@ func main() {
 	if err := r.RunTLS(":8443", config.SertificatePath, config.KeyPath); err != nil {
 		log.Fatal(err)
 	}
-
 }
