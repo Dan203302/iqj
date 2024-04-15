@@ -33,7 +33,7 @@ func main() {
 	r.GET("/news", handlers.HandleGetNews)
 	r.GET("/news_id", handlers.HandleGetNewsById)
 
-	//r.GET("/ad", handlers.HandleGetAd)
+	r.GET("/ad", handlers.HandleGetAd)
 
 	r.GET("/lessons", handlers.Lessons)
 
@@ -42,7 +42,7 @@ func main() {
 	authGroup.Use(middleware.WithJWTAuth())
 	{
 		r.POST("/news", handlers.HandleAddNews)
-		//r.POST("/ad", handlers.HandlePostAd)
+		r.POST("/ad", handlers.HandlePostAd)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.

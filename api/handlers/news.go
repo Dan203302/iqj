@@ -66,7 +66,7 @@ func HandleAddNews(c *gin.Context) {
 		&models.User{
 			Id: userId,
 		})
-	if err != nil { // TODO:подправить обработку ошибки
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, "")
 	}
 	if user.Role == "moderator" {
