@@ -140,9 +140,24 @@ class _NewsBloc extends State<NewsScreen>{
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          
+              if (flag_close) Container(
+                margin: const EdgeInsets.only(left: 14, right: 12),
+                child: Text(
+                'Важные',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0,
+                  height: 1.5,
+                  ),
+                ),
+              ),
                 if (flag_close) Container(
-                  margin: const EdgeInsets.only(top: 12),
+                  margin: const EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 12),
                   padding: const EdgeInsets.only(left: 12, right: 12),
                   height: 80,
                   alignment: Alignment.center,
@@ -150,16 +165,16 @@ class _NewsBloc extends State<NewsScreen>{
                     borderRadius: BorderRadius.circular(8),
                     color: Theme.of(context).colorScheme.primaryContainer,
                     // В дизайне же нет рамки вроде не было рамки 🤨
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 255, 166, 0),
-                    ),
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 2,
-                        color: Color.fromARGB(255, 239, 172, 0),
-                        spreadRadius: 1,
-                      ),
-                    ],
+                    // border: Border.all(
+                    //   color: const Color.fromARGB(255, 255, 166, 0),
+                    // ),
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //     blurRadius: 2,
+                    //     color: Color.fromARGB(255, 239, 172, 0),
+                    //     spreadRadius: 1,
+                    //   ),
+                    // ],
                   ),
                   child: Row(  
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +200,7 @@ class _NewsBloc extends State<NewsScreen>{
                                   softWrap: true,
                                   style: TextStyle(
                                     fontFamily: 'Inter',
-                                    fontSize: 12,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.normal,
                                     color: Color.fromARGB(255, 255, 166, 0),
                                   ),
@@ -205,6 +220,26 @@ class _NewsBloc extends State<NewsScreen>{
                     ],
                   ),
           ),
+          if (flag_close) Container(
+            margin: const EdgeInsets.only(left: 12, right: 12),
+            child: Divider(
+              thickness: 1,
+              color: Theme.of(context).colorScheme.surfaceVariant,
+            ),
+          ),
+          /*if (flag_close) */ Container(
+                margin: const EdgeInsets.only(left: 14, right: 12, bottom: 12),
+                child: Text(
+                'Общие',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0,
+                  height: 1.5,
+                  ),
+                ),
+              ),
           if (_isFilter) Container(
               margin: const EdgeInsets.only(top: 12),
               padding: const EdgeInsets.only(left: 12, right: 12),

@@ -13,7 +13,7 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(
           'newslist',
@@ -21,8 +21,7 @@ class NewsCard extends StatelessWidget {
         );
     },
       child: Card(
-        elevation: 2,
-        margin: const EdgeInsets.all(8),
+        margin: const EdgeInsets.all(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -30,6 +29,7 @@ class NewsCard extends StatelessWidget {
             children: [
               Image.network(news.thumbnail),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Text(
@@ -46,7 +46,8 @@ class NewsCard extends StatelessWidget {
                     onPressed: () {
                       // Обработка нажатия кнопки
                     },
-                    icon: SvgPicture.asset('assets/icons/news/bookmark.svg'),
+                    icon: const Icon(Icons.bookmark_border, size: 28,),
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ],
               ),

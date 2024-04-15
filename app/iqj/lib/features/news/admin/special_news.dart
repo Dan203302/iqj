@@ -3,15 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/news_add_button.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
+import 'package:intl/intl.dart';
 
-class SpecialNews extends StatelessWidget {
+class SpecialNews extends StatefulWidget {
   SpecialNews({super.key});
+
+  @override
+  State<SpecialNews> createState() => _SpecialNews();
+}
+
+class _SpecialNews extends State<SpecialNews>{
+
+  TextEditingController _textEditingController = TextEditingController();
+  String _text = '';
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController _controller = TextEditingController();
     final FocusNode _focusNode = FocusNode();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
+      // Заголовок экрана
       appBar: AppBar(
         title: Text(
           'Создать',
@@ -21,37 +33,28 @@ class SpecialNews extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 12, top: 8),
+          // Блок предпросмотра новости
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 8),
             child: Text(
               'Предпросмотр',
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 12),
+            margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
             padding: const EdgeInsets.only(left: 12, right: 12),
             height: 80,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: const Color.fromARGB(255, 250, 228, 171),
-              border: Border.all(
-                color: const Color.fromARGB(255, 255, 166, 0),
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 2,
-                  color: Color.fromARGB(255, 239, 172, 0),
-                  spreadRadius: 1,
-                ),
-              ],
+              color: Theme.of(context).colorScheme.primaryContainer,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +81,7 @@ class SpecialNews extends StatelessWidget {
                             ),
                             Expanded(
                               child: Text(
-                                '${_controller.text}',
+                                _text,
                                 softWrap: true,
                                 style: const TextStyle(
                                   fontFamily: 'Inter',
@@ -97,156 +100,184 @@ class SpecialNews extends StatelessWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 10, top: 25),
+          Container(
+            margin: const EdgeInsets.only(left: 12, right: 12, top: 12),
+            child: Divider(
+              thickness: 1,
+              color: Theme.of(context).colorScheme.surfaceVariant,
+            ),
+          ),
+          // Блок редактора новости
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 12),
             child: Text(
               'Редактор',
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
           Container(
-            height: 120,
+            height: 128,
             margin:
-                const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 30),
+                const EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 12),
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(44, 45, 47, 1),
+              color: Theme.of(context).colorScheme.onInverseSurface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(width: 1),
             ),
             child: TextField(
-              controller: _controller,
-              focusNode: _focusNode,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: const InputDecoration(
-                // border: OutlineInputBorder(
-                //   borderRadius: BorderRadius.circular(20.0),
-                // ),
-                //icon: Icon(Icons.search),
-                //enabledBorder: UnderlineInputBorder(
-                //    borderSide: BorderSide(color: Colors.transparent)),
-                hintText: "  Новость...",
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                hintText: "Напишите новость здесь...",
+                hintFadeDuration: Duration(milliseconds: 100),
                 border: InputBorder.none,
                 hintStyle: TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,
                   fontSize: 16.0,
                   height: 1.5,
-                  color: Color.fromRGBO(255, 255, 255, 0.6),
+                  color: Color.fromRGBO(128, 128, 128, 0.6),
                 ),
               ),
-              onChanged: (text) {},
+              onChanged: (text) {
+                setState(() {
+                  _text = text;
+                });
+              },
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 10, top: 25),
+          Container(
+            margin: const EdgeInsets.only(left: 12, right: 12),
+            child: Divider(
+              thickness: 1,
+              color: Theme.of(context).colorScheme.surfaceVariant,
+            ),
+          ),
+          // Блок настройки срока показа новости
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 12),
             child: Text(
               'Срок',
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 16,
-                color: Colors.grey,
+                color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(44, 45, 47, 1),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(width: 1),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   alignment: Alignment.bottomLeft,
-                  child: const Text(
-                    "C: ",
+                  margin: const EdgeInsets.only(left: 12, top: 6),
+                  child: Text(
+                    "С:  ",
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-                const Flexible(
-                  child: TextField(
+                const Padding(
+                  padding: EdgeInsets.only(right: 6),
+                ),
+                Flexible(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TextField(
                     decoration: InputDecoration(
-                      // border: OutlineInputBorder(
-                      //   borderRadius: BorderRadius.circular(20.0),
-                      // ),
-                      //icon: Icon(Icons.search),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      hintText: "  01.03.24",
-                      hintStyle: TextStyle(
+                      hintText: "дд.мм.гггг",
+                      hintFadeDuration: const Duration(milliseconds: 100),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      hintStyle: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         fontSize: 16.0,
-                        height: 1.5,
-                        color: Color.fromRGBO(255, 255, 255, 0.6),
+                        height: 2.5,
+                        color: Color.fromRGBO(128, 128, 128, 0.6),
+                      ),
+                      suffixIcon: SizedBox(
+                        child: IconButton(
+                            icon:const Icon(Icons.date_range, ),
+                            onPressed: () {},
+                        ),
                       ),
                     ),
                   ),
+                  ),
                 ),
               ],
-            ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(44, 45, 47, 1),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(width: 1),
-            ),
-            child: Row(
+          
+          Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   alignment: Alignment.bottomLeft,
-                  child: const Text(
-                    "По: ",
+                  margin: const EdgeInsets.only(left: 12, top: 6),
+                  child: Text(
+                    "По:",
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 16,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w700,
+                      
                     ),
                   ),
                 ),
-                const Flexible(
-                  child: TextField(
+                const Padding(
+                  padding: EdgeInsets.only(right: 6),
+                ),
+                Flexible(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TextField(
                     decoration: InputDecoration(
-                      // border: OutlineInputBorder(
-                      //   borderRadius: BorderRadius.circular(20.0),
-                      // ),
-                      //icon: Icon(Icons.search),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      hintText: "  01.03.24",
-                      hintStyle: TextStyle(
+                      hintText: "дд.мм.гггг",
+                      hintFadeDuration: const Duration(milliseconds: 100),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      hintStyle: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         fontSize: 16.0,
-                        height: 1.5,
-                        color: Color.fromRGBO(255, 255, 255, 0.6),
+                        height: 2.5,
+                        color: Color.fromRGBO(128, 128, 128, 0.6),
+                      ),
+                      suffixIcon: SizedBox(
+                        child: IconButton(
+                            icon:const Icon(Icons.date_range, ),
+                            onPressed: () {},
+                        ),
                       ),
                     ),
                   ),
+                  ),
                 ),
               ],
-            ),
           ),
+          // Три кнопки быстрой установки срока показа новости
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Row(
@@ -254,22 +285,22 @@ class SpecialNews extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(right: 5, left: 8),
+                  margin: const EdgeInsets.only(right: 5, left: 12),
                   height: 35,
                   decoration: BoxDecoration(
                     //borderRadius: BorderRadius.circular(50),
                     borderRadius: BorderRadius.circular(24.0),
-                    color: const Color.fromRGBO(44, 45, 47, 1),
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       "1 день",
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -281,17 +312,17 @@ class SpecialNews extends StatelessWidget {
                   decoration: BoxDecoration(
                     //borderRadius: BorderRadius.circular(50),
                     borderRadius: BorderRadius.circular(24.0),
-                    color: const Color.fromRGBO(44, 45, 47, 1),
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       "3 дня",
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -302,17 +333,17 @@ class SpecialNews extends StatelessWidget {
                   decoration: BoxDecoration(
                     //borderRadius: BorderRadius.circular(50),
                     borderRadius: BorderRadius.circular(24.0),
-                    color: const Color.fromRGBO(44, 45, 47, 1),
+                    color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text(
+                    child: Text(
                       "Неделя",
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -328,53 +359,12 @@ class SpecialNews extends StatelessWidget {
             ),
           ),
           news_add_button(),
+          const Padding(
+            padding: EdgeInsets.only(bottom: 12, top: 12),
+          ),
         ],
       ),
     );
   }
 }
 
-Widget three_but() {
-  return Container(
-    width: 120,
-    height: 99,
-    //color: Color.fromRGBO(44, 45, 47, 1),
-    //color: Colors.blue,
-    margin: EdgeInsets.only(top: 10, left: 5, right: 5),
-    decoration: BoxDecoration(
-      color: Color.fromRGBO(44, 45, 47, 1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(width: 1),
-    ),
-    child: ElevatedButton(
-      onPressed: () {
-        // Обработчик нажатия кнопки
-      },
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
-            Color.fromRGBO(44, 45, 47, 1)), // Серый цвет фона кнопки
-      ),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //icon: SvgPicture.asset('assets/icons/news/bookmark2.svg'),
-          // SvgPicture.asset(
-          //   'assets/icons/news/plus.svg',
-          //   width: 32,
-          //   height: 32,
-          // ), // Иконка или изображение
-          Icon(Icons.image, size: 39),
-          Icon(Icons.add, size: 16),
-          SizedBox(width: 8), // Расстояние между изображением и текстом
-          // Text('Загрузить изображение',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     color: Color.fromRGBO(255, 255, 255, 0.6),
-          //   ),
-
-          // ),
-        ],
-      ),
-    ),
-  );
-}
