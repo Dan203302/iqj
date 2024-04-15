@@ -8,8 +8,8 @@ func (st *Storage) AddAd(ad models.Ad) error {
 
 	var count int
 	err := st.Db.QueryRow(
-		"SELECT COUNT(*) FROM ad WHERE text = $1",
-		ad.Text).
+		"SELECT COUNT(*) FROM ad WHERE content = $1",
+		ad.Content).
 		Scan(&count)
 
 	if err != nil {
@@ -18,8 +18,8 @@ func (st *Storage) AddAd(ad models.Ad) error {
 
 	if count == 0 {
 		_, err = st.Db.Exec(
-			"INSERT INTO ad (text) VALUES (&1)",
-			ad.Text)
+			"INSERT INTO ad (content) VALUES ($1)",
+			ad.Content)
 		if err != nil {
 			return err
 		}
@@ -36,7 +36,7 @@ func (st *Storage) GetAd(count int) (*[]models.Ad, error) {
 	defer st.Mutex.Unlock()
 
 	rows, err := st.Db.Query(
-		"SELECT id, text FROM ad ORDER BY id DESC LIMIT $1", count)
+		"SELECT id, content FROM ad ORDER BY id DESC LIMIT $1", count)
 
 	if err != nil {
 		return nil, err
@@ -47,15 +47,15 @@ func (st *Storage) GetAd(count int) (*[]models.Ad, error) {
 	var latestAd []models.Ad
 
 	for rows.Next() {
-		var id, text string
-		err := rows.Scan(&id, &text)
+		var id, content string
+		err := rows.Scan(&id, &content)
 
 		if err != nil {
 			return nil, err
 		}
 		Ad := models.Ad{
-			ID:   id,
-			Text: text,
+			ID:      id,
+			Content: content,
 		}
 		latestAd = append(latestAd, Ad)
 	}

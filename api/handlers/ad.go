@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"iqj/database"
 	"iqj/models"
@@ -12,10 +13,12 @@ func HandleGetAd(c *gin.Context) {
 	countStr := c.Query("count")
 	count, ok := strconv.Atoi(countStr)
 	if ok != nil {
-		c.String(http.StatusBadRequest, "")
+		c.JSON(http.StatusBadRequest, ok.Error())
+		return
 	}
 
 	ads, err := database.Database.GetAd(count)
+	fmt.Println(ads)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "")
 	}

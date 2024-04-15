@@ -58,6 +58,7 @@ func (st *Storage) initTables() {
 	st.initStudentGroupsTable()
 	st.initTeachersTable()
 	st.initStudentsTable()
+	st.initAdTable()
 }
 
 func (st *Storage) initNewsTable() {

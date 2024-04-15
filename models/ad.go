@@ -1,6 +1,6 @@
 package models
 
 type Ad struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
+	ID      string `json:"id"`
+	Content string `json:"content"`
 }
