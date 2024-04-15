@@ -26,22 +26,23 @@ func main() {
 	r.Use(middleware.CORSMiddleware())
 
 	// Вызов хэндлеров исходя из запроса.
-	r.GET("/news", handlers.HandleGetNews)
-	r.GET("/news_id", handlers.HandleGetNewsById)
-
-	r.GET("/ad", handlers.HandleGetAd)
-
-	r.GET("/lessons", handlers.Lessons)
 
 	r.POST("/sign-up", handlers.HandleSignUp)
 	r.POST("/sign-in", handlers.HandleSignIn)
+
+	r.GET("/news", handlers.HandleGetNews)
+	r.GET("/news_id", handlers.HandleGetNewsById)
+
+	//r.GET("/ad", handlers.HandleGetAd)
+
+	r.GET("/lessons", handlers.Lessons)
 
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
 	authGroup.Use(middleware.WithJWTAuth())
 	{
-		r.POST("/add_news", handlers.HandleAddNews)
-		r.POST("/ad", handlers.HandlePostAd)
+		r.POST("/news", handlers.HandleAddNews)
+		//r.POST("/ad", handlers.HandlePostAd)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.
