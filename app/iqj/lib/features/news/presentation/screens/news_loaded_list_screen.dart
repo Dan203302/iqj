@@ -67,64 +67,76 @@ class _NewsListState extends State<NewsList>{
             ),
           ), ]
         ),
-      body: Card(
-        elevation: 2,
-        margin: const EdgeInsets.all(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: Image.network(news.thumbnail)),
-              Row(
+      body: ListView(
+        children: [
+          Card(
+            elevation: 2,
+            margin: const EdgeInsets.all(8),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      news.title,
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        // title,
-                        // style: textTheme.titleLarge
-                      ),
+                  Center(
+                    child: Container(
+                      width: double.infinity, 
+                      child: Image.network(
+                        news.thumbnail,
+                        fit: BoxFit.fill, 
+                      )
                     ),
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          news.title,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            // title,
+                            // style: textTheme.titleLarge
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(DateFormat('yyyy.MM.dd').format(news.publicationTime)),
+                      const Spacer(),
+                      if (!flag_open_tags) IconButton(
+                        onPressed:() {
+                          open_close_tags();
+                        }, 
+                        icon: SvgPicture.asset('assets/icons/news/open_tags.svg'),
+                      ) else IconButton(
+                        onPressed:() {
+                          open_close_tags();
+                        }, 
+                        icon: SvgPicture.asset('assets/icons/news/open_tags_yel.svg'),
+                      ) 
+                    ],
+                  ),
+                  if (flag_open_tags) const  Text("Здесь будут теги"),
+                  const SizedBox(height: 8),
+                  Container(
+                    height: 1,
+                    decoration: const BoxDecoration(
+                    color: Colors.white, 
+                    border: Border(
+                      top: BorderSide(color: Color.fromRGBO(209, 209, 209, 1), width: 2),
+                      //bottom: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
+                    ),
+                    ),
+                  ),
+                  // Text(news?.description ?? '...'),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(DateFormat('yyyy.MM.dd').format(news.publicationTime)),
-                  const Spacer(),
-                  if (!flag_open_tags) IconButton(
-                    onPressed:() {
-                      open_close_tags();
-                    }, 
-                    icon: SvgPicture.asset('assets/icons/news/open_tags.svg'),
-                  ) else IconButton(
-                    onPressed:() {
-                      open_close_tags();
-                    }, 
-                    icon: SvgPicture.asset('assets/icons/news/open_tags_yel.svg'),
-                  ) 
-                ],
-              ),
-              if (flag_open_tags) const  Text("Здесь будут теги"),
-              const SizedBox(height: 8),
-              Container(
-                height: 1,
-                decoration: const BoxDecoration(
-                color: Colors.white, 
-                border: Border(
-                  top: BorderSide(color: Color.fromRGBO(209, 209, 209, 1), width: 2),
-                  //bottom: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
-                ),
-                ),
-              ),
-              // Text(news?.description ?? '...'),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

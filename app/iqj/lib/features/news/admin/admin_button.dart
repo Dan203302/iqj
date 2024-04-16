@@ -71,7 +71,7 @@ import 'package:iqj/features/news/presentation/screens/search/body_for_data/body
 //     );
 // }
 
-void admin_button(BuildContext context) {
+Future<void> admin_button(BuildContext context) async {
   final AlertDialog alert = AlertDialog(
     title: const Text(
       "Создать новость",
