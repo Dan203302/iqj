@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"iqj/api/handlers"
 	"iqj/api/middleware"
 	"iqj/api/scraper"
 	"iqj/config"
 	"iqj/database"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -45,7 +46,7 @@ func main() {
 		authGroup.POST("/ad", handlers.HandlePostAd)
 
 		//Для тестов
-		authGroup.POST("/ad2", handlers.HandlePostAd2)
+		// authGroup.POST("/ad2", handlers.HandlePostAd2)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.

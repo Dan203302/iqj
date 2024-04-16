@@ -1,8 +1,9 @@
 package database
 
 import (
-	"github.com/lib/pq"
 	"iqj/models"
+
+	"github.com/lib/pq"
 )
 
 func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
@@ -23,7 +24,7 @@ func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 
 	if count == 0 {
 		_, err = st.Db.Exec(
-			"INSERT INTO news (header, link, news_text, image_link, tags, publication_time) VALUES ($1, $2, $3, $4, $5)",
+			"INSERT INTO news (header, link, news_text, image_link, tags, publication_time) VALUES ($1, $2, $3, $4, $5, $6)",
 			newsBlock.Header, newsBlock.Link, newsText, pq.Array(newsBlock.ImageLink), pq.Array(newsBlock.Tags), newsBlock.PublicationTime)
 		if err != nil {
 			return err
