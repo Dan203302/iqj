@@ -2,6 +2,7 @@ package database
 
 import (
 	"iqj/models"
+	"time"
 
 	"github.com/lib/pq"
 )
@@ -22,16 +23,22 @@ func (st *Storage) AddNews(newsBlock models.NewsBlock, newsText string) error {
 		return err
 	}
 
-	if count == 0 {
-		_, err = st.Db.Exec(
-			"INSERT INTO news (header, link, news_text, image_link, tags, publication_time) VALUES ($1, $2, $3, $4, $5, $6)",
-			newsBlock.Header, newsBlock.Link, newsText, pq.Array(newsBlock.ImageLink), pq.Array(newsBlock.Tags), newsBlock.PublicationTime)
-		if err != nil {
-			return err
-		}
-
-	} else {
+	if count != 0 {
 		return nil
+	}
+
+	formattedDate, err := time.Parse("02.01.2006", newsBlock.PublicationTime)
+	if err != nil {
+    	return err
+	}
+	newsBlock.PublicationTime = formattedDate.Format("2006-01-02 15:04:05")
+
+
+	_, err = st.Db.Exec(
+		"INSERT INTO news (header, link, news_text, image_link, tags, publication_time) VALUES ($1, $2, $3, $4, $5, $6)",
+		newsBlock.Header, newsBlock.Link, newsText, pq.Array(newsBlock.ImageLink), pq.Array(newsBlock.Tags), newsBlock.PublicationTime)
+	if err != nil {
+		return err
 	}
 
 	return nil
