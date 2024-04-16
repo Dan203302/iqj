@@ -17,6 +17,14 @@ func HandleSignUp(c *gin.Context) {
 		c.String(http.StatusBadRequest, ok.Error())
 	}
 
+	if user.Data.Email == "" {
+		c.JSON(http.StatusBadRequest, "There is no email")
+	}
+
+	if user.Data.Password == "" {
+		c.JSON(http.StatusBadRequest, "There is no password")
+	}
+
 	password := user.Data.Password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
