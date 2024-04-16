@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"iqj/models"
+
 	_ "github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
-	"iqj/models"
 )
 
 //	func (st *Storage) SearchUser(user *models.User, token *jwt.StandardClaims) error {
@@ -54,7 +55,7 @@ func (st *Storage) CheckUser(user *models.User) (*models.User, error) {
 
 func (st *Storage) GetRole(user *models.User) (*models.User, error) {
 	st.Mutex.Lock()
-	defer st.Mutex.Lock()
+	defer st.Mutex.Unlock()
 
 	err := st.Db.QueryRow("SELECT role FROM users WHERE id = $1",
 		user.Id).
