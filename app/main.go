@@ -39,10 +39,13 @@ func main() {
 
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
-	authGroup.Use(middleware.WithJWTAuth())
+	authGroup.Use(middleware.WithJWTAuth)
 	{
-		r.POST("/news", handlers.HandleAddNews)
-		r.POST("/ad", handlers.HandlePostAd)
+		authGroup.POST("/news", handlers.HandleAddNews)
+		authGroup.POST("/ad", handlers.HandlePostAd)
+
+		//Для тестов
+		authGroup.POST("/ad2", handlers.HandlePostAd2)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.

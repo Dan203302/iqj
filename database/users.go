@@ -11,7 +11,7 @@ import (
 
 //	func (st *Storage) SearchUser(user *models.User, token *jwt.StandardClaims) error {
 //		err := st.Db.QueryRow("SELECT id, username, password FROM users WHERE id = $1", token.Issuer).
-//			Scan(&user.Id, &user.Name, &user.Role)
+//			Scan(&user.ID, &user.Name, &user.Role)
 //		return err
 //	}
 //
@@ -42,6 +42,7 @@ func (st *Storage) CheckUser(user *models.User) (*models.User, error) {
 		Scan(&passFromData, &user.Id)
 
 	if errHash := bcrypt.CompareHashAndPassword([]byte(passFromData), []byte(user.Data.Password)); errors.Is(err, sql.ErrNoRows) || errHash != nil {
+		fmt.Println(errHash, "ok")
 		return nil, fmt.Errorf("incorrect password")
 	}
 	//if errors.Is(err, sql.ErrNoRows) || passFromData != user.Data.Password {
