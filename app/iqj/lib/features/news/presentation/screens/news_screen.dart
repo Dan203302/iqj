@@ -149,6 +149,73 @@ class _NewsBloc extends State<NewsScreen>{
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (_isFilter) Container(
+              margin: const EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 12),
+                  padding: const EdgeInsets.only(left: 12, right: 12),
+                  height: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Theme.of(context).colorScheme.primaryContainer,),
+              child: Row(  
+                //crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      //crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            //borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: const Color.fromRGBO(239, 172, 0, 1),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              searchdata(context);
+                            },
+                            child: const Text(
+                              "По дате:                                  ",
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color:Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            //borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: const Color.fromRGBO(239, 172, 0, 1),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              search_tags(context);
+                            },
+                            child: const Text(
+                              "По тегам:                                ",
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color:Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           
               if (flag_close) Container(
                 margin: const EdgeInsets.only(left: 14, right: 12),
@@ -234,84 +301,6 @@ class _NewsBloc extends State<NewsScreen>{
               color: Theme.of(context).colorScheme.surfaceVariant,
             ),
           ),
-          if (_isFilter) Container(
-              margin: const EdgeInsets.only(top: 12),
-              padding: const EdgeInsets.only(left: 12, right: 12),
-              height: 100,
-              //alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: const Color.fromARGB(255, 250, 228, 171),
-                border: Border.all(
-                  color: const Color.fromARGB(255, 255, 166, 0),
-                ),
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 2,
-                    color: Color.fromARGB(255, 239, 172, 0),
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-              child: Row(  
-                //crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      //crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Container(
-                          height: 35,
-                          decoration: BoxDecoration(
-                            //borderRadius: BorderRadius.circular(50),
-                            borderRadius: BorderRadius.circular(24.0),
-                            color: const Color.fromRGBO(239, 172, 0, 1),
-                          ),
-                          child: TextButton(
-                            onPressed: () {
-                              searchdata(context);
-                            },
-                            child: const Text(
-                              "По дате:                                  ",
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color:Color.fromARGB(255, 255, 255, 255),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 35,
-                          decoration: BoxDecoration(
-                            //borderRadius: BorderRadius.circular(50),
-                            borderRadius: BorderRadius.circular(24.0),
-                            color: const Color.fromRGBO(239, 172, 0, 1),
-                          ),
-                          child: TextButton(
-                            onPressed: () {
-                              search_tags(context);
-                            },
-                            child: const Text(
-                              "По тегам:                                ",
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color:Color.fromARGB(255, 255, 255, 255),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
           Container(
                 margin: const EdgeInsets.only(left: 14, right: 12,top: 10),
                 child: Text(
