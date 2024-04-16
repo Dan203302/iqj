@@ -1,5 +1,6 @@
 package var1
 
+/*
 import (
 	"bufio"
 	"fmt"
@@ -33,3 +34,4 @@ func main() {
 		}
 	}
 }
+*/
