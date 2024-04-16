@@ -82,7 +82,7 @@ func (st *Storage) initUsersTable() {
 			name VARCHAR(255) NOT NULL,
 		    email VARCHAR(255) NOT NULL UNIQUE,
 			password TEXT NOT NULL,
-		    role VARCHAR(20),
+		    role VARCHAR(20)
 		);
 	`)
 	if err != nil {
@@ -114,7 +114,7 @@ func (st *Storage) initStudentsTable() {
 		CREATE TABLE IF NOT EXISTS students (
 			id INT PRIMARY KEY,
 			student_group INT NOT NULL,
-			teachers JSON		    
+			teachers JSON
 		);
 	`)
 	if err != nil {
@@ -127,7 +127,7 @@ func (st *Storage) initTeachersTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS teachers (
 			id INT PRIMARY KEY,
-			student_groups JSON		    
+			student_groups JSON
 		);
 	`)
 	if err != nil {
@@ -142,7 +142,7 @@ func (st *Storage) initStudentGroupsTable() {
 			grade INT NOT NULL,
 			institute VARCHAR(128) NOT NULL,
 		    name VARCHAR(10) NOT NULL,
-		    students JSON		    
+		    students JSON
 		);
 	`)
 	if err != nil {
@@ -159,7 +159,7 @@ func (st *Storage) initScheduleTable() {
 			teacher_id INT NOT NULL,
 		    weekday INT NOT NULL,
 		    discipline_name VARCHAR (128),
-		    lesson_count INT NOT NULL,		    
+		    lesson_count INT NOT NULL,
 		    location VARCHAR(12) NOT NULL
 		);
 	`)
@@ -172,7 +172,7 @@ func (st *Storage) initScheduleTable() {
 func (st *Storage) initAdTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS ad (
-			id SERIAL PRIMARY KEY, 
+			id SERIAL PRIMARY KEY,
 			content TEXT NOT NULL
 		);
 	`)
