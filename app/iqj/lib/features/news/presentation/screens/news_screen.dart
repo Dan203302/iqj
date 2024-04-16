@@ -164,7 +164,7 @@ class _NewsBloc extends State<NewsScreen>{
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: Theme.of(context).colorScheme.primaryContainer,
-                    // В дизайне же нет рамки вроде не было рамки 🤨
+                    // В дизайне же нет рамки вроде не было рамки 🤨 
                     // border: Border.all(
                     //   color: const Color.fromARGB(255, 255, 166, 0),
                     // ),
@@ -227,19 +227,6 @@ class _NewsBloc extends State<NewsScreen>{
               color: Theme.of(context).colorScheme.surfaceVariant,
             ),
           ),
-          /*if (flag_close) */ Container(
-                margin: const EdgeInsets.only(left: 14, right: 12, bottom: 12),
-                child: Text(
-                'Общие',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24.0,
-                  height: 1.5,
-                  ),
-                ),
-              ),
           if (_isFilter) Container(
               margin: const EdgeInsets.only(top: 12),
               padding: const EdgeInsets.only(left: 12, right: 12),
@@ -318,7 +305,19 @@ class _NewsBloc extends State<NewsScreen>{
                 ],
               ),
             ),
-
+          Container(
+                margin: const EdgeInsets.only(left: 14, right: 12,top: 10),
+                child: Text(
+                'Общие',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24.0,
+                  height: 1.5,
+                  ),
+                ),
+              ),
           Expanded(
             child: RefreshIndicator(
               key: _refreshIndicatorKey,
