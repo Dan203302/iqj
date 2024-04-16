@@ -2,10 +2,10 @@ package excelparser
 
 import (
 	"fmt"
+	"iqj/models"
 	"os"
 	"path/filepath"
 	"strings"
-	"iqj/models"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 )

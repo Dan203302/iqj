@@ -78,7 +78,7 @@ func HandleAddNews(c *gin.Context) {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 		}
-		newsBl := models.NewsBlock{Header: news.Header, ImageLink: news.ImageLink, Link: "", PublicationTime: news.PublicationTime}
+		newsBl := models.NewsBlock{Header: news.Header, ImageLink: news.ImageLink, Link: "", Tags: news.Tags, PublicationTime: news.PublicationTime}
 		ok := database.Database.AddNews(newsBl, news.Text)
 		if ok != nil {
 			c.JSON(http.StatusInternalServerError, ok.Error())

@@ -45,8 +45,6 @@ func main() {
 		authGroup.POST("/news", handlers.HandleAddNews)
 		authGroup.POST("/ad", handlers.HandlePostAd)
 
-		//Для тестов
-		// authGroup.POST("/ad2", handlers.HandlePostAd2)
 	}
 
 	// Запускает сервер на порту и "слушает" запросы.
