@@ -20,46 +20,65 @@ class NewsCard extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.all(12),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: ClipRRect(
+                child: Container(
+                  width: double.infinity,
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Image.network(
                       news.thumbnail,
-                      fit: BoxFit.fill,
-                    )),
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 6)),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      news.title,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        // title,
-                        // style: textTheme.titleLarge
+              Container(
+                margin: const EdgeInsets.only(left: 12, right: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            news.title,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              // title,
+                              // style: textTheme.titleLarge
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            // Обработка нажатия кнопки
+                          },
+                          icon: const Icon(
+                            Icons.bookmark_border,
+                            size: 28,
+                          ),
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.only(bottom: 6)),
+                    Text(
+                      DateFormat('dd.MM.yyyy').format(news.publicationTime),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      // Обработка нажатия кнопки
-                    },
-                    icon: const Icon(
-                      Icons.bookmark_border,
-                      size: 28,
-                    ),
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ],
+                    const Padding(padding: EdgeInsets.only(bottom: 12)),
+                  ],
+                ),
               ),
-              Text(DateFormat('yyyy.MM.dd').format(news.publicationTime)),
             ],
           ),
         ),

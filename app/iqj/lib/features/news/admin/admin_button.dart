@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/admin/general_news.dart';
 import 'package:iqj/features/news/admin/special_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
-import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
+import 'package:iqj/features/news/presentation/screens/search/body_for_date/body.dart';
 
 // не удаляйте плиз :) нужно потом будет
 
@@ -81,11 +81,14 @@ Future<void> admin_button(BuildContext context) async {
           icon: const Icon(Icons.arrow_back),
         ),
         const Padding(padding: EdgeInsets.only(right: 6)),
-        const Text(
-          "Создать новость",
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
+        const Flexible(
+          child: Text(
+            "Создать новость",
+            overflow: TextOverflow.clip,
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
@@ -117,7 +120,8 @@ Widget two_button_add_news(BuildContext context) {
       color: Colors.transparent,
       border: Border(
         top: BorderSide(
-            color: Theme.of(context).colorScheme.surfaceVariant, width: 1),
+          color: Theme.of(context).colorScheme.surfaceVariant,
+        ),
       ),
     ),
     child: Column(
@@ -133,18 +137,16 @@ Widget two_button_add_news(BuildContext context) {
                 const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 8),
             child: Material(
               color: const Color.fromRGBO(239, 172, 0, 1),
-              shape: StadiumBorder(),
+              shape: const StadiumBorder(),
               elevation: 5.0,
               child: InkWell(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              SpecialNews()) // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
-                      // и да, кнопку создать уже сделал, она лежит в файле news_add_button
-                      );
-                  //Navigator.of(context).pop();
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SpecialNews(),
+                    ),
+                  );
                 },
                 child: const Center(
                   //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -167,12 +169,15 @@ Widget two_button_add_news(BuildContext context) {
             padding: const EdgeInsets.only(top: 15, left: 8, right: 8),
             child: Material(
               color: const Color.fromRGBO(239, 172, 0, 1),
-              shape: StadiumBorder(),
+              shape: const StadiumBorder(),
               elevation: 5.0,
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GeneralNews()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const GeneralNews()),
+                  );
                 },
                 child: const Center(
                   //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),

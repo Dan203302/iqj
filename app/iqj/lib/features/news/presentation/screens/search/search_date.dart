@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_date/body.dart';
-import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 
-void search_tags(BuildContext context) {
+void searchdata(BuildContext context) {
   final Widget okButton = TextButton(
     style: ButtonStyle(
       overlayColor: MaterialStatePropertyAll(
@@ -37,7 +36,7 @@ void search_tags(BuildContext context) {
 
   final AlertDialog alert = AlertDialog(
     title: const Text(
-      "Теги",
+      "Дата",
       style: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
@@ -45,7 +44,7 @@ void search_tags(BuildContext context) {
     ),
     backgroundColor: Theme.of(context).colorScheme.background,
     surfaceTintColor: Colors.white,
-    content: create_body_tags(),
+    content: create_body_date(context),
     actions: [
       okButton,
       searchButton,

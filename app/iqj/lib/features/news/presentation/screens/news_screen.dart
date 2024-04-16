@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/admin_button.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
-import 'package:iqj/features/news/presentation/screens/search/search_data.dart';
+import 'package:iqj/features/news/presentation/screens/search/search_date.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_tags.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -90,8 +90,12 @@ class _NewsBloc extends State<NewsScreen> {
                   width: 250,
                   child: TextField(
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(16.0, 12.0, 0.0,
-                          12.0), // Отступы слева и справа для текста
+                      contentPadding: const EdgeInsets.fromLTRB(
+                        16.0,
+                        12.0,
+                        0.0,
+                        12.0,
+                      ), // Отступы слева и справа для текста
                       hintText: "Поиск по заголовку ...",
                       hintStyle: const TextStyle(
                         fontFamily: 'Inter',
@@ -101,9 +105,10 @@ class _NewsBloc extends State<NewsScreen> {
                       ),
                       suffixIcon: Padding(
                         padding: const EdgeInsets.only(
-                            bottom: 12.0), // Установка отступа только сверху
+                          bottom: 12.0,
+                        ), // Установка отступа только сверху
                         child: IconButton(
-                          icon: Icon(Icons.search),
+                          icon: const Icon(Icons.search),
                           onPressed: () {},
                         ),
                       ),
@@ -127,7 +132,8 @@ class _NewsBloc extends State<NewsScreen> {
                           announce_close();
                           searchfilter();
                         },
-                        icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                        //icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                        icon: const Icon(Icons.tune_rounded),
                       ),
                     ],
                   ),
@@ -140,14 +146,14 @@ class _NewsBloc extends State<NewsScreen> {
                     children: [
                       IconButton(
                         onPressed: () {},
-                        icon:
-                            SvgPicture.asset('assets/icons/news/bookmark2.svg'),
+                        icon: const Icon(Icons.bookmarks_outlined),
                       ),
                       IconButton(
                         onPressed: () {
                           searchfilter();
                         },
-                        icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                        icon: //SvgPicture.asset('assets/icons/news/filter2.svg'),
+                            const Icon(Icons.tune_rounded),
                       ),
                     ],
                   ),
