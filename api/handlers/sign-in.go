@@ -15,9 +15,17 @@ func HandleSignIn(c *gin.Context) {
 
 	// Получаем данные, введенные пользователем из тела запроса и записываем их в signingUser
 	var signingUser models.User
-	err := c.BindJSON(&signingUser.Data)
+	err := c.BindJSON(&signingUser)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
+	}
+
+	if signingUser.Data.Email == "" {
+		c.JSON(http.StatusBadRequest, "There is no email")
+	}
+
+	if signingUser.Data.Password == "" {
+		c.JSON(http.StatusBadRequest, "There is no password")
 	}
 
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль

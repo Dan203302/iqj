@@ -18,56 +18,32 @@ type tokenclaims struct {
 
 // Если с токеном все хорошо,вызовется функция, которая находится внутри.
 // Например для WithJWTAuth(handleHello) при правильном токене следом сработает handleHello
-func WithJWTAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Получаем значение заголовка Authorization
-		header := c.GetHeader("Authorization")
+func WithJWTAuth(c *gin.Context) {
+	// Получаем значение заголовка Authorization
+	header := c.GetHeader("Authorization")
 
-		// Проверяем не пустое ли значение в поле заголовка
-		if header == "" {
-			c.JSON(http.StatusUnauthorized, "Missing auth token")
-			return
-		}
-
-		// Отделяем тип от токена(изначально у нас header выглядит так:
-		//Bearer eyJhbGciOiJIU и так далее).
-		tokenstring := strings.Split(header, " ")
-		// Проверяем, что у нас есть и тип и сам токен
-		if len(tokenstring) != 2 {
-			c.JSON(http.StatusUnauthorized, "Invalid auth header")
-			return
-		}
-
-		//Парсим токен, взяв из заголовка только токен
-		token, err := jwt.ParseWithClaims(tokenstring[1], &tokenclaims{}, func(token *jwt.Token) (interface{}, error) {
-			// Проверяем метод подписи токена
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, errors.New("invalid signing method")
-			}
-			return []byte(config.SigningKey), nil
-		})
-
-		if err != nil {
-			c.JSON(http.StatusForbidden, err.Error())
-			return
-		}
-
-		// Проверяем что токен действителен
-		if !token.Valid {
-			c.JSON(http.StatusForbidden, "bad token")
-			return
-		}
-
-		claims, ok := token.Claims.(*tokenclaims)
-		if !ok {
-			c.JSON(http.StatusForbidden, err.Error())
-		}
-
-		// Записываем id в контекст, чтобы в дальнейшем использовать в других функциях
-		c.Set("userId", claims.UserId)
-		// Если все хорошо, у нас вызывается функция, которая передавалась в WithJWTAuth
-		c.Next()
+	// Проверяем не пустое ли значение в поле заголовка
+	if header == "" {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "Missing auth token")
+		return
 	}
+
+	// Отделяем тип от токена(изначально у нас header выглядит так:
+	//Bearer eyJhbGciOiJIU и так далее).
+	tokenstring := strings.Split(header, " ")
+	// Проверяем, что у нас есть и тип и сам токен
+	if len(tokenstring) != 2 {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "Invalid auth header")
+		return
+	}
+
+	userId, err := ParseToken(tokenstring[1])
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, err.Error())
+		return
+	}
+	// Записываем id в контекст, чтобы в дальнейшем использовать в других функциях
+	c.Set("userId", userId)
 }
 
 // Создание токена
@@ -81,6 +57,33 @@ func GenerateJWT(id int) (string, error) {
 	}
 	// Создание токена с параметрами записанными в claims и id пользователя
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	// Создание какой-то JWT строчки
+
 	return token.SignedString([]byte(config.SigningKey))
+}
+
+func ParseToken(tokenstring string) (int, error) {
+	//Парсим токен, взяв из заголовка только токен
+	token, err := jwt.ParseWithClaims(tokenstring, &tokenclaims{}, func(token *jwt.Token) (interface{}, error) {
+		// Проверяем метод подписи токена
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+		return []byte(config.SigningKey), nil
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	// Проверяем что токен действителен
+	if !token.Valid {
+		return 0, err
+	}
+
+	claims, ok := token.Claims.(*tokenclaims)
+	if !ok {
+		return 0, err
+	}
+
+	return claims.UserId, nil
 }
