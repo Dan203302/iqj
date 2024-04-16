@@ -79,25 +79,32 @@ class _NewsBloc extends State<NewsScreen>{
         scrolledUnderElevation: 0,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: _isFilter ? Container(
-          width: 285,
-          height: 23,
-          margin: const EdgeInsets.only(left: 20.0, top: 20.0),
-          child: const TextField(
-            decoration: InputDecoration(
-              // border: OutlineInputBorder(
-              //   borderRadius: BorderRadius.circular(20.0),
-              // ),
-              //icon: Icon(Icons.search),
-              hintText: "Поиск по заголовку ...",
-              hintStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                fontSize: 16.0,
-                height: 1.5,
+          width: 400,
+          height: 33,
+          margin: const EdgeInsets.only( top: 20.0),
+          child: Container(
+            width: 250,
+            child: TextField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(16.0, 12.0, 0.0, 12.0), // Отступы слева и справа для текста
+                hintText: "Поиск по заголовку ...",
+                hintStyle: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.0,
+                  height: 1.5,
+                ),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0), // Установка отступа только сверху
+                  child: IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {},
+                  ),
+                ),
               ),
-              icon: Icon(Icons.search),
             ),
           ),
+
         ) :  Text(
           'Новости',
           style: Theme.of(context).textTheme.titleLarge,
