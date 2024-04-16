@@ -6,20 +6,54 @@ import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body
 import 'package:intl/intl.dart';
 
 class SpecialNews extends StatefulWidget {
-  SpecialNews({super.key});
+  const SpecialNews({super.key});
 
   @override
   State<SpecialNews> createState() => _SpecialNews();
 }
 
 class _SpecialNews extends State<SpecialNews> {
-  TextEditingController _textEditingController = TextEditingController();
   String _text = '';
+
+  TextEditingController fromDatePickerController = TextEditingController();
+  TextEditingController toDatePickerController = TextEditingController();
+  DateTime selectedFromDate = DateTime.now();
+  DateTime selectedToDate = DateTime.now();
+
+  Future<void> _selectFromDate(BuildContext context) async {
+    final DateFormat formatter = DateFormat('dd.MM.yyyy');
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedFromDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedFromDate) {
+      setState(() {
+        fromDatePickerController.text = formatter.format(picked);
+        selectedFromDate = picked;
+      });
+    }
+  }
+
+  Future<void> _selectToDate(BuildContext context) async {
+    final DateFormat formatter = DateFormat('dd.MM.yyyy');
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedToDate,
+      firstDate: selectedFromDate,
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedToDate) {
+      setState(() {
+        toDatePickerController.text = formatter.format(picked);
+        selectedToDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
-    final FocusNode _focusNode = FocusNode();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       // Заголовок экрана
@@ -186,13 +220,14 @@ class _SpecialNews extends State<SpecialNews> {
             ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
+                width: 30,
                 alignment: Alignment.bottomLeft,
                 margin: const EdgeInsets.only(left: 12, top: 6),
                 child: Text(
-                  "С:  ",
+                  "С:",
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 16,
@@ -200,9 +235,6 @@ class _SpecialNews extends State<SpecialNews> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 9),
               ),
               Flexible(
                 child: Container(
@@ -212,6 +244,7 @@ class _SpecialNews extends State<SpecialNews> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextField(
+                    controller: fromDatePickerController,
                     decoration: InputDecoration(
                       hintText: "дд.мм.гггг",
                       hintFadeDuration: const Duration(milliseconds: 100),
@@ -230,7 +263,9 @@ class _SpecialNews extends State<SpecialNews> {
                           icon: const Icon(
                             Icons.date_range,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _selectFromDate(context);
+                          },
                         ),
                       ),
                     ),
@@ -241,9 +276,10 @@ class _SpecialNews extends State<SpecialNews> {
           ),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
+                width: 30,
                 alignment: Alignment.bottomLeft,
                 margin: const EdgeInsets.only(left: 12, top: 6),
                 child: Text(
@@ -256,9 +292,6 @@ class _SpecialNews extends State<SpecialNews> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(right: 6),
-              ),
               Flexible(
                 child: Container(
                   margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
@@ -267,6 +300,7 @@ class _SpecialNews extends State<SpecialNews> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextField(
+                    controller: toDatePickerController,
                     decoration: InputDecoration(
                       hintText: "дд.мм.гггг",
                       hintFadeDuration: const Duration(milliseconds: 100),
@@ -285,7 +319,9 @@ class _SpecialNews extends State<SpecialNews> {
                           icon: const Icon(
                             Icons.date_range,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _selectToDate(context);
+                          },
                         ),
                       ),
                     ),
@@ -310,7 +346,15 @@ class _SpecialNews extends State<SpecialNews> {
                     color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final DateTime now = DateTime.now();
+                      final DateTime to =
+                          DateTime(now.year, now.month, now.day + 1);
+                      fromDatePickerController.text =
+                          DateFormat('dd.MM.yyyy').format(now);
+                      toDatePickerController.text =
+                          DateFormat('dd.MM.yyyy').format(to);
+                    },
                     child: Text(
                       "1 день",
                       style: TextStyle(
@@ -332,7 +376,15 @@ class _SpecialNews extends State<SpecialNews> {
                     color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final DateTime now = DateTime.now();
+                      final DateTime to =
+                          DateTime(now.year, now.month, now.day + 3);
+                      fromDatePickerController.text =
+                          DateFormat('dd.MM.yyyy').format(now);
+                      toDatePickerController.text =
+                          DateFormat('dd.MM.yyyy').format(to);
+                    },
                     child: Text(
                       "3 дня",
                       style: TextStyle(
@@ -353,7 +405,15 @@ class _SpecialNews extends State<SpecialNews> {
                     color: Theme.of(context).colorScheme.onInverseSurface,
                   ),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final DateTime now = DateTime.now();
+                      final DateTime to =
+                          DateTime(now.year, now.month, now.day + 7);
+                      fromDatePickerController.text =
+                          DateFormat('dd.MM.yyyy').format(now);
+                      toDatePickerController.text =
+                          DateFormat('dd.MM.yyyy').format(to);
+                    },
                     child: Text(
                       "Неделя",
                       style: TextStyle(

@@ -25,8 +25,8 @@ class NewsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Container(
-                    width: double.infinity,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
                     child: Image.network(
                       news.thumbnail,
                       fit: BoxFit.fill,

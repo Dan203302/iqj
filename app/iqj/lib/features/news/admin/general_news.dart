@@ -4,10 +4,38 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/news_add_button.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
+import 'package:intl/intl.dart';
 
-class GeneralNews extends StatelessWidget {
+class GeneralNews extends StatefulWidget {
+  const GeneralNews({super.key});
+
+  @override
+  State<GeneralNews> createState() => _GeneralNews();
+}
+
+class _GeneralNews extends State<GeneralNews> {
+  TextEditingController datePickerController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateFormat formatter = DateFormat('dd.MM.yyyy');
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        datePickerController.text = formatter.format(picked);
+        selectedDate = picked;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    datePickerController.text = DateFormat('dd.MM.yyyy').format(selectedDate);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -52,7 +80,8 @@ class GeneralNews extends StatelessWidget {
                   Theme.of(context).colorScheme.onInverseSurface,
                 ),
                 shape: MaterialStatePropertyAll(
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
               ),
               child: Column(
@@ -61,7 +90,8 @@ class GeneralNews extends StatelessWidget {
                   //icon: SvgPicture.asset('assets/icons/news/bookmark2.svg'),
                   //SvgPicture.asset('assets/icons/news/images_add.svg'), // Иконка или изображение
                   const Icon(Icons.image, size: 39),
-                  const SizedBox(width: 8), // Расстояние между изображением и текстом
+                  const SizedBox(
+                      width: 8), // Расстояние между изображением и текстом
                   Text(
                     'Загрузить изображение',
                     textAlign: TextAlign.center,
@@ -71,7 +101,6 @@ class GeneralNews extends StatelessWidget {
                   ),
                 ],
               ),
-              
             ),
           ),
           Container(
@@ -117,7 +146,8 @@ class GeneralNews extends StatelessWidget {
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 hintText: "Напишите заголовок здесь...",
                 hintFadeDuration: Duration(milliseconds: 100),
                 border: InputBorder.none,
@@ -129,7 +159,6 @@ class GeneralNews extends StatelessWidget {
                   color: Color.fromRGBO(128, 128, 128, 0.6),
                 ),
               ),
-              
             ),
           ),
           Container(
@@ -164,7 +193,8 @@ class GeneralNews extends StatelessWidget {
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 hintText: "Напишите новость здесь...",
                 hintFadeDuration: Duration(milliseconds: 100),
                 border: InputBorder.none,
@@ -176,7 +206,6 @@ class GeneralNews extends StatelessWidget {
                   color: Color.fromRGBO(128, 128, 128, 0.6),
                 ),
               ),
-              
             ),
           ),
           Container(
@@ -245,26 +274,32 @@ class GeneralNews extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "дд.мм.гггг",
-                      hintFadeDuration: const Duration(milliseconds: 100),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      hintStyle: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.0,
-                        height: 2.5,
-                        color: Color.fromRGBO(128, 128, 128, 0.6),
-                      ),
-                      suffixIcon: SizedBox(
-                        child: IconButton(
-                            icon:const Icon(Icons.date_range, ),
-                            onPressed: () {},
-                        ),
-                      ),
+              controller: datePickerController,
+              decoration: InputDecoration(
+                hintText: "дд.мм.гггг",
+                hintFadeDuration: const Duration(milliseconds: 100),
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                hintStyle: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.0,
+                  height: 2.5,
+                  color: Color.fromRGBO(128, 128, 128, 0.6),
+                ),
+                suffixIcon: SizedBox(
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.date_range,
                     ),
+                    onPressed: () {
+                      _selectDate(context);
+                    },
                   ),
+                ),
+              ),
+            ),
           ),
           news_add_button(),
           const Padding(
@@ -293,11 +328,11 @@ Widget three_but(BuildContext context) {
       },
       style: ButtonStyle(
         backgroundColor: MaterialStatePropertyAll(
-            Theme.of(context).colorScheme.onInverseSurface,
-      ),
-      shape: MaterialStatePropertyAll(
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+          Theme.of(context).colorScheme.onInverseSurface,
+        ),
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
