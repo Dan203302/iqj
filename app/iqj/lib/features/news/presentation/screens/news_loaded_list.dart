@@ -20,7 +20,7 @@ class NewsCard extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.all(12),
         child: Padding(
-          padding: const EdgeInsets.all(0),
+          padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -83,32 +83,33 @@ class _NewsBloc extends State<NewsScreen> {
         backgroundColor: Theme.of(context).colorScheme.background,
         title: _isFilter
             ? Container(
-                width: 400,
-                height: 33,
-                margin: const EdgeInsets.only(top: 20.0),
+                width: 500,
+                height: 45,
+                margin: EdgeInsets.zero,
                 child: Container(
-                  width: 250,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onInverseSurface,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: TextField(
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.fromLTRB(
-                        16.0,
-                        12.0,
-                        0.0,
-                        12.0,
-                      ), // Отступы слева и справа для текста
-                      hintText: "Поиск по заголовку ...",
+                      hintText: "Поиск по заголовку...",
+                      hintFadeDuration: const Duration(milliseconds: 100),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
                       hintStyle: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
                         fontSize: 16.0,
-                        height: 1.5,
+                        height: 5,
+                        color: Color.fromRGBO(128, 128, 128, 0.6),
                       ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 12.0,
-                        ), // Установка отступа только сверху
+                      suffixIcon: SizedBox(
                         child: IconButton(
-                          icon: const Icon(Icons.search),
+                          icon: const Icon(
+                            Icons.search,
+                          ),
                           onPressed: () {},
                         ),
                       ),
@@ -129,7 +130,7 @@ class _NewsBloc extends State<NewsScreen> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          announce_close();
+                          //announce_close();
                           searchfilter();
                         },
                         //icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
@@ -165,7 +166,8 @@ class _NewsBloc extends State<NewsScreen> {
         children: [
           if (_isFilter)
             Container(
-              margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
+              margin: const EdgeInsets.only(
+                  top: 12, left: 12, right: 12, bottom: 12),
               padding: const EdgeInsets.only(left: 12, right: 12),
               height: 100,
               alignment: Alignment.center,
