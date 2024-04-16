@@ -27,7 +27,15 @@ class NewsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(news.thumbnail),
+              Center(
+                child: Container(
+                  width: double.infinity, 
+                  child: Image.network(
+                    news.thumbnail,
+                    fit: BoxFit.fill, 
+                  )
+                ),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

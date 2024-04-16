@@ -75,7 +75,7 @@ class _NewsListState extends State<NewsList>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(news.thumbnail),
+              Center(child: Image.network(news.thumbnail)),
               Row(
                 children: [
                   Expanded(

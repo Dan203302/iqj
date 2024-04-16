@@ -150,7 +150,7 @@ class _NewsBloc extends State<NewsScreen>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_isFilter) Container(
-              margin: const EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 12),
+              margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
                   padding: const EdgeInsets.only(left: 12, right: 12),
                   height: 100,
                   alignment: Alignment.center,
