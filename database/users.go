@@ -57,7 +57,7 @@ func (st *Storage) GetRole(user *models.User) (*models.User, error) {
 
 	err := st.Db.QueryRow("SELECT role FROM users WHERE id = $1",
 		user.Id).
-		Scan(user.Role)
+		Scan(&user.Role)
 	if err != nil {
 		return nil, err
 	}
