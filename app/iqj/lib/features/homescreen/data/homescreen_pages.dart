@@ -3,31 +3,69 @@ import 'package:iqj/features/account/presentation/screens/account_screen.dart';
 import 'package:iqj/features/homescreen/domain/homescreen_page.dart';
 import 'package:iqj/features/news/presentation/screens/news_screen.dart';
 import 'package:iqj/features/schedule/presentation/schedule_screen.dart';
+import 'package:flutter_svg/svg.dart';
 
-const pages = <HomeScreenPage>[
+final pages = <HomeScreenPage>[
   HomeScreenPage(
     label: 'Новости',
-    icon: Icon(Icons.newspaper),
-    widget: NewsScreen(),
+    //icon: Icon(Icons.newspaper),
+
+    icon: SvgPicture.asset('assets/icons/navbar/news.svg'),
+    activeIcon: SvgPicture.asset(
+      'assets/icons/navbar/news.svg',
+      colorFilter: const ColorFilter.mode(
+        Color.fromARGB(255, 255, 166, 0),
+        BlendMode.srcIn,
+      ),
+    ),
+    widget: const NewsScreen(),
   ),
   HomeScreenPage(
-    label: 'Рассписание',
-    icon: Icon(Icons.calendar_today),
-    widget: ScheduleScreen(),
+    label: 'Расписание',
+    icon: SvgPicture.asset('assets/icons/navbar/schedule.svg'),
+    activeIcon: SvgPicture.asset(
+      'assets/icons/navbar/schedule.svg',
+      colorFilter: const ColorFilter.mode(
+        Color.fromARGB(255, 255, 166, 0),
+        BlendMode.srcIn,
+      ),
+    ),
+    widget: const ScheduleScreen(),
   ),
   HomeScreenPage(
     label: 'Чаты',
-    icon: Icon(Icons.chat_bubble),
-    widget: Text('Здесь будут чаты'),
+    icon: SvgPicture.asset('assets/icons/navbar/chat.svg'),
+    activeIcon: SvgPicture.asset(
+      'assets/icons/navbar/chat.svg',
+      colorFilter: const ColorFilter.mode(
+        Color.fromARGB(255, 255, 166, 0),
+        BlendMode.srcIn,
+      ),
+    ),
+    widget: const Text('Здесь будут чаты'),
   ),
   HomeScreenPage(
     label: 'ЛК',
-    icon: Icon(Icons.account_circle),
-    widget: AccountScreen(),
+    icon: SvgPicture.asset('assets/icons/navbar/account.svg'),
+    activeIcon: SvgPicture.asset(
+      'assets/icons/navbar/account.svg',
+      colorFilter: const ColorFilter.mode(
+        Color.fromARGB(255, 255, 166, 0),
+        BlendMode.srcIn,
+      ),
+    ),
+    widget: const AccountScreen(),
   ),
   HomeScreenPage(
     label: 'Сервисы',
-    icon: Icon(Icons.grid_view),
-    widget: Text('Здесь будут сервисы'),
+    icon: SvgPicture.asset('assets/icons/navbar/services.svg'),
+    activeIcon: SvgPicture.asset(
+      'assets/icons/navbar/services.svg',
+      colorFilter: const ColorFilter.mode(
+        Color.fromARGB(255, 255, 166, 0),
+        BlendMode.srcIn,
+      ),
+    ),
+    widget: const Text('Здесь будут сервисы'),
   ),
 ];

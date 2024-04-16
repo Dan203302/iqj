@@ -18,7 +18,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   late bool firstLaunch = false;
 
   @override
@@ -44,14 +43,14 @@ class _AppState extends State<App> {
       title: 'IQJ',
       theme: lightTheme,
       darkTheme: darkTheme,
-      initialRoute: firstLaunch? 'welcome' : '/',
+      initialRoute: firstLaunch ? 'welcome' : '/',
       routes: {
-        '/' : (context) => const HomeScreen(),
-        'welcome' : (context) => const Welcome(),
-        'authorise' :(context) => const AuthScreen(),
-        'newslist' : (context) => const NewsList(),
-        'account' : (context) => const AccountScreen(),
-        'registration':(context) => const RegScreen(),
+        '/': (context) => const HomeScreen(),
+        'welcome': (context) => const Welcome(),
+        'authorise': (context) => const AuthScreen(),
+        'newslist': (context) => const NewsList(),
+        'account': (context) => const AccountScreen(),
+        'registration': (context) => const RegScreen(),
       },
     );
   }

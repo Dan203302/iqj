@@ -12,8 +12,7 @@ class SpecialNews extends StatefulWidget {
   State<SpecialNews> createState() => _SpecialNews();
 }
 
-class _SpecialNews extends State<SpecialNews>{
-
+class _SpecialNews extends State<SpecialNews> {
   TextEditingController _textEditingController = TextEditingController();
   String _text = '';
 
@@ -49,53 +48,65 @@ class _SpecialNews extends State<SpecialNews>{
           ),
           Container(
             margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
-            padding: const EdgeInsets.only(left: 12, right: 12),
-            height: 80,
+            padding:
+                const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: Theme.of(context).colorScheme.primaryContainer,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Wrap(
               children: [
-                Flexible(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              child: SvgPicture.asset(
-                                'assets/icons/schedule/warning.svg',
-                                semanticsLabel: 'warning',
-                                height: 24,
-                                width: 24,
-                                allowDrawingOutsideViewBox: true,
-                                // color: const Color.fromARGB(255, 239, 172, 0),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                _text,
-                                softWrap: true,
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.normal,
-                                  color: Color.fromARGB(255, 255, 166, 0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(right: 12),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/schedule/warning.svg',
+                                    semanticsLabel: 'warning',
+                                    height: 24,
+                                    width: 24,
+                                    allowDrawingOutsideViewBox: true,
+                                    // color: const Color.fromARGB(255, 239, 172, 0),
+                                  ),
                                 ),
-                              ),
+                                Expanded(
+                                  child: Text(
+                                    _text,
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.normal,
+                                      color: Color.fromARGB(255, 255, 166, 0),
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {});
+                                  },
+                                  icon: SvgPicture.asset(
+                                    'assets/icons/news/close.svg',
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -133,7 +144,8 @@ class _SpecialNews extends State<SpecialNews>{
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 hintText: "Напишите новость здесь...",
                 hintFadeDuration: Duration(milliseconds: 100),
                 border: InputBorder.none,
@@ -174,37 +186,38 @@ class _SpecialNews extends State<SpecialNews>{
             ),
           ),
           Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  alignment: Alignment.bottomLeft,
-                  margin: const EdgeInsets.only(left: 12, top: 6),
-                  child: Text(
-                    "С:  ",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.w700,
-                    ),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                alignment: Alignment.bottomLeft,
+                margin: const EdgeInsets.only(left: 12, top: 6),
+                child: Text(
+                  "С:  ",
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 6),
-                ),
-                Flexible(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onInverseSurface,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TextField(
+              ),
+              const Padding(
+                padding: EdgeInsets.only(right: 9),
+              ),
+              Flexible(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onInverseSurface,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextField(
                     decoration: InputDecoration(
                       hintText: "дд.мм.гггг",
                       hintFadeDuration: const Duration(milliseconds: 100),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
                       hintStyle: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -214,50 +227,52 @@ class _SpecialNews extends State<SpecialNews>{
                       ),
                       suffixIcon: SizedBox(
                         child: IconButton(
-                            icon:const Icon(Icons.date_range, ),
-                            onPressed: () {},
+                          icon: const Icon(
+                            Icons.date_range,
+                          ),
+                          onPressed: () {},
                         ),
                       ),
                     ),
                   ),
-                  ),
                 ),
-              ],
+              ),
+            ],
           ),
-          
+
           Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  alignment: Alignment.bottomLeft,
-                  margin: const EdgeInsets.only(left: 12, top: 6),
-                  child: Text(
-                    "По:",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.w700,
-                      
-                    ),
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                alignment: Alignment.bottomLeft,
+                margin: const EdgeInsets.only(left: 12, top: 6),
+                child: Text(
+                  "По:",
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 6),
-                ),
-                Flexible(
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onInverseSurface,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TextField(
+              ),
+              const Padding(
+                padding: EdgeInsets.only(right: 6),
+              ),
+              Flexible(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onInverseSurface,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextField(
                     decoration: InputDecoration(
                       hintText: "дд.мм.гггг",
                       hintFadeDuration: const Duration(milliseconds: 100),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
                       hintStyle: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -267,15 +282,17 @@ class _SpecialNews extends State<SpecialNews>{
                       ),
                       suffixIcon: SizedBox(
                         child: IconButton(
-                            icon:const Icon(Icons.date_range, ),
-                            onPressed: () {},
+                          icon: const Icon(
+                            Icons.date_range,
+                          ),
+                          onPressed: () {},
                         ),
                       ),
                     ),
                   ),
-                  ),
                 ),
-              ],
+              ),
+            ],
           ),
           // Три кнопки быстрой установки срока показа новости
           Padding(
@@ -367,4 +384,3 @@ class _SpecialNews extends State<SpecialNews>{
     );
   }
 }
-

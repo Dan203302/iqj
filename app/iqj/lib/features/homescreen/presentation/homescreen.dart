@@ -18,7 +18,7 @@ class HomeScreenState extends State<HomeScreen> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: Theme.of(context).colorScheme.background,
         selectedItemColor: Theme.of(context).colorScheme.inversePrimary,
-        unselectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: const Color(0xFF828282),
         items: pages,
         currentIndex: _currentPage,
         onTap: (int index) {

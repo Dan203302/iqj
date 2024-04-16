@@ -5,6 +5,7 @@ class HomeScreenPage extends BottomNavigationBarItem {
   const HomeScreenPage({
     required this.widget,
     required super.icon,
+    required super.activeIcon,
     required super.label,
   });
 }

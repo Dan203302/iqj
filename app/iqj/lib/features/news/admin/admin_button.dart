@@ -6,7 +6,6 @@ import 'package:iqj/features/news/admin/special_news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_data/body.dart';
 
-
 // не удаляйте плиз :) нужно потом будет
 
 // void admin_button(BuildContext context,NewsBloc newsBloc) {
@@ -73,12 +72,23 @@ import 'package:iqj/features/news/presentation/screens/search/body_for_data/body
 
 Future<void> admin_button(BuildContext context) async {
   final AlertDialog alert = AlertDialog(
-    title: const Text(
-      "Создать новость",
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-      ),
+    title: Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+        const Padding(padding: EdgeInsets.only(right: 6)),
+        const Text(
+          "Создать новость",
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     ),
     backgroundColor: Theme.of(context).colorScheme.background,
     surfaceTintColor: Colors.white,
@@ -90,11 +100,11 @@ Future<void> admin_button(BuildContext context) async {
     builder: (BuildContext context) {
       return WillPopScope(
         onWillPop: () async {
-          Navigator.of(context).pop(); 
+          Navigator.of(context).pop();
           return true;
         },
         child: alert,
-        );
+      );
     },
   );
 }
@@ -106,7 +116,8 @@ Widget two_button_add_news(BuildContext context) {
     decoration: BoxDecoration(
       color: Colors.transparent,
       border: Border(
-        top: BorderSide(color: Theme.of(context).colorScheme.surfaceVariant, width: 1),
+        top: BorderSide(
+            color: Theme.of(context).colorScheme.surfaceVariant, width: 1),
       ),
     ),
     child: Column(
@@ -133,7 +144,7 @@ Widget two_button_add_news(BuildContext context) {
                               SpecialNews()) // замени тут на свою страницу и создай в папку admin/news свой файл с этии файлом
                       // и да, кнопку создать уже сделал, она лежит в файле news_add_button
                       );
-                      //Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
                 },
                 child: const Center(
                   //padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),

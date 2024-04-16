@@ -12,38 +12,40 @@ import 'package:iqj/features/news/presentation/screens/search/search_tags.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
-  
+
   @override
   State<NewsScreen> createState() => _NewsBloc();
 }
 
-class _NewsBloc extends State<NewsScreen>{
+class _NewsBloc extends State<NewsScreen> {
   //final _newsbloc=NewsBloc(newsRepository)
-    //List<News>? _news_list;
-    // final newsList = getNews();
-    // final _newsbloc=NewsBloc(NewsArticle());
-    //final newsList=NewsSmall();
-    final _newsbloc=NewsBloc();
-    
-    static get title => null;
-    
-    @override
-    void initState(){
-      _newsbloc.add(LoadNewsList(completer: null));
-      super.initState();
-    }
-    bool _isFilter = false;
-    void searchfilter(){
-      setState(() {
-        _isFilter = !_isFilter;
-      });
-    }
-    bool flag_close = true;
-    void announce_close(){
-      setState(() {
-        flag_close=false;
-      });
-    }
+  //List<News>? _news_list;
+  // final newsList = getNews();
+  // final _newsbloc=NewsBloc(NewsArticle());
+  //final newsList=NewsSmall();
+  final _newsbloc = NewsBloc();
+
+  static get title => null;
+
+  @override
+  void initState() {
+    _newsbloc.add(LoadNewsList(completer: null));
+    super.initState();
+  }
+
+  bool _isFilter = false;
+  void searchfilter() {
+    setState(() {
+      _isFilter = !_isFilter;
+    });
+  }
+
+  bool flag_close = true;
+  void announce_close() {
+    setState(() {
+      flag_close = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +53,8 @@ class _NewsBloc extends State<NewsScreen>{
     // newsBloc.add(FetchNews());
     //final _newslistbloc=NewsBloc(context);
     final newsBloc = NewsBloc();
-    GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-
+    GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+        GlobalKey<RefreshIndicatorState>();
 
     return Scaffold(
       // appBar: AppBar(
@@ -62,14 +64,15 @@ class _NewsBloc extends State<NewsScreen>{
         width: 50.0, // Задаем ширину
         height: 50.0, // Задаем высоту
         decoration: BoxDecoration(
-          color: const Color.fromRGBO(239, 172, 0, 1), // Цвет кнопки
-          borderRadius: BorderRadius.circular(10.0), 
+          color: Theme.of(context).colorScheme.primary, // Цвет кнопки
+          borderRadius: BorderRadius.circular(10.0),
         ),
         child: IconButton(
           onPressed: () {
             admin_button(context);
           },
           icon: const Icon(Icons.edit),
+          color: Theme.of(context).colorScheme.onPrimary,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -78,86 +81,93 @@ class _NewsBloc extends State<NewsScreen>{
         toolbarHeight: 72,
         scrolledUnderElevation: 0,
         backgroundColor: Theme.of(context).colorScheme.background,
-        title: _isFilter ? Container(
-          width: 400,
-          height: 33,
-          margin: const EdgeInsets.only( top: 20.0),
-          child: Container(
-            width: 250,
-            child: TextField(
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.fromLTRB(16.0, 12.0, 0.0, 12.0), // Отступы слева и справа для текста
-                hintText: "Поиск по заголовку ...",
-                hintStyle: const TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16.0,
-                  height: 1.5,
-                ),
-                suffixIcon: Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0), // Установка отступа только сверху
-                  child: IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {},
+        title: _isFilter
+            ? Container(
+                width: 400,
+                height: 33,
+                margin: const EdgeInsets.only(top: 20.0),
+                child: Container(
+                  width: 250,
+                  child: TextField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(16.0, 12.0, 0.0,
+                          12.0), // Отступы слева и справа для текста
+                      hintText: "Поиск по заголовку ...",
+                      hintStyle: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.0,
+                        height: 1.5,
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 12.0), // Установка отступа только сверху
+                        child: IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
                   ),
                 ),
+              )
+            : Text(
+                'Новости',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-            ),
-          ),
-
-        ) :  Text(
-          'Новости',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
         centerTitle: false,
-        actions: _isFilter? [
-          Container(
-            padding: const EdgeInsets.only(right: 12),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    announce_close();
-                    searchfilter();
-                  },
-                  icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+        actions: _isFilter
+            ? [
+                Container(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          announce_close();
+                          searchfilter();
+                        },
+                        icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                      ),
+                    ],
+                  ),
+                ),
+              ]
+            : [
+                Container(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon:
+                            SvgPicture.asset('assets/icons/news/bookmark2.svg'),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          searchfilter();
+                        },
+                        icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ),
-        ] : [
-          Container(
-            padding: const EdgeInsets.only(right: 12),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                  },
-                  icon: SvgPicture.asset('assets/icons/news/bookmark2.svg'),
-                ),
-                IconButton(
-                  onPressed: () {
-                    searchfilter();
-                  },
-                  icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_isFilter) Container(
+          if (_isFilter)
+            Container(
               margin: const EdgeInsets.only(top: 12, left: 12, right: 12),
-                  padding: const EdgeInsets.only(left: 12, right: 12),
-                  height: 100,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.primaryContainer,),
-              child: Row(  
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              height: 100,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.primaryContainer,
+              ),
+              child: Row(
                 //crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Flexible(
@@ -182,7 +192,7 @@ class _NewsBloc extends State<NewsScreen>{
                                 fontFamily: 'Inter',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color:Color.fromARGB(255, 255, 255, 255),
+                                color: Color.fromARGB(255, 255, 255, 255),
                               ),
                             ),
                           ),
@@ -205,7 +215,7 @@ class _NewsBloc extends State<NewsScreen>{
                                 fontFamily: 'Inter',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color:Color.fromARGB(255, 255, 255, 255),
+                                color: Color.fromARGB(255, 255, 255, 255),
                               ),
                             ),
                           ),
@@ -216,10 +226,10 @@ class _NewsBloc extends State<NewsScreen>{
                 ],
               ),
             ),
-          
-              if (flag_close) Container(
-                margin: const EdgeInsets.only(left: 14, right: 12),
-                child: Text(
+          if (flag_close)
+            Container(
+              margin: const EdgeInsets.only(left: 14, right: 12),
+              child: Text(
                 'Важные',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
@@ -227,98 +237,101 @@ class _NewsBloc extends State<NewsScreen>{
                   fontWeight: FontWeight.w600,
                   fontSize: 24.0,
                   height: 1.5,
-                  ),
                 ),
               ),
-                if (flag_close) Container(
-                  margin: const EdgeInsets.only(top: 12, left: 12, right: 12, bottom: 12),
-                  padding: const EdgeInsets.only(left: 12, right: 12),
-                  height: 80,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    // В дизайне же нет рамки вроде не было рамки 🤨 
-                    // border: Border.all(
-                    //   color: const Color.fromARGB(255, 255, 166, 0),
-                    // ),
-                    // boxShadow: const [
-                    //   BoxShadow(
-                    //     blurRadius: 2,
-                    //     color: Color.fromARGB(255, 239, 172, 0),
-                    //     spreadRadius: 1,
-                    //   ),
-                    // ],
-                  ),
-                  child: Row(  
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(right: 12),
-                              child: SvgPicture.asset(
-                              'assets/icons/schedule/warning.svg',
-                                semanticsLabel: 'warning',
-                                height: 24,
-                                width: 24,
-                                allowDrawingOutsideViewBox: true,
-                                // color: const Color.fromARGB(255, 239, 172, 0),
-                              ),
-                            ),
-                              const Expanded(
-                                child: Text(
-                                  'С 35 нояктября по 64 апремая в корпусе В-78 будет закрыт главный вход. ',
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontFamily: 'Inter',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color.fromARGB(255, 255, 166, 0),
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    announce_close();
-                                  });
-                                },
-                                icon: SvgPicture.asset('assets/icons/news/close.svg'),
-                              ),
-                          ],
+            ),
+          if (flag_close)
+            Container(
+              margin: const EdgeInsets.only(
+                  top: 12, left: 12, right: 12, bottom: 12),
+              padding:
+                  const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Theme.of(context).colorScheme.primaryContainer,
+                // В дизайне же нет рамки вроде не было рамки 🤨
+                // border: Border.all(
+                //   color: const Color.fromARGB(255, 255, 166, 0),
+                // ),
+                // boxShadow: const [
+                //   BoxShadow(
+                //     blurRadius: 2,
+                //     color: Color.fromARGB(255, 239, 172, 0),
+                //     spreadRadius: 1,
+                //   ),
+                // ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(right: 12),
+                          child: SvgPicture.asset(
+                            'assets/icons/schedule/warning.svg',
+                            semanticsLabel: 'warning',
+                            height: 24,
+                            width: 24,
+                            allowDrawingOutsideViewBox: true,
+                            // color: const Color.fromARGB(255, 239, 172, 0),
+                          ),
                         ),
-                      ),
-                    ],
+                        const Expanded(
+                          child: Text(
+                            'С 35 нояктября по 64 апремая в корпусе В-78 будет закрыт главный вход. ',
+                            softWrap: true,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 18,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 255, 166, 0),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              announce_close();
+                            });
+                          },
+                          icon: SvgPicture.asset('assets/icons/news/close.svg'),
+                        ),
+                      ],
+                    ),
                   ),
-          ),
-          if (flag_close) Container(
-            margin: const EdgeInsets.only(left: 12, right: 12),
-            child: Divider(
-              thickness: 1,
-              color: Theme.of(context).colorScheme.surfaceVariant,
+                ],
+              ),
+            ),
+          if (flag_close)
+            Container(
+              margin: const EdgeInsets.only(left: 12, right: 12),
+              child: Divider(
+                thickness: 1,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+              ),
+            ),
+          Container(
+            margin: const EdgeInsets.only(left: 14, right: 12, top: 10),
+            child: Text(
+              'Общее',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                fontSize: 24.0,
+                height: 1.5,
+              ),
             ),
           ),
-          Container(
-                margin: const EdgeInsets.only(left: 14, right: 12,top: 10),
-                child: Text(
-                'Общие',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 24.0,
-                  height: 1.5,
-                  ),
-                ),
-              ),
           Expanded(
             child: RefreshIndicator(
               key: _refreshIndicatorKey,
               onRefresh: () async {
-                final completer=Completer();
+                final completer = Completer();
                 _newsbloc.add(LoadNewsList(completer: completer));
                 return completer.future;
               },
@@ -346,7 +359,9 @@ class _NewsBloc extends State<NewsScreen>{
                       itemBuilder: (context, index) {
                         final news = state.newsList[index];
                         //print(news.thumbnail);
-                        return NewsCard(news: news,);
+                        return NewsCard(
+                          news: news,
+                        );
                       },
                     );
                   } else if (state is NewsListLoadingFail) {
