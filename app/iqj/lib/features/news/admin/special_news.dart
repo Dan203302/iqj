@@ -54,6 +54,8 @@ class _SpecialNews extends State<SpecialNews> {
 
   @override
   Widget build(BuildContext context) {
+    fromDatePickerController.text =
+        DateFormat('dd.MM.yyyy').format(selectedFromDate);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       // Заголовок экрана
