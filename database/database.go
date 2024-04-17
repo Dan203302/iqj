@@ -3,9 +3,10 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"iqj/config"
 	"sync"
+
+	_ "github.com/lib/pq"
 )
 
 var Database Storage
@@ -155,12 +156,14 @@ func (st *Storage) initScheduleTable() {
 	_, err := st.Db.Exec(`
 		CREATE TABLE IF NOT EXISTS schedule (
 			id SERIAL PRIMARY KEY,
-			group_id INT NOT NULL,
+			group_id INT[] NOT NULL,
 			teacher_id INT NOT NULL,
+			count INT NOT NULL,
 		    weekday INT NOT NULL,
-		    discipline_name VARCHAR (128),
-		    lesson_count INT NOT NULL,
-		    location VARCHAR(12) NOT NULL
+			week INT NOT NULL,
+		    lesson_name VARCHAR (128),
+			lesson_type VARCHAR(30),
+		    location VARCHAR(40) NOT NULL
 		);
 	`)
 	if err != nil {
