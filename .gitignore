@@ -12,7 +12,14 @@ app/iqj/.dart_tool/
 
 # IntelliJ related
 app/iqj/.idea/
+app/.idea/
+.idea/
 
 # Visual Studio Code related
 app/iqj/.vscode/
 .vscode/
+
+# Finder file
+.DS_Store
+app/.DS_Store
+app/iqj/.DS_Store
