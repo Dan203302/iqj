@@ -15,6 +15,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           emit(ScheduleLoading());
         }
         final List<Week> scheduleList = await getSchedule();
+        _activeDay = scheduleList[0].days[0];
         emit(ScheduleLoaded(scheduleList: scheduleList, activeDay: _activeDay));
       } catch (e) {
         emit(ScheduleLoadingFailed(except: e));

@@ -4,10 +4,11 @@ import 'package:iqj/features/schedule/domain/week.dart';
 
 // Массив, служащий заглушкой для расписания.
 // Не стесняйтесь изменять по мере надобности.
-/* 
+/*
 В список дней так же можно добавлять и объекты
 класса WorkingDay, т.к. он - дочерний для класса day
 */
+
 Future<List<Week>> getSchedule() async {
   return schedule;
 }
@@ -19,8 +20,7 @@ final List<Week> schedule = [
       WorkingDay(
         lessons: [
           Lesson(
-            order: 1,
-            name: "Основы российской государственности",
+            name: "Физика",
             type: "Лекция",
             classroom: "A-63 (МП-1)",
             groups: [
@@ -30,10 +30,32 @@ final List<Week> schedule = [
               "ЭФБО-04-23",
               "ЭФБО-05-23",
             ],
-            professor: "Не Помню Уже",
+            professor: "Я не помню",
           ),
+          Lesson(
+            name: 'Физика',
+            type: 'Практика',
+            classroom: 'А-107-1 (В-78)',
+            groups: [
+              'ЭФБО-14-88',
+            ],
+            professor: 'Кто-то',
+          ),
+          Lesson(
+            name: 'Линейная алгебра и аналитическая геометрия',
+            type: 'Практика',
+            classroom: 'А-107-1 (В-78)',
+            groups: [
+              'ЭФБО-14-88',
+            ],
+            professor: 'Кто-то',
+          ),
+          null,
+          null,
+          null,
         ],
-        order: 1, date: '01.01.2024',
+        order: 1,
+        date: '01.01.2024',
       ),
       DayOff(2, '02.01.2024'),
       DayOff(3, '03.01.2024'),

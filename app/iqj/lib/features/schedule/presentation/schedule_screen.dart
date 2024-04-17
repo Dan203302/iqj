@@ -21,11 +21,14 @@ class ScheduleScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        body: ListView(
-          children: const [
-            Calendar(),
-            Lessons(),
-          ],
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ListView(
+            children: const [
+              Calendar(),
+              Lessons(),
+            ],
+          ),
         ),
       ),
     );
