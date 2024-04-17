@@ -72,14 +72,21 @@ func scraper2(newsblarr []models.NewsBlock) {
 		mas = append(mas, "https://www.mirea.ru"+e.ChildAttr("img", "src"))
 	})
 
+	var tags []string
+	c.OnHTML("li[class=\"uk-display-inline-block\"]", func(e *colly.HTMLElement) {
+		tags = append(tags, e.Text)
+	})
+
 	for i := range newsblarr {
 		c.Visit(newsblarr[i].Link)
 		news.Header = title
 		news.Text = text
 		news.ImageLink = mas
 		mas = nil
+		news.Tags = tags
+		tags = nil
 		news.PublicationTime = newsblarr[i].PublicationTime
-		n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime}
+		n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime, Tags: news.Tags}
 		err := database.Database.AddNews(n1, news.Text)
 		if err != nil {
 			fmt.Println(err)

@@ -61,6 +61,7 @@ func GenerateJWT(id int) (string, error) {
 	return token.SignedString([]byte(config.SigningKey))
 }
 
+// Парсинг токена и получение id пользователя
 func ParseToken(tokenstring string) (int, error) {
 	//Парсим токен, взяв из заголовка только токен
 	token, err := jwt.ParseWithClaims(tokenstring, &tokenclaims{}, func(token *jwt.Token) (interface{}, error) {
