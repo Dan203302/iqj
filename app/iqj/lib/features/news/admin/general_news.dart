@@ -231,17 +231,16 @@ class _GeneralNews extends State<GeneralNews> {
           Container(
             //padding: EdgeInsets.only(top: 40),
             width: 328,
-            height: 427,
             //color: Color.fromRGBO(44, 45, 47, 1),
             //color: Colors.blue,
             margin: EdgeInsets.only(top: 10, left: 12, right: 12),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(44, 45, 47, 1),
+              color: Theme.of(context).colorScheme.onInverseSurface,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               children: [
-                create_body_tags_black(),
+                create_body_tags_black(context),
               ],
             ),
           ),
