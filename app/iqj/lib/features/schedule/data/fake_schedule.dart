@@ -54,7 +54,7 @@ final List<Week> schedule = [
           null,
           null,
         ],
-        order: 1, date: '01.01.2024',
+        order: 1,
       ),
       DayOff(2),
       DayOff(3),
