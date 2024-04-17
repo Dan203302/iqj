@@ -169,7 +169,7 @@ class _SpecialNews extends State<SpecialNews> {
             ),
           ),
           Container(
-            height: 128,
+            //height: 128,
             margin:
                 const EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 12),
             decoration: BoxDecoration(

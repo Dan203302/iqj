@@ -18,23 +18,15 @@ class ScheduleScreen extends StatelessWidget {
       create: (context) => ScheduleBloc()..add(LoadSchedule()),
       child: Scaffold(
         appBar: AppBar(
-        title: Text(
-          'Расписание',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        actions: [
-          IconButton(
-            icon: SvgPicture.asset('assets/icons/schedule/dots.svg'),
-            onPressed: () {},
+          title: Text(
+            'Расписание',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
-        ],
-      ),
-
+        ),
         body: ListView(
           children: const [
             Calendar(),
             Lessons(),
-            
           ],
         ),
       ),

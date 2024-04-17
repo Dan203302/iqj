@@ -4,7 +4,6 @@
 из пар будет складываться день
 */
 class Lesson {
-  final int order; // Номер пары
   final String name; // Название предмета
   final String type; // Тип пары (лекция/семинар/лабораторная/...)
   final String classroom; // Аудитория проведения
@@ -12,7 +11,6 @@ class Lesson {
   final String professor; // Преподаватель, который ведет пару
 
   Lesson({
-    required this.order,
     required this.name,
     required this.type,
     required this.classroom,

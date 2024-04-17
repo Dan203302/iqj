@@ -7,6 +7,7 @@ import 'package:iqj/features/welcome/presentation/welcome.dart';
 import 'package:iqj/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:iqj/features/registration/presentation/reg_screen.dart';
+import 'package:iqj/features/registration/presentation/successful_reg_screen.dart';
 
 void main() => runApp(const App());
 
@@ -51,6 +52,7 @@ class _AppState extends State<App> {
         'newslist': (context) => const NewsList(),
         'account': (context) => const AccountScreen(),
         'registration': (context) => const RegScreen(),
+        'successreg': (context) => const SuccessReg(),
       },
     );
   }

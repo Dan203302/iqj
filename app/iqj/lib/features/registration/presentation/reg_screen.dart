@@ -82,7 +82,7 @@ class _LoginScreenState extends State<RegScreen> {
                       ),
                       onPressed: () {
                         // if (_formKey.currentState?.validate() ?? false) {
-                          Navigator.pushReplacementNamed(context, '/');
+                          Navigator.pushReplacementNamed(context, 'successreg');
                         // }
                       },
                       child: const Text(
