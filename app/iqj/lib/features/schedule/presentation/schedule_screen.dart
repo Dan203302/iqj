@@ -6,6 +6,8 @@ import 'package:iqj/features/schedule/presentation/bloc/schedule_event.dart';
 import 'package:iqj/features/schedule/presentation/widgets/calendar.dart';
 import 'package:iqj/features/schedule/presentation/widgets/lesson_list.dart';
 import 'widgets/calendar.dart';
+import 'package:table_calendar/table_calendar.dart';
+
 
 // Всю логику новостей нужно сесть и хорошо обдумать, прежде чем писать этот код
 
