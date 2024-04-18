@@ -36,7 +36,7 @@ func main() {
 
 	r.GET("/ad", handlers.HandleGetAd)
 
-	r.GET("/lessons", handlers.Lessons)
+	//r.GET("/lessons", handlers.Lessons)
 
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")

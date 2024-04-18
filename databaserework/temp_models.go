@@ -6,13 +6,11 @@ import (
 	"iqj/config"
 )
 
-type Filter func()
-
-func
-
 type Database123 struct {
-	Users users
+	Users *users
 }
+
+type users struct{}
 
 type userModel struct {
 	Db *sql.DB
@@ -51,7 +49,7 @@ func (st *Database123) createStorage() {
 	st.Mutex
 }
 
-var user123 = Users{}
+var user123 = users{}
 
 type Filter struct {
 	// Keys приводите только нужные параметры!!!
