@@ -124,7 +124,18 @@ class _NewsListState extends State<NewsList> {
                                 fontSize: 16,
                               ),
                             ),
-                            const Spacer(),
+                            Row(
+                              children: [
+                                // На всякий
+                                Text(
+                                  "ID: ${news.id}",
+                                style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                                fontSize: 16,
+                                ),
+                                ),
                             if (!flag_open_tags)
                               IconButton(
                                 onPressed: () {
@@ -144,9 +155,19 @@ class _NewsListState extends State<NewsList> {
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
+                              ],
+                            ),
                           ],
                         ),
-                        if (flag_open_tags) const Text("Здесь будут теги"),
+                        if (flag_open_tags) 
+                        Text("Здесь будут теги",
+                          style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                                fontSize: 16,
+                                ),
+                        ),
                         if (flag_open_tags)
                           const Padding(padding: EdgeInsets.only(bottom: 6)),
                         Container(
@@ -165,8 +186,15 @@ class _NewsListState extends State<NewsList> {
 
                         const SizedBox(height: 8),
                         //Text(news?.description ?? '...'),  ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
-                        const Text('Здесь будет текст'),
-                         const SizedBox(height: 8),
+                        Text('Здесь будет текст',
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                            fontSize: 16,
+                            ),
+                        ),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
