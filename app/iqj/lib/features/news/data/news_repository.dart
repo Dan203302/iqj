@@ -118,8 +118,8 @@ Future<http.Response> postGeneralNews(
 
 Future<http.Response> postSpecialNews(
   String text,
-  DateTime publishFromTime,
-  DateTime publishUntilTime,
+  String publishFromTime,
+  String publishUntilTime,
 ) async {
   return http.post(
     Uri(

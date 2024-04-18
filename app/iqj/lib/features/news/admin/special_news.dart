@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iqj/features/news/admin/news_add_button.dart';
+import 'package:iqj/features/news/admin/special_news_add_button.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +14,8 @@ class SpecialNews extends StatefulWidget {
 
 class _SpecialNews extends State<SpecialNews> {
   String _text = '';
+  String _publishFromTime = '';
+  String _publishUntilTime = '';
 
   TextEditingController fromDatePickerController = TextEditingController();
   TextEditingController toDatePickerController = TextEditingController();
@@ -272,6 +274,11 @@ class _SpecialNews extends State<SpecialNews> {
                         ),
                       ),
                     ),
+                    onChanged: (text) {
+                      setState(() {
+                        _publishFromTime = text;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -328,6 +335,11 @@ class _SpecialNews extends State<SpecialNews> {
                         ),
                       ),
                     ),
+                    onChanged: (text) {
+                      setState(() {
+                        _publishUntilTime = text;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -438,7 +450,12 @@ class _SpecialNews extends State<SpecialNews> {
               textAlign: TextAlign.center,
             ),
           ),
-          news_add_button(),
+          special_news_add_button(
+            context,
+            _text,
+            _publishFromTime,
+            _publishUntilTime,
+          ),
           const Padding(
             padding: EdgeInsets.only(bottom: 12, top: 12),
           ),
