@@ -138,3 +138,5 @@ app.*.symbols
 !.vscode/settings.json
 /.dart_tool/
 /.idea/
+/.dart_tool/
+/build/
