@@ -43,7 +43,7 @@ Future<List<News>> getNews() async {
         // tags: json['tags'] as List<String>, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         // thumbnails: json['image_link'] as List<String>,
         thumbnails: json['image_link'][0] as String,
-        //description: json['text'] as String, ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+        description: "dd", ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         link: json['link'] as String,
       );
     }).toList();
@@ -130,4 +130,50 @@ Future<http.Response> postSpecialNews(
       path: '/news',
     ),
   );
+}
+
+
+Future<News> getNewsFull(String id) async {
+  final response = await http.get(
+    Uri(
+      scheme: 'https',
+      host: 'mireaiqj.ru',
+      port: 8443,
+      path: '/news_id',
+      queryParameters: {'id': id},
+    ),
+  );
+  if (response.statusCode == 200) {
+    final dynamic decodedData = json.decode(response.body);
+
+    List<News> newsList = [];
+
+    if (decodedData is List) {
+      newsList = List<News>.from(decodedData.map((json) => News(
+        description: json['text'] as String,
+        id: json['id'] as String,
+        title: json['header'] as String,
+        publicationTime: DateTime.parse(json['publication_time'] as String),
+        thumbnails: (json['image_link'] as List<String>).isNotEmpty 
+          ? json['image_link'][0] as String
+          : '',
+        link: json['link'] as String,
+      )));
+    } else if (decodedData is Map<String, dynamic>) {
+      // Handle case where decodedData is a Map
+      News news = News(
+        id: decodedData['id'] as String,
+        title: decodedData['header'] as String,
+        publicationTime: DateTime.parse(decodedData['publication_time'] as String),
+        thumbnails: decodedData['image_link'][0] as String,
+        link: "decodedData['link'] as String",
+        description: decodedData['text'] as String,
+      );
+      newsList.add(news);
+    }
+
+    return newsList[0];
+  } else {
+    throw Exception(response.statusCode);
+  }
 }

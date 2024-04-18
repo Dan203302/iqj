@@ -5,7 +5,7 @@ class News {
   final String thumbnails;
   //final List<String> tags; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
   final DateTime publicationTime;
-  //final String description; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+  final String description; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
   final String link;
   News({
     required this.id,
@@ -13,7 +13,7 @@ class News {
     required this.thumbnails,
     //required this.tags, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
     required this.publicationTime,
-    //required this.description, ///////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+    required this.description, ///////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
     required this.link,
   });
 }
