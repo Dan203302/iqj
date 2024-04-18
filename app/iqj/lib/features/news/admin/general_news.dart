@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iqj/features/news/admin/news_add_button.dart';
+import 'package:iqj/features/news/admin/general_news_add_button.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,9 +18,16 @@ class GeneralNews extends StatefulWidget {
 
 class _GeneralNews extends State<GeneralNews> {
   TextEditingController datePickerController = TextEditingController();
+
   DateTime selectedDate = DateTime.now();
 
   File? imageFile;
+  String _header = '';
+  String _link = '';
+  List<String> _thumbnails = [''];
+  List<String> _tags = [''];
+  String _publicationTime = '';
+  String _text = '';
 
   selectFile() async {
     XFile? file = await ImagePicker().pickImage(
@@ -164,10 +171,10 @@ class _GeneralNews extends State<GeneralNews> {
               color: Theme.of(context).colorScheme.onInverseSurface,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const TextField(
+            child: TextField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 hintText: "Напишите заголовок здесь...",
@@ -181,6 +188,11 @@ class _GeneralNews extends State<GeneralNews> {
                   color: Color.fromRGBO(128, 128, 128, 0.6),
                 ),
               ),
+              onChanged: (text) {
+                setState(() {
+                  _header = text;
+                });
+              },
             ),
           ),
           Container(
@@ -211,10 +223,10 @@ class _GeneralNews extends State<GeneralNews> {
               color: Theme.of(context).colorScheme.onInverseSurface,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const TextField(
+            child: TextField(
               keyboardType: TextInputType.multiline,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 hintText: "Напишите новость здесь...",
@@ -228,6 +240,11 @@ class _GeneralNews extends State<GeneralNews> {
                   color: Color.fromRGBO(128, 128, 128, 0.6),
                 ),
               ),
+              onChanged: (text) {
+                setState(() {
+                  _text = text;
+                });
+              },
             ),
           ),
           Container(
@@ -255,7 +272,7 @@ class _GeneralNews extends State<GeneralNews> {
             width: 328,
             //color: Color.fromRGBO(44, 45, 47, 1),
             //color: Colors.blue,
-            margin: EdgeInsets.only(top: 10, left: 12, right: 12),
+            margin: const EdgeInsets.only(top: 10, left: 12, right: 12),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onInverseSurface,
               borderRadius: BorderRadius.circular(12),
@@ -320,9 +337,20 @@ class _GeneralNews extends State<GeneralNews> {
                   ),
                 ),
               ),
+              onChanged: (text) {
+                _publicationTime = text;
+              },
             ),
           ),
-          news_add_button(),
+          general_news_add_button(
+            context,
+            _header,
+            _link,
+            _thumbnails,
+            _tags,
+            _publicationTime,
+            _text,
+          ),
           const Padding(
             padding: EdgeInsets.only(bottom: 12, top: 12),
           ),
