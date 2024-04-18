@@ -2,16 +2,28 @@ package databaserework
 
 import (
 	"database/sql"
-	"sync"
+	"fmt"
+	"iqj/config"
 )
 
+type Filter func()
+
+func
+
 type Database123 struct {
-	Users Users
+	Users users
 }
 
-type Users struct {
-	DB   *sql.DB
-	Lock sync.Mutex
+type userModel struct {
+	Db *sql.DB
+}
+
+type newsModel struct {
+	Db *sql.DB
+}
+
+type Table interface {
+	Add(func())
 }
 
 var Database2 Database123
@@ -21,7 +33,22 @@ func ConnectStorage() {
 }
 
 func (st *Database123) createStorage() {
+	connectionString := fmt.Sprintf(
+		"host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
+		config.DbData["host"],
+		config.DbData["port"],
+		config.DbData["user"],
+		config.DbData["password"],
+		config.DbData["database"])
 
+	db, err := sql.Open("postgres", connectionString)
+
+	if err != nil {
+		panic(fmt.Sprintf("could not connect to the database: %v", err))
+	}
+
+	st.Db = db
+	st.Mutex
 }
 
 var user123 = Users{}
