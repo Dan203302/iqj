@@ -28,7 +28,7 @@ func Lessons(c *gin.Context) {
 	for _, lesson := range lessons {
 		switch criterion {
 		case "group":
-			if lesson.GroupID == 0 { //заглушка value
+			if lesson.GroupID == nil { //заглушка value
 				filteredLessons = append(filteredLessons, lesson)
 			}
 		case "tutor":
