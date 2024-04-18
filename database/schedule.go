@@ -113,7 +113,7 @@ func (st *Storage) GetLessonByGroupID(selectedGroupId int) (*[]models.Lesson, er
 
 		err = rows.Scan(
 			&id,
-			pq.Array(&lesson.GroupID),
+			pq.Array(&groupID),
 			&teacherID,
 			&count,
 			&weekday,
