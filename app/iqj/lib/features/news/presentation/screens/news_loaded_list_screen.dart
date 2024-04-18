@@ -84,7 +84,7 @@ class _NewsListState extends State<NewsList> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Image.network(
-                          news.thumbnail,
+                          news.thumbnails,
                           fit: BoxFit.fitWidth,
                         ),
                       ),

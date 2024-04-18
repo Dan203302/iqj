@@ -41,7 +41,7 @@ class _SpecialNews extends State<SpecialNews> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedToDate,
-      firstDate: selectedFromDate,
+      firstDate: DateTime(2015, 8), //selectedFromDate,
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != selectedToDate) {
@@ -54,8 +54,9 @@ class _SpecialNews extends State<SpecialNews> {
 
   @override
   Widget build(BuildContext context) {
-    fromDatePickerController.text =
-        DateFormat('dd.MM.yyyy').format(selectedFromDate);
+    // Todo: Здесь при выборе даты публикации "с" после сегодняшней ломается выбор даты "по"
+    //fromDatePickerController.text =
+    //  DateFormat('dd.MM.yyyy').format(selectedFromDate);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       // Заголовок экрана

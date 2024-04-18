@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/news_add_button.dart';
 import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GeneralNews extends StatefulWidget {
   const GeneralNews({super.key});
@@ -16,6 +19,22 @@ class GeneralNews extends StatefulWidget {
 class _GeneralNews extends State<GeneralNews> {
   TextEditingController datePickerController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+
+  File? imageFile;
+
+  selectFile() async {
+    XFile? file = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 1800,
+      maxWidth: 1800,
+    );
+
+    if (file != null) {
+      setState(() {
+        imageFile = File(file.path);
+      });
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateFormat formatter = DateFormat('dd.MM.yyyy');
@@ -73,7 +92,10 @@ class _GeneralNews extends State<GeneralNews> {
             ),
             child: ElevatedButton(
               onPressed: () {
-                // Обработчик нажатия кнопки
+                selectFile();
+                setState(
+                  () {},
+                ); // Todo показаать картинку при выборе из галереи
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(
