@@ -52,7 +52,7 @@ func (st *Storage) GetLessonByID(lesson *models.Lesson) (*models.Lesson, error) 
 	return lesson, nil
 }
 
-func (st *Storage) GetLessonByTeacherID(lesson *models.Lesson) (*[]models.Lesson, error) {
+func (st *Storage) GetLessonsByTeacherID(lesson *models.Lesson) (*[]models.Lesson, error) {
 	st.Mutex.Lock()
 	defer st.Mutex.Unlock()
 
@@ -97,12 +97,57 @@ func (st *Storage) GetLessonByTeacherID(lesson *models.Lesson) (*[]models.Lesson
 	return &lessons, nil
 }
 
-func (st *Storage) GetLessonByGroupID(selectedGroupId int) (*[]models.Lesson, error) {
+func (st *Storage) GetLessonsByGroupID(selectedGroupId int) (*[]models.Lesson, error) {
 	st.Mutex.Lock()
 	defer st.Mutex.Unlock()
 
 	rows, err := st.Db.Query("SELECT * FROM schedule WHERE $1 = ANY(group_id)",
 		selectedGroupId)
+
+	var lessons []models.Lesson
+
+	for rows.Next() {
+		var id, teacherID, count, weekday, week int
+		var lessonName, lessonType, location string
+		var groupID []int
+
+		err = rows.Scan(
+			&id,
+			pq.Array(&groupID),
+			&teacherID,
+			&count,
+			&weekday,
+			&week,
+			&lessonName,
+			&lessonType,
+			&location)
+		if err != nil {
+			return nil, err
+		}
+
+		resultingLesson := models.Lesson{
+			Id:         id,
+			GroupID:    groupID,
+			TeacherID:  teacherID,
+			Count:      count,
+			Weekday:    weekday,
+			Week:       week,
+			LessonName: lessonName,
+			LessonType: lessonType,
+			Location:   location,
+		}
+		lessons = append(lessons, resultingLesson)
+	}
+
+	return &lessons, nil
+}
+
+func (st *Storage) GetLessonsByLocation(location string) (*[]models.Lesson, error) {
+	st.Mutex.Lock()
+	defer st.Mutex.Unlock()
+
+	rows, err := st.Db.Query("SELECT * FROM schedule WHERE location = $1",
+		location)
 
 	var lessons []models.Lesson
 
