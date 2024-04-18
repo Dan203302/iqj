@@ -40,9 +40,10 @@ Future<List<News>> getNews() async {
         id: json['id'] as String,
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
-        //tags: json['tags'] as List<String>,
+        // tags: json['tags'] as List<String>, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         // thumbnails: json['image_link'] as List<String>,
         thumbnails: json['image_link'][0] as String,
+        //description: json['text'] as String, ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         link: json['link'] as String,
       );
     }).toList();

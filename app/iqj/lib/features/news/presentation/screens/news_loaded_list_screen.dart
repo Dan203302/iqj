@@ -164,7 +164,9 @@ class _NewsListState extends State<NewsList> {
                         ),
 
                         const SizedBox(height: 8),
-                        // Text(news?.description ?? '...'),
+                        //Text(news?.description ?? '...'),  ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+                        const Text('Здесь будет текст'),
+                         const SizedBox(height: 8),
                       ],
                     ),
                   ),
