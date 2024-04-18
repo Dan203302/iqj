@@ -4,13 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"iqj/config"
+	"sync"
 )
 
 type Database123 struct {
 	Users *users
 }
 
-type users struct{}
+type users struct {
+	db   *sql.DB
+	lock *sync.Mutex
+}
 
 type userModel struct {
 	Db *sql.DB
@@ -45,18 +49,8 @@ func (st *Database123) createStorage() {
 		panic(fmt.Sprintf("could not connect to the database: %v", err))
 	}
 
-	st.Db = db
-	st.Mutex
+	st.Users.db = db
+	st.Users.lock = &sync.Mutex{}
 }
 
 var user123 = users{}
-
-type Filter struct {
-	// Keys приводите только нужные параметры!!!
-	Keys map[string]interface{}
-}
-
-func lol() {
-	varia := Filter{Keys: map[string]interface{}{}}
-	varia.Keys = map[string]interface{}{}
-}
