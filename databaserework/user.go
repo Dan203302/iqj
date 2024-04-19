@@ -221,5 +221,9 @@ func (ut *usersTable) new(db *sql.DB, mu *sync.Mutex) error {
 				password TEXT NOT NULL
 		);
 		`)
-	return err
+
+	if err != nil {
+		return fmt.Errorf("Database.Users.new: problem with creating table: %v", err)
+	}
+	return nil
 }
