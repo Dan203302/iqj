@@ -40,7 +40,7 @@ func (ut *usersTable) Add(u *User) error {
 
 	// Проверяем были ли переданы данные в u
 	if u.isDefault() {
-		return errors.New("User.Add: wrong data! provided *User is empty")
+		return errors.New("Users.Add: wrong data! provided *User is empty")
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
@@ -49,8 +49,11 @@ func (ut *usersTable) Add(u *User) error {
 		&u.Email, &u.Password,
 	)
 
-	// Возвращаем ошибку, если такая произошла, если нет, то вернется nil
-	return err
+	if err != nil {
+		return fmt.Errorf("Users.Add: %v", err)
+	}
+
+	return nil
 }
 
 // Возвращает пользователя(массив из одного элемента) из базы данных
@@ -58,11 +61,11 @@ func (ut *usersTable) GetById(u *User) (*User, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
-		return nil, errors.New("User.Get: wrong data! provided *User is empty")
+		return nil, errors.New("Users.Get: wrong data! provided *User is empty")
 	}
 	// Проверяем передан ли id
 	if u.Id == 0 {
-		return nil, errors.New("User.Get: wrong data! provided *User.Id is empty")
+		return nil, errors.New("Users.Get: wrong data! provided *User.Id is empty")
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
@@ -71,7 +74,7 @@ func (ut *usersTable) GetById(u *User) (*User, error) {
 
 	// Проверяем ошибку select'а
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Users.Get: %v", err)
 	}
 	return u, nil
 
@@ -80,33 +83,45 @@ func (ut *usersTable) GetById(u *User) (*User, error) {
 func (ut *usersTable) Check(u *User) (*User, error) {
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
-		return nil, errors.New("User.Check: wrong data! provided *User is empty")
+		return nil, errors.New("Users.Check: wrong data! *User is empty")
 	}
 
+	// Переменные, в которых мы будем хранить полученные данные из базы данных
 	id := 0
 	pass := ""
 
+	// Для получения используем базовую функцию
 	err := ut.makeSelect("SELECT password, id FROM users WHERE email = $1", u.Email, &pass, &id)
 
+	// Проверяем ошибку
 	if err != nil {
-		return nil, fmt.Errorf("User.Check: %v", err)
+		return nil, fmt.Errorf("Users.Check: %v", err)
 	}
 
+	// Сравниваем хеш из бд с тем, что мы получили из веба
 	if errHash := bcrypt.CompareHashAndPassword([]byte(pass), []byte(u.Password)); errHash != nil {
-		return nil, errors.New("User.Check: incorrect password!")
+		return nil, errors.New("Users.Check: incorrect password!")
 	}
 
+	// Если все хорошо, возвращаем пользователя с id
+	u.Id = id
 	return u, nil
 }
 
 func (ut *usersTable) Delete(u *User) error {
+	//  Проверяем дали ли нам нужные данные
 	if u.isDefault() {
-		return errors.New("User.Delete: wrong data! provided *User.Id is empty")
+		return errors.New("Users.Delete: wrong data! *User.Id is empty")
 	}
 
+	// Для удаления используем базовую функцию
 	err := ut.makeDelete("DELETE FROM users WHERE id = $1", u.Id)
 
-	return err
+	if err != nil {
+		return fmt.Errorf("Users.Delete: %v", err)
+	}
+
+	return nil
 }
 
 // ====== ЭНДПОИНТЫ ======
@@ -130,7 +145,7 @@ func (ut *usersTable) makeSelectMultiple(query string, key interface{}) (*[]User
 		users = append(users, user)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("problem with selecting multiple values! %v", err)
 	}
 
 	return &users, nil
@@ -143,6 +158,10 @@ func (ut *usersTable) makeSelect(query string, key interface{}, values ...interf
 	err := ut.db.QueryRow(query,
 		key).Scan(values)
 
+	if err != nil {
+		return fmt.Errorf("problem with selecting! %v", err)
+	}
+
 	return err
 }
 
@@ -154,7 +173,11 @@ func (ut *usersTable) makeInsert(query string, values ...interface{}) error {
 	_, err := ut.db.Exec(query,
 		values...)
 
-	return err
+	if err != nil {
+		return fmt.Errorf("problem with inserting! %v", err)
+	}
+
+	return nil
 }
 
 func (ut *usersTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
@@ -166,7 +189,11 @@ func (ut *usersTable) makeUpdate(query string, key interface{}, values ...interf
 	_, err := ut.db.Exec(query,
 		values...)
 
-	return err
+	if err != nil {
+		fmt.Errorf("problem with updating! %v", err)
+	}
+
+	return nil
 }
 
 func (ut *usersTable) makeDelete(query string, key interface{}) error {
@@ -175,7 +202,11 @@ func (ut *usersTable) makeDelete(query string, key interface{}) error {
 
 	_, err := ut.db.Exec(query, key)
 
-	return err
+	if err != nil {
+		return fmt.Errorf("problem with deleting! %v", err)
+	}
+
+	return nil
 }
 
 // дальше не эндпоинт, просто самая бесполезная функция
