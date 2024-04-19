@@ -2,16 +2,16 @@ package excelparser
 
 import (
 	"iqj/models"
+	"strconv"
 	"strings"
 )
-
-//TODO: Заменить заглушку на GroupID и TeacherID на поиск из БД
 
 // Получение критерия, значения и таблицы, возвращение массива уроков
 func find(criterion string, value string, table [][]string) ([]models.Lesson, error) {
 	var valueTable []models.Lesson
 	weekdayIndex := []int{3, 17, 31, 45, 59, 73, 87}
-	var id, groupid, teacherid int
+	var groupid []int
+	var id, teacherid int
 	//Поиск по группе
 	if criterion == "group" {
 		n := 0
@@ -34,15 +34,37 @@ func find(criterion string, value string, table [][]string) ([]models.Lesson, er
 					break
 				}
 			}
+			groupid = append(groupid, 0) //table[1][n] //TODO: Заменить на поиск из БД
+			var iter int
+			if table[i][n-1] == "I" || table[i][n-1] == "II" {
+				iter = 5
+			} else {
+				iter = 10
+			}
+			for n+2+iter < len(table[i]) && table[i][n+2] == table[i][n+2+iter] {
+				groupid = append(groupid, 0) //table[1][n+iter] //TODO: Заменить на поиск из БД
+				if iter == 5 {
+					iter += 10
+				} else {
+					iter += 5
+				}
+			}
 			row.Id = id
-			row.GroupID = groupid //table[1][n]
+			row.GroupID = groupid
+			groupid = nil
+			row.TeacherID = teacherid //[i][n+2] //TODO: Заменить на поиск из БД
+			row.Count, _ = strconv.Atoi(table[i][n-4])
+			if table[i][n-1] == "I" {
+				row.Week = 1
+			} else {
+				row.Week = 2
+			}
 			row.LessonName = table[i][n]
-			row.TeacherID = teacherid //[i][n+2]
+			row.LessonType = table[i][n+1]
 			row.Location = table[i][n+3]
 
 			valueTable = append(valueTable, row)
 			id++
-			groupid++
 			teacherid++
 		}
 		//Поиск по преподавателю
@@ -78,28 +100,53 @@ func find(criterion string, value string, table [][]string) ([]models.Lesson, er
 			var row models.Lesson
 			for j := 0; j < len(weekdayIndex); j++ {
 				if weekdayIndex[j] > rowNum {
-					row.Weekday = j - 1
+					row.Weekday = j
 					break
 				}
 			}
 			// Парсинг в зависимости от положения группы в таблице
 			if table[rowNum][colNum-3] == "I" || table[rowNum][colNum-3] == "II" {
-				row.Id = id
-				row.TeacherID = teacherid //table[rowNum][colNum]
-				row.GroupID = groupid     //table[1][colNum-2]
-				row.LessonName = table[rowNum][colNum-2]
-				row.Location = table[rowNum][colNum+1]
-				valueTable = append(valueTable, row)
+				iter := 5
+				for colNum+iter < len(table[rowNum]) && table[rowNum][colNum] == table[rowNum][colNum+iter] {
+					groupid = append(groupid, 0) //table[1][colNum+iter] //TODO: Заменить на поиск из БД
+					if iter == 5 {
+						iter += 10
+					} else {
+						iter += 5
+					}
+				}
+				row.Count, _ = strconv.Atoi(table[rowNum][colNum-6])
+				if table[rowNum][colNum-3] == "I" {
+					row.Week = 1
+				} else {
+					row.Week = 2
+				}
 			} else {
-				row.Id = id
-				row.TeacherID = teacherid //table[rowNum][colNum]
-				row.GroupID = groupid     //table[1][colNum-2]
-				row.LessonName = table[rowNum][colNum-2]
-				row.Location = table[rowNum][colNum+1]
-				valueTable = append(valueTable, row)
+				iter := 10
+				for colNum+iter < len(table[rowNum]) && table[rowNum][colNum] == table[rowNum][colNum+iter] {
+					groupid = append(groupid, 0) //table[1][colNum+iter] //TODO: Заменить на поиск из БД
+					if iter == 5 {
+						iter += 10
+					} else {
+						iter += 5
+					}
+				}
+				row.Count, _ = strconv.Atoi(table[rowNum][colNum-11])
+				if table[rowNum][colNum-8] == "I" {
+					row.Week = 1
+				} else {
+					row.Week = 2
+				}
 			}
+			row.Id = id
+			row.GroupID = groupid //table[1][colNum-2] //TODO: Заменить на поиск из БД
+			groupid = nil
+			row.TeacherID = teacherid //table[rowNum][colNum] //TODO: Заменить на поиск из БД
+			row.LessonName = table[rowNum][colNum-2]
+			row.LessonType = table[rowNum][colNum-1]
+			row.Location = table[rowNum][colNum+1]
+			valueTable = append(valueTable, row)
 			id++
-			groupid++
 			teacherid++
 		}
 		//Поиск по аудитории
@@ -132,27 +179,52 @@ func find(criterion string, value string, table [][]string) ([]models.Lesson, er
 			var row models.Lesson
 			for j := 0; j < len(weekdayIndex); j++ {
 				if weekdayIndex[j] > rowNum {
-					row.Weekday = j - 1
+					row.Weekday = j
 					break
 				}
 			}
 			if table[rowNum][colNum-4] == "I" || table[rowNum][colNum-4] == "II" {
-				row.Id = id
-				row.TeacherID = teacherid //table[rowNum][colNum-1]
-				row.GroupID = groupid     //table[1][colNum-3]
-				row.LessonName = table[rowNum][colNum-3]
-				row.Location = table[rowNum][colNum]
-				valueTable = append(valueTable, row)
+				iter := 5
+				for colNum+iter < len(table[rowNum]) && table[rowNum][colNum] == table[rowNum][colNum+iter] {
+					groupid = append(groupid, 0) //table[1][n+iter] //TODO: Заменить на поиск из БД
+					if iter == 5 {
+						iter += 10
+					} else {
+						iter += 5
+					}
+				}
+				row.Count, _ = strconv.Atoi(table[rowNum][colNum-7])
+				if table[rowNum][colNum-4] == "I" {
+					row.Week = 1
+				} else {
+					row.Week = 2
+				}
 			} else {
-				row.Id = id
-				row.TeacherID = teacherid //table[rowNum][colNum-1]
-				row.GroupID = groupid     //table[1][colNum-3]
-				row.LessonName = table[rowNum][colNum-3]
-				row.Location = table[rowNum][colNum]
-				valueTable = append(valueTable, row)
+				iter := 10
+				for colNum+iter < len(table[rowNum]) && table[rowNum][colNum] == table[rowNum][colNum+iter] {
+					groupid = append(groupid, 0) //table[1][n+iter] //TODO: Заменить на поиск из БД
+					if iter == 5 {
+						iter += 10
+					} else {
+						iter += 5
+					}
+				}
+				row.Count, _ = strconv.Atoi(table[rowNum][colNum-12])
+				if table[rowNum][colNum-9] == "I" {
+					row.Week = 1
+				} else {
+					row.Week = 2
+				}
 			}
+			row.Id = id
+			row.GroupID = groupid //table[1][colNum-2] //TODO: Заменить на поиск из БД
+			groupid = nil
+			row.TeacherID = teacherid //table[rowNum][colNum] //TODO: Заменить на поиск из БД
+			row.LessonName = table[rowNum][colNum-3]
+			row.LessonType = table[rowNum][colNum-2]
+			row.Location = table[rowNum][colNum]
+			valueTable = append(valueTable, row)
 			id++
-			groupid++
 			teacherid++
 		}
 	}
