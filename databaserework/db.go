@@ -12,14 +12,15 @@ var Database2 database123
 
 // Структура, реализующая двухуровневое внедрение зависимостей, для более удобного доступа и управления базой данных
 type database123 struct {
-	Users *usersTable
-	News  *newsTable
+	Users     *usersTable
+	UsersData *usersDataTable
+	News      *newsTable
 }
 
 // Интерфейс структур, отвечающий за доступ к базе данных (по большей части сделан для написания тестов)
 type TableModel interface {
-	Add(entity) error
-	Get(entity) ([]entity, error)
+	Add(*entity) error
+	Get(*entity) (*[]*entity, error)
 	new(*sql.DB, *sync.Mutex)
 }
 
@@ -74,22 +75,27 @@ func (st *database123) connectDatabase(connectionString string) error {
 	// уже как-то не IdIoMaTiC Go))) довольствуйтесь тем что имеете
 	mutex := &sync.Mutex{}
 
-	// Раздаем зависимости (подключение к БД) для функций доступа к отдельным таблицам
-	st.connectTables(db, mutex)
-
 	err = db.Ping()
 	if err != nil {
 		return fmt.Errorf("could not ping the database: %v", err)
 	}
+
+	// Раздаем зависимости (подключение к БД) для функций доступа к отдельным таблицам
+	err = st.connectTables(db, mutex)
 
 	// возвращаем nil вместо ошибки если все хорошо и никто не потерял конфиги
 	// спасибо люблю вас чмоки чмоки 😇😇😇
 	return nil
 }
 
-func (st *database123) connectTables(db *sql.DB, mutex *sync.Mutex) {
-	// я бездарь поэтому просто захардкодил, я реально не знаю че тут еще можно сделать
-	// послушаю ваше предложение за сто рублей, обращаться в тг, думаю найдете
-	st.Users.new(db, mutex)
-	st.News.new(db, mutex)
+func (st *database123) connectTables(db *sql.DB, mutex *sync.Mutex) error {
+	errors := []error{
+		st.Users.new(db, mutex),
+	}
+	for _, err := range errors {
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
