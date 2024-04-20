@@ -83,7 +83,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 72,
+        toolbarHeight: 40,
         scrolledUnderElevation: 0,
         title: Text(
           'Личный кабинет',
@@ -91,13 +91,13 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
         centerTitle: false,
       ),
-      body: const Center(
+      body:  Center(
         child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 24),
-              Row(
+              const SizedBox(height: 24),
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ProfilePicture(), 
@@ -105,36 +105,39 @@ class _AccountScreenState extends State<AccountScreen> {
                   ProfileInfo(),
                 ],
               ),
-              Expanded(
+              const Expanded(
                 child: Column(
                 children: [
                   SizedBox(height: 24),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       EditButton(),
-                      SizedBox(width: 10),
                       MailButton(),
                     ]
                   ),
                 ],
               )
               ),
-              SizedBox(height: 12),
               Expanded(
               child: Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ListButton(),
-                    SizedBox(height: 12),
-                    ListButton(),
+                    ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(8),
+                      children: const [
+                        ListButton(),
+                        ListButton(),
+                      ],
+                    )
                   ],
                 ),
               ),
               ),
-              SizedBox(height: 24),
+              const Expanded(child: 
               Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -144,6 +147,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ]
               ),
               ),
+              )
             ],
           ),
         ),

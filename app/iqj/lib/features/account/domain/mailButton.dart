@@ -55,8 +55,8 @@ class _MailButtonState extends State<MailButton> {
         child: TextButton(
           style: ElevatedButton.styleFrom(
             //alignment: Alignment.center,
-            backgroundColor: Color.fromARGB(255, 239, 172, 0),
-            fixedSize: Size(195, 60),
+            backgroundColor: const Color.fromARGB(255, 239, 172, 0),
+            padding: const EdgeInsets.all(24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(60),
             ),

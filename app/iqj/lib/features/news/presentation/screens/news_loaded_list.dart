@@ -47,7 +47,8 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            news.title,
+                            //news.title,
+                            news.id,
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
