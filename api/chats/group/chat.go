@@ -1,4 +1,4 @@
-package var2
+package group
 
 import (
 	"fmt"
