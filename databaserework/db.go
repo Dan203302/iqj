@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"iqj/config"
-	"sync"
 )
 
 // Переменная (объект базы данных) используемая для доступа к её зависимостям(хендлерам конкретных таблиц)
@@ -12,23 +11,32 @@ var Database2 database123
 
 // Структура, реализующая двухуровневое внедрение зависимостей, для более удобного доступа и управления базой данных
 type database123 struct {
-	Users     *usersTable
-	UsersData *usersDataTable
-	News      *newsTable
+	User     *userTable
+	UserData *userDataTable
+	News     *newsTable
+	Teacher  *teacherTable
 }
 
 // Интерфейс структур, отвечающий за доступ к базе данных (по большей части сделан для написания тестов)
 type TableModel interface {
-	Add(*entity) error
-	Get(*entity) (*[]*entity, error)
-	new(*sql.DB, *sync.Mutex)
+	Add(*Entity) error
+	GetById(*Entity) (*Entity, error)
+}
+
+// Интерфейс функций создания и выполнения запросов, вокруг которых оборачивается логика бд
+type QueryMaker interface {
+	makeSelect(string, interface{}, ...interface{}) error
+	makeSelectMultiple(string, interface{}) (*[]Entity, error)
+	makeInsert(string, ...interface{}) error
+	makeUpdate(string, interface{}, ...interface{})
+	makeDelete(string, interface{}) error
 }
 
 /*
 Интерфейс, включающий в себя все структуры сущностей, используемых в базе данных.
 (прим. User,Lesson,News,Student)
 */
-type entity interface {
+type Entity interface {
 	isDefault() bool
 }
 
@@ -73,7 +81,7 @@ func (st *database123) connectDatabase(connectionString string) error {
 	// хотя малое да удалое, но все равно, мне пока слишком в падлу
 	// делать множества подключений, а открывать новые для каждой операции
 	// уже как-то не IdIoMaTiC Go))) довольствуйтесь тем что имеете
-	mutex := &sync.Mutex{}
+	// mutex := &sync.Mutex{}
 
 	err = db.Ping()
 	if err != nil {
@@ -81,21 +89,16 @@ func (st *database123) connectDatabase(connectionString string) error {
 	}
 
 	// Раздаем зависимости (подключение к БД) для функций доступа к отдельным таблицам
-	err = st.connectTables(db, mutex)
+	st.connectTables(db)
 
 	// возвращаем nil вместо ошибки если все хорошо и никто не потерял конфиги
 	// спасибо люблю вас чмоки чмоки 😇😇😇
 	return nil
 }
 
-func (st *database123) connectTables(db *sql.DB, mutex *sync.Mutex) error {
-	errors := []error{
-		st.Users.new(db, mutex),
-	}
-	for _, err := range errors {
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+func (st *database123) connectTables(db *sql.DB) {
+	st.User.db = db
+	st.UserData.db = db
+	st.News.db = db
+	st.Teacher.db = db
 }
