@@ -4,13 +4,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"sync"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 /*
-====== ЭНДПОИНТЫ НАХОДЯТСЯ В КОНЦЕ ФАЙЛА ======
+====== ТРАНЗАКЦИИ НАХОДЯТСЯ В КОНЦЕ ФАЙЛА ======
 */
 
 // Сущность пользователя (данные о пользователе отдельно в UserData)
@@ -29,61 +28,59 @@ func (u *User) isDefault() bool {
 }
 
 // Структура для более удобного и понятного взаимодействия с таблицой users
-type usersTable struct {
+type userTable struct {
 	// Указатель на подключение к базе данных
 	db *sql.DB
-	// Единый мьютекс, используемый при подключении к базе данных
-	mu *sync.Mutex
 }
 
-func (ut *usersTable) Add(u *User) error {
+func (ut *userTable) Add(u *User) error {
 
 	// Проверяем были ли переданы данные в u
 	if u.isDefault() {
-		return errors.New("Users.Add: wrong data! provided *User is empty")
+		return errors.New("User.Add: wrong data! provided *User is empty")
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := ut.makeInsert(
-		"INSERT INTO users (email,password) VALUES ($1, $2)",
+		"INSERT INTO Users (Email,Password) VALUES ($1, $2)",
 		&u.Email, &u.Password,
 	)
 
 	if err != nil {
-		return fmt.Errorf("Users.Add: %v", err)
+		return fmt.Errorf("User.Add: %v", err)
 	}
 
 	return nil
 }
 
 // Возвращает пользователя(массив из одного элемента) из базы данных
-func (ut *usersTable) GetById(u *User) (*User, error) {
+func (ut *userTable) GetById(u *User) (*User, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
-		return nil, errors.New("Users.Get: wrong data! provided *User is empty")
+		return nil, errors.New("User.Get: wrong data! provided *User is empty")
 	}
 	// Проверяем передан ли id
 	if u.Id == 0 {
-		return nil, errors.New("Users.Get: wrong data! provided *User.Id is empty")
+		return nil, errors.New("User.Get: wrong data! provided *User.Id is empty")
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := ut.makeSelect("SELECT email, password FROM users WHERE id = $1",
+	err := ut.makeSelect("SELECT Email, Password FROM Users WHERE UserId = $1",
 		u.Id, &u.Email, &u.Password)
 
 	// Проверяем ошибку select'а
 	if err != nil {
-		return nil, fmt.Errorf("Users.Get: %v", err)
+		return nil, fmt.Errorf("User.Get: %v", err)
 	}
 	return u, nil
 
 }
 
-func (ut *usersTable) Check(u *User) (*User, error) {
+func (ut *userTable) Check(u *User) (*User, error) {
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
-		return nil, errors.New("Users.Check: wrong data! *User is empty")
+		return nil, errors.New("User.Check: wrong data! *User is empty")
 	}
 
 	// Переменные, в которых мы будем хранить полученные данные из базы данных
@@ -91,11 +88,11 @@ func (ut *usersTable) Check(u *User) (*User, error) {
 	pass := ""
 
 	// Для получения используем базовую функцию
-	err := ut.makeSelect("SELECT password, id FROM users WHERE email = $1", u.Email, &pass, &id)
+	err := ut.makeSelect("SELECT Password, Id FROM Users WHERE Email = $1", u.Email, &pass, &id)
 
 	// Проверяем ошибку
 	if err != nil {
-		return nil, fmt.Errorf("Users.Check: %v", err)
+		return nil, fmt.Errorf("User.Check: %v", err)
 	}
 
 	// Сравниваем хеш из бд с тем, что мы получили из веба
@@ -108,29 +105,32 @@ func (ut *usersTable) Check(u *User) (*User, error) {
 	return u, nil
 }
 
-func (ut *usersTable) Delete(u *User) error {
+func (ut *userTable) Delete(u *User) error {
 	//  Проверяем дали ли нам нужные данные
 	if u.isDefault() {
-		return errors.New("Users.Delete: wrong data! *User.Id is empty")
+		return errors.New("User.Delete: wrong data! *User.Id is empty")
 	}
 
 	// Для удаления используем базовую функцию
-	err := ut.makeDelete("DELETE FROM users WHERE id = $1", u.Id)
+	err := ut.makeDelete("DELETE FROM Users WHERE UserId = $1", u.Id)
 
 	if err != nil {
-		return fmt.Errorf("Users.Delete: %v", err)
+		return fmt.Errorf("User.Delete: %v", err)
 	}
 
 	return nil
 }
 
-// ====== ЭНДПОИНТЫ ======
+// ====== ТРАНЗАКЦИИ ======
 
-func (ut *usersTable) makeSelectMultiple(query string, key interface{}) (*[]User, error) {
-	ut.mu.Lock()
-	defer ut.mu.Unlock()
+func (ut *userTable) makeSelectMultiple(query string, key interface{}) (*[]User, error) {
+	tx, err := ut.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback()
 
-	rows, err := ut.db.Query(query, key)
+	rows, err := tx.Query(query, key)
 	if err != nil {
 		return nil, err
 	}
@@ -148,82 +148,87 @@ func (ut *usersTable) makeSelectMultiple(query string, key interface{}) (*[]User
 		return nil, fmt.Errorf("problem with selecting multiple values! %v", err)
 	}
 
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
 	return &users, nil
 }
 
-func (ut *usersTable) makeSelect(query string, key interface{}, values ...interface{}) error {
-	ut.mu.Lock()
-	defer ut.mu.Unlock()
+func (ut *userTable) makeSelect(query string, key interface{}, values ...interface{}) error {
+	tx, err := ut.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
-	err := ut.db.QueryRow(query,
-		key).Scan(values)
-
+	err = tx.QueryRow(query, key).Scan(values...)
 	if err != nil {
 		return fmt.Errorf("problem with selecting! %v", err)
 	}
 
-	return err
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (ut *usersTable) makeInsert(query string, values ...interface{}) error {
-	ut.mu.Lock()
-	defer ut.mu.Unlock()
+func (ut *userTable) makeInsert(query string, values ...interface{}) error {
+	tx, err := ut.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
-	// Выполняем дефолтный инсерт в базу данных (вставка в таблицу)
-	_, err := ut.db.Exec(query,
-		values...)
-
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return fmt.Errorf("problem with inserting! %v", err)
 	}
 
-	return nil
-}
-
-func (ut *usersTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
-	ut.mu.Lock()
-	defer ut.mu.Unlock()
-
-	values = append(values, &key)
-
-	_, err := ut.db.Exec(query,
-		values...)
-
-	if err != nil {
-		fmt.Errorf("problem with updating! %v", err)
+	if err := tx.Commit(); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (ut *usersTable) makeDelete(query string, key interface{}) error {
-	ut.mu.Lock()
-	defer ut.mu.Unlock()
+func (ut *userTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
+	tx, err := ut.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
-	_, err := ut.db.Exec(query, key)
+	values = append(values, &key)
 
+	_, err = tx.Exec(query, values...)
+	if err != nil {
+		return fmt.Errorf("problem with updating! %v", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ut *userTable) makeDelete(query string, key interface{}) error {
+	tx, err := ut.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	_, err = tx.Exec(query, key)
 	if err != nil {
 		return fmt.Errorf("problem with deleting! %v", err)
 	}
 
-	return nil
-}
-
-// дальше не эндпоинт, просто самая бесполезная функция
-
-// связываем нашу абстракцию с единым подключением и мьютексом
-func (ut *usersTable) new(db *sql.DB, mu *sync.Mutex) error {
-	ut.db, ut.mu = db, mu
-
-	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS users (
-				id SERIAL PRIMARY KEY,
-				email VARCHAR(255) NOT NULL,
-				password TEXT NOT NULL
-		);
-		`)
-
-	if err != nil {
-		return fmt.Errorf("Database.Users.new: problem with creating table: %v", err)
+	if err := tx.Commit(); err != nil {
+		return err
 	}
+
 	return nil
 }

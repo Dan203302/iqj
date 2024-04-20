@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"sync"
 )
+
+// ====== ТРАНЗАКЦИИ В КОНЦЕ ФАЙЛА ======
 
 type UserData struct {
 	Id         int    `json:"id"`
@@ -24,81 +25,81 @@ func (ud *UserData) isDefault() bool {
 }
 
 // Структура для более удобного и понятного взаимодействия с таблицой users_data
-type usersDataTable struct {
+type userDataTable struct {
 	// Указатель на подключение к базе данных
 	db *sql.DB
 	// Единый мьютекс, используемый при подключении к базе данных
-	mu *sync.Mutex
+	// mu *sync.Mutex
 }
 
-func (udt *usersDataTable) Add(ud *UserData) error {
+func (udt *userDataTable) Add(ud *UserData) error {
 
 	// Проверяем были ли переданы данные в ud
 	if ud.isDefault() {
-		return errors.New("UsersData.Add: wrong data! provided *UserData is empty")
+		return errors.New("UserData.Add: wrong data! provided *UserData is empty")
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := udt.makeInsert(
-		"INSERT INTO users_data (id,name,bio,useful_data,role) VALUES ($1, $2, $3, $4, $5)",
+		"INSERT INTO UsersData (UserDataId,UserName,Biography,UsefulData,Role) VALUES ($1, $2, $3, $4, $5)",
 		&ud.Id, &ud.Name, &ud.Bio, &ud.UsefulData, &ud.Role,
 	)
 
 	if err != nil {
-		return fmt.Errorf("UsersData.Add: %v", err)
+		return fmt.Errorf("UserData.Add: %v", err)
 	}
 
 	return nil
 }
 
 // Возвращает данные пользователя из базы данных по ID
-func (udt *usersDataTable) GetById(ud *UserData) (*UserData, error) {
+func (udt *userDataTable) GetById(ud *UserData) (*UserData, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if ud.isDefault() {
-		return nil, errors.New("UsersData.GetById: wrong data! provided *UserData is empty")
+		return nil, errors.New("UserData.GetById: wrong data! provided *UserData is empty")
 	}
 	// Проверяем передан ли id
 	if ud.Id == 0 {
-		return nil, errors.New("UsersData.GetById: wrong data! provided *UserData.Id is empty")
+		return nil, errors.New("UserData.GetById: wrong data! provided *UserData.Id is empty")
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := udt.makeSelect("SELECT name, bio, useful_data, role FROM users_data WHERE id = $1",
+	err := udt.makeSelect("SELECT Name, Bio, UsefulData, Role FROM UsersData WHERE UserDataId = $1",
 		ud.Id, &ud.Name, &ud.Bio, &ud.UsefulData, &ud.Role)
 
 	// Проверяем ошибку select'а
 	if err != nil {
-		return nil, fmt.Errorf("UsersData.GetById: %v", err)
+		return nil, fmt.Errorf("UserData.GetById: %v", err)
 	}
 	return ud, nil
 }
 
 // Возвращает данные пользователя из базы данных по имени
-func (udt *usersDataTable) GetByName(ud *UserData) (*UserData, error) {
+func (udt *userDataTable) GetByName(ud *UserData) (*UserData, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if ud.isDefault() {
-		return nil, errors.New("UsersData.GetByName: wrong data! provided *UserData is empty")
+		return nil, errors.New("UserData.GetByName: wrong data! provided *UserData is empty")
 	}
 	// Проверяем передан ли id
 	if ud.Name == "" {
-		return nil, errors.New("UsersData.GetByName: wrong data! provided *UserData.Name is empty")
+		return nil, errors.New("UserData.GetByName: wrong data! provided *UserData.Name is empty")
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := udt.makeSelect("SELECT id, bio, useful_data, role FROM users_data WHERE name = $1",
+	err := udt.makeSelect("SELECT UserDataId, Biography, UsefulData, Role FROM UsersData WHERE UserName = $1",
 		ud.Name, &ud.Id, &ud.Bio, &ud.UsefulData, &ud.Role)
 
 	// Проверяем ошибку select'а
 	if err != nil {
-		return nil, fmt.Errorf("UsersData.GetByName: %v", err)
+		return nil, fmt.Errorf("UserData.GetByName: %v", err)
 	}
 	return ud, nil
 }
 
 // Возвращает пользователя(массив из одного элемента) из базы данных
-func (udt *usersDataTable) GetRoleById(ud *UserData) (*UserData, error) {
+func (udt *userDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if ud.isDefault() {
@@ -110,24 +111,24 @@ func (udt *usersDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := udt.makeSelect("SELECT role FROM users_data WHERE id = $1",
+	err := udt.makeSelect("SELECT Role FROM UsersData WHERE UserDataId = $1",
 		ud.Id, &ud.Role)
 
 	// Проверяем ошибку select'а
 	if err != nil {
 		return nil, fmt.Errorf("UsersData.GetRoleById: %v", err)
 	}
-	return u, nil
+	return ud, nil
 }
 
-func (udt *usersDataTable) Delete(ud *UserData) error {
+func (udt *userDataTable) Delete(ud *UserData) error {
 	//  Проверяем дали ли нам нужные данные
 	if ud.isDefault() {
 		return errors.New("UsersData.Delete: wrong data! *UserData.Id is empty")
 	}
 
 	// Для удаления используем базовую функцию
-	err := udt.makeDelete("DELETE FROM users_data WHERE id = $1", ud.Id)
+	err := udt.makeDelete("DELETE FROM UsersData WHERE UserDataId = $1", ud.Id)
 
 	if err != nil {
 		return fmt.Errorf("UsersData.Delete: %v", err)
@@ -136,11 +137,9 @@ func (udt *usersDataTable) Delete(ud *UserData) error {
 	return nil
 }
 
-// ====== ЭНДПОИНТЫ ======
+// ====== ТРАНЗАКЦИИ ======
 
-func (udt *usersDataTable) makeSelectMultiple(query string, key interface{}) (*[]User, error) {
-	udt.mu.Lock()
-	defer udt.mu.Unlock()
+func (udt *userDataTable) makeSelectMultiple(query string, key interface{}) (*[]UserData, error) {
 
 	rows, err := udt.db.Query(query, key)
 	if err != nil {
@@ -148,24 +147,22 @@ func (udt *usersDataTable) makeSelectMultiple(query string, key interface{}) (*[
 	}
 	defer rows.Close()
 
-	var users []User
+	var usersdata []UserData
 	for rows.Next() {
-		var user User
-		if err := rows.Scan(&user.Id, &user.Email, &user.Password); err != nil {
+		var userdata UserData
+		if err := rows.Scan(&userdata.Name, &userdata.Bio, &userdata.UsefulData, &userdata.Role); err != nil {
 			return nil, err
 		}
-		users = append(users, user)
+		usersdata = append(usersdata, userdata)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("problem with selecting multiple values! %v", err)
 	}
 
-	return &users, nil
+	return &usersdata, nil
 }
 
-func (udt *usersDataTable) makeSelect(query string, key interface{}, values ...interface{}) error {
-	udt.mu.Lock()
-	defer udt.mu.Unlock()
+func (udt *userDataTable) makeSelect(query string, key interface{}, values ...interface{}) error {
 
 	err := udt.db.QueryRow(query,
 		key).Scan(values)
@@ -177,67 +174,61 @@ func (udt *usersDataTable) makeSelect(query string, key interface{}, values ...i
 	return err
 }
 
-func (udt *usersDataTable) makeInsert(query string, values ...interface{}) error {
-	udt.mu.Lock()
-	defer udt.mu.Unlock()
+func (udt *userDataTable) makeInsert(query string, values ...interface{}) error {
+	tx, err := udt.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
-	// Выполняем дефолтный инсерт в базу данных (вставка в таблицу)
-	_, err := udt.db.Exec(query,
-		values...)
-
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return fmt.Errorf("problem with inserting! %v", err)
 	}
 
-	return nil
-}
-
-func (udt *usersDataTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
-	udt.mu.Lock()
-	defer udt.mu.Unlock()
-
-	values = append(values, &key)
-
-	_, err := udt.db.Exec(query,
-		values...)
-
-	if err != nil {
-		fmt.Errorf("problem with updating! %v", err)
+	if err := tx.Commit(); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (udt *usersDataTable) makeDelete(query string, key interface{}) error {
-	udt.mu.Lock()
-	defer udt.mu.Unlock()
+func (udt *userDataTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
+	tx, err := udt.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
 
-	_, err := udt.db.Exec(query, key)
+	values = append(values, &key)
 
+	_, err = tx.Exec(query, values...)
+	if err != nil {
+		return fmt.Errorf("problem with updating! %v", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (udt *userDataTable) makeDelete(query string, key interface{}) error {
+	tx, err := udt.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	_, err = tx.Exec(query, key)
 	if err != nil {
 		return fmt.Errorf("problem with deleting! %v", err)
 	}
 
-	return nil
-}
-
-// дальше не эндпоинт, просто самая бесполезная функция
-
-// связываем нашу абстракцию с единым подключением и мьютексом
-func (udt *usersDataTable) new(db *sql.DB, mu *sync.Mutex) error {
-	udt.db, udt.mu = db, mu
-
-	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS users_data (
-				id INT PRIMARY KEY,
-				name VARCHAR(255) NOT NULL,
-				bio TEXT NOT NULL,
-				useful_data TEXT NOT NULL,
-				role VARCHAR(50) NOT NULL
-		);
-		`)
-
-	if err != nil {
-		return fmt.Errorf("Database.UsersData.new: problem with creating table: %v", err)
+	if err := tx.Commit(); err != nil {
+		return err
 	}
+
 	return nil
 }
