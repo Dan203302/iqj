@@ -14,12 +14,12 @@ void main() => runApp(const App());
 class App extends StatefulWidget {
   const App({super.key});
 
-  @override
+  @override 
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-  late bool firstLaunch = false;
+  late bool firstLaunch = true;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _AppState extends State<App> {
         'account': (context) => const AccountScreen(),
         'registration': (context) => const RegScreen(),
         'successreg': (context) => const SuccessReg(),
-      },
+       },
     );
   }
 }
