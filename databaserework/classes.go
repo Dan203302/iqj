@@ -56,6 +56,94 @@ func (ct *classTable) Add(c *Class) error {
 	return nil
 }
 
-func (ct *classTable) GetById() {}
+func (ct *classTable) GetById(c *Class) (*Class, error) {
+	if c.isDefault() {
+		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
+	}
 
-func (ct *classTable) GetByTeacher() {}
+	row, err := ct.qm.makeSelect(ct.db,
+		`SELECT ClassGroupIds, ClassTeacherId, Count, Weekday, Week, ClassName, ClassType, ClassLocation
+FROM Classes
+WHERE ClassId = $1;
+`,
+		c.Id)
+	if err != nil {
+		return nil, fmt.Errorf("Class.GetById: %v", err)
+	}
+
+	if !row.Next() {
+		return nil, err // todo: написать ошибку
+	}
+	row.Scan(pq.Array(&c.Groups), &c.Teacher, &c.Count, &c.Weekday, &c.Week, &c.Name, &c.Type, &c.Location)
+
+	return c, err
+
+}
+
+func (ct *classTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
+	if c.isDefault() {
+		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
+	}
+
+	rows, err := ct.qm.makeSelect(ct.db,
+		`SELECT ClassId, ClassGroupIds, Count, Weekday, ClassName, ClassType, ClassLocation
+		FROM Classes
+		WHERE ClassTeacherId = $1 AND Week = $2;`,
+		c.Id, c.Week)
+	if err != nil {
+		return nil, fmt.Errorf("Class.GetById: %v", err)
+	}
+
+	var resultClasses []Class
+	var resultClass Class
+
+	for rows.Next() {
+		rows.Scan(&resultClass.Id, pq.Array(&resultClass.Groups), &resultClass.Count, &resultClass.Weekday, &resultClass.Name, &resultClass.Type, &resultClass.Location)
+		resultClass.Teacher, resultClass.Week = c.Teacher, c.Week
+		resultClasses = append(resultClasses, resultClass)
+	}
+
+	return &resultClasses, nil
+}
+
+func (ct *classTable) GetForDayByTeacher(c *Class) (*[]Class, error) {
+	if c.isDefault() {
+		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
+	}
+
+	rows, err := ct.qm.makeSelect(ct.db,
+		`SELECT ClassId, ClassGroupIds, Count, ClassName, ClassType, ClassLocation
+		FROM Classes
+		WHERE ClassTeacherId = $1 AND Week = $2 AND Weekday = $3;`,
+		c.Id, c.Week, c.Weekday)
+	if err != nil {
+		return nil, fmt.Errorf("Class.GetById: %v", err)
+	}
+
+	var resultClasses []Class
+	var resultClass Class
+
+	for rows.Next() {
+		rows.Scan(&resultClass.Id, pq.Array(&resultClass.Groups), &resultClass.Count, &resultClass.Name, &resultClass.Type, &resultClass.Location)
+		resultClass.Teacher, resultClass.Week, resultClass.Weekday = c.Teacher, c.Week, c.Weekday
+		resultClasses = append(resultClasses, resultClass)
+	}
+
+	return &resultClasses, nil
+}
+
+func (ct *classTable) Delete(c *Class) error {
+	if c.isDefault() {
+		return errors.New("Class.Delete: wrong data! provided *Class is empty")
+	}
+
+	err := ct.qm.makeDelete(ct.db,
+		"DELETE FROM Classes WHERE ClassId = $1",
+		c.Id)
+
+	if err != nil {
+		return fmt.Errorf("Class.Delete: %v", err)
+	}
+
+	return nil
+}
