@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS News (
     Header VARCHAR(255) NOT NULL,
     Link VARCHAR(255) NOT NULL,
     NewsText TEXT NOT NULL,
-    ImageLink TEXT[],
+    ImageLinks TEXT[],
     Tags VARCHAR(255)[],
     PubliactionTime TIMESTAMP
 );
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS StudentsGroups (
 -- Создание таблицы расписания (schedule)
 CREATE TABLE IF NOT EXISTS Classes (
     ClassId SERIAL PRIMARY KEY,
-    ClassGroupId INT[] NOT NULL,
+    ClassGroupIds INT[] NOT NULL,
     ClassTeacherId INT NOT NULL,
     Count INT NOT NULL,
     Weekday INT NOT NULL,
