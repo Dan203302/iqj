@@ -8,8 +8,6 @@ import (
 	"github.com/lib/pq"
 )
 
-// ====== ТРАНЗАКЦИИ В КОНЦЕ ФАЙЛА ======
-
 type Student struct {
 	Id       int   `json:"id"`
 	Group    int   `json:"group"`
@@ -30,6 +28,7 @@ type studentTable struct {
 	db *sql.DB
 	// Единый мьютекс, используемый при подключении к базе данных
 	// mu *sync.Mutex
+	qm queryMaker
 }
 
 func (st *studentTable) Add(s *Student) error {
@@ -40,7 +39,7 @@ func (st *studentTable) Add(s *Student) error {
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
-	err := st.makeInsert(
+	err := st.qm.makeInsert(st.db,
 		"INSERT INTO Students (StudentId,StudentGroupId,StudentTeachersIds) VALUES ($1, $2, $3, $4, $5)",
 		&s.Id, &s.Group, pq.Array(&s.Teachers),
 	)
@@ -65,13 +64,19 @@ func (st *studentTable) GetById(s *Student) (*Student, error) {
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := st.makeSelect("SELECT StudentGroupId, StudentTeachersIds FROM Students WHERE StudentId = $1",
-		s.Id, &s.Group, pq.Array(&s.Teachers))
+	student_values, err := st.qm.makeSelect(st.db,
+		"SELECT StudentGroupId, StudentTeachersIds FROM Students WHERE StudentId = $1",
+		s.Id)
 
 	// Проверяем ошибку select'а
 	if err != nil {
 		return nil, fmt.Errorf("Student.GetById: %v", err)
 	}
+	// TODO: исправить условие снизу
+	if student_values.Next() {
+		student_values.Scan(&s.Group, pq.Array(&s.Teachers))
+	}
+
 	return s, nil
 }
 
@@ -88,7 +93,8 @@ func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	classes, err := st.makeSelectMultiple(`SELECT s.*
+	classes, err := st.qm.makeSelect(st.db,
+		`SELECT s.*
 											FROM schedule s
 											JOIN student_groups sg ON s.group_id = ANY(sg.students)
 											WHERE $1 = ANY(sg.students);
@@ -98,11 +104,20 @@ func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Student.GetRoleById: %v", err)
 	}
-	return classes, nil
+
+	var resultClasses []Class
+	var resultClass Class
+
+	for classes.Next() {
+		classes.Scan(&resultClass.Id, pq.Array(&resultClass.Groups), &resultClass.Teacher, &resultClass.Count, &resultClass.Weekday, &resultClass.Week, &resultClass.Name, &resultClass.Type, &resultClass.Location)
+		resultClasses = append(resultClasses, resultClass)
+	}
+
+	return &resultClasses, nil
 }
 
 // Возвращает пользователя(массив из одного элемента) из базы данных
-func (st *studentTable) GetClassesByWeekday(s *Student, wd int) (*[]Class, error) {
+func (st *studentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if s.isDefault() {
@@ -114,18 +129,28 @@ func (st *studentTable) GetClassesByWeekday(s *Student, wd int) (*[]Class, error
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	classes, err := st.makeSelectMultiple(`SELECT s.*
-											FROM schedule s
-											JOIN student_groups sg ON s.group_id = ANY(sg.students)
-											JOIN students st ON sg.id = st.student_group
-											WHERE st.id = $1 AND s.weekday = $2"`,
-		s.Id, wd)
+	classes, err := st.qm.makeSelect(st.db, // TODO: Оптимизировать запрос
+		`SELECT s.*
+			FROM schedule s
+			JOIN student_groups sg ON s.group_id = ANY(sg.students)
+			JOIN students st ON sg.id = st.student_group
+			WHERE st.id = $1 AND s.weekday = $2 AND s.Week = $3"`,
+		s.Id, wd, wc)
 
 	// Проверяем ошибку select'а
 	if err != nil {
 		return nil, fmt.Errorf("Student.GetRoleById: %v", err)
 	}
-	return classes, nil
+
+	var resultClasses []Class
+	var resultClass Class
+
+	for classes.Next() {
+		classes.Scan(&resultClass.Id, pq.Array(&resultClass.Groups), &resultClass.Teacher, &resultClass.Count, &resultClass.Weekday, &resultClass.Week, &resultClass.Name, &resultClass.Type, &resultClass.Location)
+		resultClasses = append(resultClasses, resultClass)
+	}
+
+	return &resultClasses, nil
 }
 
 func (st *studentTable) Delete(s *Student) error {
@@ -135,93 +160,10 @@ func (st *studentTable) Delete(s *Student) error {
 	}
 
 	// Для удаления используем базовую функцию
-	err := st.makeDelete("DELETE FROM users_data WHERE id = $1", s.Id)
+	err := st.qm.makeDelete(st.db, "DELETE FROM users_data WHERE id = $1", s.Id)
 
 	if err != nil {
 		return fmt.Errorf("Student.Delete: %v", err)
-	}
-
-	return nil
-}
-
-// ====== ТРАНЗАКЦИИ ======
-
-func (st *studentTable) makeSelectMultiple(query string, key ...interface{}) (*[]Class, error) {
-
-	rows, err := st.db.Query(query, key...)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var classes []Class
-	for rows.Next() {
-		var class Class
-		if err := rows.Scan(&class.Id, &class.Groups, &class.Teacher, &class.Count, &class.Weekday, &class.Week, &class.Name, &class.Type, &class.Location); err != nil {
-			return nil, err
-		}
-		classes = append(classes, class)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("problem with selecting multiple values! %v", err)
-	}
-
-	return &classes, nil
-}
-
-func (st *studentTable) makeSelect(query string, key interface{}, values ...interface{}) error {
-
-	err := st.db.QueryRow(query,
-		key).Scan(values)
-
-	if err != nil {
-		return fmt.Errorf("problem with selecting! %v", err)
-	}
-
-	return err
-}
-
-func (st *studentTable) makeInsert(query string, values ...interface{}) error {
-
-	// Выполняем дефолтный инсерт в базу данных (вставка в таблицу)
-	_, err := st.db.Exec(query,
-		values...)
-
-	if err != nil {
-		return fmt.Errorf("problem with inserting! %v", err)
-	}
-
-	return nil
-}
-
-func (st *studentTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
-
-	values = append(values, &key)
-
-	_, err := st.db.Exec(query,
-		values...)
-
-	if err != nil {
-		return fmt.Errorf("problem with updating! %v", err)
-	}
-
-	return nil
-}
-
-func (st *studentTable) makeDelete(query string, key interface{}) error {
-	tx, err := st.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	_, err = tx.Exec(query, key)
-	if err != nil {
-		return fmt.Errorf("problem with deleting! %v", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
 	}
 
 	return nil

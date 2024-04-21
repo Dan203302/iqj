@@ -23,15 +23,6 @@ type TableModel interface {
 	GetById(*Entity) (*Entity, error)
 }
 
-// Интерфейс функций создания и выполнения запросов, вокруг которых оборачивается логика бд
-type QueryMaker interface {
-	makeSelect(string, interface{}, ...interface{}) error
-	makeSelectMultiple(string, interface{}) (*[]Entity, error)
-	makeInsert(string, ...interface{}) error
-	makeUpdate(string, interface{}, ...interface{})
-	makeDelete(string, interface{}) error
-}
-
 /*
 Интерфейс, включающий в себя все структуры сущностей, используемых в базе данных.
 (прим. User,Lesson,News,Student)

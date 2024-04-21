@@ -8,8 +8,6 @@ import (
 	"github.com/lib/pq"
 )
 
-// ====== ТРАНЗАКЦИИ В КОНЦЕ ФАЙЛА ======
-
 type Teacher struct {
 	Id     int   `json:"id"`
 	Groups []int `json:"groups"`
@@ -29,6 +27,7 @@ type teacherTable struct {
 	db *sql.DB
 	// Единый мьютекс, используемый при подключении к базе данных
 	// mu *sync.Mutex
+	qm queryMaker
 }
 
 func (tt *teacherTable) Add(t *Teacher) error {
@@ -39,7 +38,7 @@ func (tt *teacherTable) Add(t *Teacher) error {
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
-	err := tt.makeInsert(
+	err := tt.qm.makeInsert(tt.db,
 		"INSERT INTO teachers (id,groups) VALUES ($1, $2)",
 		&t.Id, &t.Groups,
 	)
@@ -64,13 +63,18 @@ func (tt *teacherTable) GetById(t *Teacher) (*Teacher, error) {
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := tt.makeSelect("SELECT groups FROM teachers WHERE id = $1",
-		t.Id, pq.Array(&t.Groups))
+	row, err := tt.qm.makeSelect(tt.db,
+		"SELECT groups FROM teachers WHERE id = $1",
+		t.Id)
 
 	// Проверяем ошибку select'а
 	if err != nil {
 		return nil, fmt.Errorf("Teachers.GetById: %v", err)
 	}
+
+	// TODO: исправить условие снизу
+	row.Scan(pq.Array(*&t.Groups))
+
 	return t, nil
 }
 
@@ -85,7 +89,8 @@ func (tt *teacherTable) UpdateGroups(t *Teacher) (*Teacher, error) {
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	err := tt.makeUpdate("UPDATE teachers SET groups = $1 WHERE id = $2",
+	err := tt.qm.makeUpdate(tt.db,
+		"UPDATE teachers SET groups = $1 WHERE id = $2",
 		t.Id, &t.Groups)
 
 	// Проверяем ошибку select'а
@@ -93,45 +98,4 @@ func (tt *teacherTable) UpdateGroups(t *Teacher) (*Teacher, error) {
 		return nil, fmt.Errorf("Teachers.GetById: %v", err)
 	}
 	return t, nil
-}
-
-// ====== ТРАНЗАКЦИИ ======  на самом деле я посчитал что здесь они будут излишними, тут обычные запросы хаха
-
-func (tt *teacherTable) makeSelect(query string, key interface{}, values ...interface{}) error {
-
-	err := tt.db.QueryRow(query,
-		key).Scan(values)
-
-	if err != nil {
-		return fmt.Errorf("problem with selecting! %v", err)
-	}
-
-	return err
-}
-
-func (tt *teacherTable) makeInsert(query string, values ...interface{}) error {
-
-	// Выполняем дефолтный инсерт в базу данных (вставка в таблицу)
-	_, err := tt.db.Exec(query,
-		values...)
-
-	if err != nil {
-		return fmt.Errorf("problem with inserting! %v", err)
-	}
-
-	return nil
-}
-
-func (tt *teacherTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
-
-	values = append(values, &key)
-
-	_, err := tt.db.Exec(query,
-		values...)
-
-	if err != nil {
-		return fmt.Errorf("problem with updating! %v", err)
-	}
-
-	return nil
 }

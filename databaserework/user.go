@@ -8,10 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-/*
-====== ТРАНЗАКЦИИ НАХОДЯТСЯ В КОНЦЕ ФАЙЛА ======
-*/
-
 // Сущность пользователя (данные о пользователе отдельно в UserData)
 type User struct {
 	Id       int    `json:"id"`
@@ -31,6 +27,7 @@ func (u *User) isDefault() bool {
 type userTable struct {
 	// Указатель на подключение к базе данных
 	db *sql.DB
+	tm *transactionMaker
 }
 
 func (ut *userTable) Add(u *User) error {
@@ -41,7 +38,7 @@ func (ut *userTable) Add(u *User) error {
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
-	err := ut.makeInsert(
+	err := ut.tm.makeInsert(ut.db,
 		"INSERT INTO Users (Email,Password) VALUES ($1, $2)",
 		&u.Email, &u.Password,
 	)
@@ -55,7 +52,6 @@ func (ut *userTable) Add(u *User) error {
 
 // Возвращает пользователя(массив из одного элемента) из базы данных
 func (ut *userTable) GetById(u *User) (*User, error) {
-
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
 		return nil, errors.New("User.Get: wrong data! provided *User is empty")
@@ -65,16 +61,21 @@ func (ut *userTable) GetById(u *User) (*User, error) {
 		return nil, errors.New("User.Get: wrong data! provided *User.Id is empty")
 	}
 
-	// Используем базовую функцию для формирования и исполнения select запроса
-	err := ut.makeSelect("SELECT Email, Password FROM Users WHERE UserId = $1",
-		u.Id, &u.Email, &u.Password)
-
-	// Проверяем ошибку select'а
+	rows, err := ut.tm.makeSelect(ut.db, "SELECT Email, Password FROM Users WHERE UserId = $1", u.Id)
 	if err != nil {
 		return nil, fmt.Errorf("User.Get: %v", err)
 	}
-	return u, nil
+	defer rows.Close()
+	// TODO: исправить условие снизу
+	if rows.Next() {
+		if err := rows.Scan(&u.Email, &u.Password); err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, errors.New("User.Get: no rows returned")
+	}
 
+	return u, nil
 }
 
 func (ut *userTable) Check(u *User) (*User, error) {
@@ -87,12 +88,18 @@ func (ut *userTable) Check(u *User) (*User, error) {
 	id := 0
 	pass := ""
 
-	// Для получения используем базовую функцию
-	err := ut.makeSelect("SELECT Password, Id FROM Users WHERE Email = $1", u.Email, &pass, &id)
-
-	// Проверяем ошибку
+	rows, err := ut.tm.makeSelect(ut.db, "SELECT Password, Id FROM Users WHERE Email = $1", u.Email)
 	if err != nil {
 		return nil, fmt.Errorf("User.Check: %v", err)
+	}
+	defer rows.Close()
+	// TODO: исправить условие снизу
+	if rows.Next() {
+		if err := rows.Scan(&pass, &id); err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, errors.New("User.Check: no rows returned")
 	}
 
 	// Сравниваем хеш из бд с тем, что мы получили из веба
@@ -112,122 +119,10 @@ func (ut *userTable) Delete(u *User) error {
 	}
 
 	// Для удаления используем базовую функцию
-	err := ut.makeDelete("DELETE FROM Users WHERE UserId = $1", u.Id)
+	err := ut.tm.makeDelete(ut.db, "DELETE FROM Users WHERE UserId = $1", u.Id)
 
 	if err != nil {
 		return fmt.Errorf("User.Delete: %v", err)
-	}
-
-	return nil
-}
-
-// ====== ТРАНЗАКЦИИ ======
-
-func (ut *userTable) makeSelectMultiple(query string, key interface{}) (*[]User, error) {
-	tx, err := ut.db.Begin()
-	if err != nil {
-		return nil, err
-	}
-	defer tx.Rollback()
-
-	rows, err := tx.Query(query, key)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var users []User
-	for rows.Next() {
-		var user User
-		if err := rows.Scan(&user.Id, &user.Email, &user.Password); err != nil {
-			return nil, err
-		}
-		users = append(users, user)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("problem with selecting multiple values! %v", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return nil, err
-	}
-
-	return &users, nil
-}
-
-func (ut *userTable) makeSelect(query string, key interface{}, values ...interface{}) error {
-	tx, err := ut.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	err = tx.QueryRow(query, key).Scan(values...)
-	if err != nil {
-		return fmt.Errorf("problem with selecting! %v", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (ut *userTable) makeInsert(query string, values ...interface{}) error {
-	tx, err := ut.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	_, err = tx.Exec(query, values...)
-	if err != nil {
-		return fmt.Errorf("problem with inserting! %v", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (ut *userTable) makeUpdate(query string, key interface{}, values ...interface{}) error {
-	tx, err := ut.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	values = append(values, &key)
-
-	_, err = tx.Exec(query, values...)
-	if err != nil {
-		return fmt.Errorf("problem with updating! %v", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (ut *userTable) makeDelete(query string, key interface{}) error {
-	tx, err := ut.db.Begin()
-	if err != nil {
-		return err
-	}
-	defer tx.Rollback()
-
-	_, err = tx.Exec(query, key)
-	if err != nil {
-		return fmt.Errorf("problem with deleting! %v", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
 	}
 
 	return nil
