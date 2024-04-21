@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -8,40 +8,43 @@ import (
 	"github.com/lib/pq"
 )
 
+// Student представляет сущность студента в системе.
 type Student struct {
-	Id       int   `json:"id"`
-	Group    int   `json:"group"`
-	Teachers []int `json:"teachers"`
+	Id       int   `json:"id"`       // Уникальный идентификатор студента
+	Group    int   `json:"group"`    // Идентификатор группы студента
+	Teachers []int `json:"teachers"` // Идентификаторы преподавателей студента
 }
 
-/*
-Проверяет, переданы ли какие-либо данные в структуру.
-Необходимо для реализаци интерфейса Entity, а также для фильтров в функциях БД
-*/
+// isDefault проверяет, переданы ли какие-либо данные в структуру Student.
+// Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (s *Student) isDefault() bool {
 	return s.Id == 0 || s.Group == 0 || s.Teachers == nil
 }
 
-// Структура для более удобного и понятного взаимодействия с таблицой students
+// studentTable предоставляет методы для работы с таблицей студентов в базе данных.
 type studentTable struct {
-	// Указатель на подключение к базе данных
-	db *sql.DB
-	// Единый мьютекс, используемый при подключении к базе данных
-	// mu *sync.Mutex
-	qm queryMaker
+	db *sql.DB    // Указатель на подключение к базе данных
+	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
 
+// Add добавляет студента в базу данных.
+// Принимает указатель на Student с заполненными полями.
+// Возвращает nil при успешном добавлении.
+//
+// Прим:
+// s := &Student{Id: 1, Group: 101, Teachers: []int{1, 2, 3}}
+// err := ...Add(s) // err == nil если все хорошо
 func (st *studentTable) Add(s *Student) error {
 
-	// Проверяем были ли переданы данные в ud
+	// Проверяем были ли переданы данные в s
 	if s.isDefault() {
 		return errors.New("Student.Add: wrong data! provided *Student is empty")
 	}
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := st.qm.makeInsert(st.db,
-		"INSERT INTO Students (StudentId,StudentGroupId,StudentTeachersIds) VALUES ($1, $2, $3, $4, $5)",
-		&s.Id, &s.Group, pq.Array(&s.Teachers),
+		"INSERT INTO Students (StudentId, StudentGroupId, StudentTeachersIds) VALUES ($1, $2, $3)",
+		s.Id, s.Group, pq.Array(s.Teachers),
 	)
 
 	if err != nil {
@@ -51,7 +54,13 @@ func (st *studentTable) Add(s *Student) error {
 	return nil
 }
 
-// Возвращает данные пользователя из базы данных по ID
+// GetById возвращает данные студента из базы данных по указанному идентификатору.
+// Принимает указатель на Student с заполненным полем Id.
+// Возвращает заполненную структуру Student и nil при успешном запросе.
+//
+// Прим:
+// s := &Student{Id: 1}
+// student, err := ...GetById(s) // err == nil если все хорошо
 func (st *studentTable) GetById(s *Student) (*Student, error) {
 
 	// Проверяем переданы ли данные в функцию
@@ -64,7 +73,7 @@ func (st *studentTable) GetById(s *Student) (*Student, error) {
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	student_values, err := st.qm.makeSelect(st.db,
+	rows, err := st.qm.makeSelect(st.db,
 		"SELECT StudentGroupId, StudentTeachersIds FROM Students WHERE StudentId = $1",
 		s.Id)
 
@@ -72,15 +81,22 @@ func (st *studentTable) GetById(s *Student) (*Student, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Student.GetById: %v", err)
 	}
-	// TODO: исправить условие снизу
-	if student_values.Next() {
-		student_values.Scan(&s.Group, pq.Array(&s.Teachers))
+
+	// Извлекаем данные из результата запроса и заполняем структуру Student
+	if rows.Next() {
+		rows.Scan(&s.Group, pq.Array(&s.Teachers))
 	}
 
 	return s, nil
 }
 
-// Возвращает пользователя(массив из одного элемента) из базы данных
+// GetClasses возвращает классы студента из базы данных.
+// Принимает указатель на Student с заполненным полем Id.
+// Возвращает срез Class и nil при успешном запросе.
+//
+// Прим:
+// s := &Student{Id: 1}
+// classes, err := ...GetClasses(s) // err == nil если все хорошо
 func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
 
 	// Проверяем переданы ли данные в функцию
@@ -95,19 +111,20 @@ func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
 	// Используем базовую функцию для формирования и исполнения select запроса
 	classes, err := st.qm.makeSelect(st.db,
 		`SELECT s.*
-											FROM schedule s
-											JOIN student_groups sg ON s.group_id = ANY(sg.students)
-											WHERE $1 = ANY(sg.students);
-											`, s.Id)
+			FROM schedule s
+			JOIN student_groups sg ON s.group_id = ANY(sg.students)
+			WHERE $1 = ANY(sg.students);
+			`, s.Id)
 
 	// Проверяем ошибку select'а
 	if err != nil {
-		return nil, fmt.Errorf("Student.GetRoleById: %v", err)
+		return nil, fmt.Errorf("Student.GetClasses: %v", err)
 	}
 
 	var resultClasses []Class
 	var resultClass Class
 
+	// Извлекаем данные из результата запроса и заполняем структуру Class
 	for classes.Next() {
 		classes.Scan(&resultClass.Id, pq.Array(&resultClass.Groups), &resultClass.Teacher, &resultClass.Count, &resultClass.Weekday, &resultClass.Week, &resultClass.Name, &resultClass.Type, &resultClass.Location)
 		resultClasses = append(resultClasses, resultClass)
@@ -116,7 +133,13 @@ func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
 	return &resultClasses, nil
 }
 
-// Возвращает пользователя(массив из одного элемента) из базы данных
+// GetClassesByCurrentDay возвращает классы студента по текущему дню недели и неделе.
+// Принимает указатель на Student с заполненными полями Id, Week и Weekday.
+// Возвращает срез Class и nil при успешном запросе.
+//
+// Прим:
+// s := &Student{Id: 1, Week: 1, Weekday: 3}
+// classes, err := ...GetClassesByCurrentDay(s, 1, 3) // Получить классы на 3-м дне недели первой недели
 func (st *studentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class, error) {
 
 	// Проверяем переданы ли данные в функцию
@@ -129,22 +152,23 @@ func (st *studentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class
 	}
 
 	// Используем базовую функцию для формирования и исполнения select запроса
-	classes, err := st.qm.makeSelect(st.db, // TODO: Оптимизировать запрос
+	classes, err := st.qm.makeSelect(st.db,
 		`SELECT s.*
 			FROM schedule s
 			JOIN student_groups sg ON s.group_id = ANY(sg.students)
 			JOIN students st ON sg.id = st.student_group
-			WHERE st.id = $1 AND s.weekday = $2 AND s.Week = $3"`,
+			WHERE st.id = $1 AND s.weekday = $2 AND s.Week = $3`,
 		s.Id, wd, wc)
 
 	// Проверяем ошибку select'а
 	if err != nil {
-		return nil, fmt.Errorf("Student.GetRoleById: %v", err)
+		return nil, fmt.Errorf("Student.GetClassesByWeekday: %v", err)
 	}
 
 	var resultClasses []Class
 	var resultClass Class
 
+	// Извлекаем данные из результата запроса и заполняем структуру Class
 	for classes.Next() {
 		classes.Scan(&resultClass.Id, pq.Array(&resultClass.Groups), &resultClass.Teacher, &resultClass.Count, &resultClass.Weekday, &resultClass.Week, &resultClass.Name, &resultClass.Type, &resultClass.Location)
 		resultClasses = append(resultClasses, resultClass)
@@ -153,8 +177,15 @@ func (st *studentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class
 	return &resultClasses, nil
 }
 
+// Delete удаляет данные студента из базы данных по указанному идентификатору.
+// Принимает указатель на Student с заполненным полем Id.
+// Возвращает nil при успешном удалении.
+//
+// Прим:
+// s := &Student{Id: 1}
+// err := ...Delete(s) // err == nil если все хорошо
 func (st *studentTable) Delete(s *Student) error {
-	//  Проверяем дали ли нам нужные данные
+	// Проверяем дали ли нам нужные данные
 	if s.isDefault() {
 		return errors.New("Student.Delete: wrong data! *UserData.Id is empty")
 	}

@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -8,28 +8,32 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Сущность пользователя (данные о пользователе отдельно в UserData)
+// User представляет сущность пользователя в системе.
 type User struct {
-	Id       int    `json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Id       int    `json:"id"`       // Уникальный идентификатор пользователя
+	Email    string `json:"email"`    // Электронная почта пользователя
+	Password string `json:"password"` // Хешированный пароль пользователя
 }
 
-/*
-Проверяет, переданы ли какие-либо данные в структуру.
-Необходимо для реализаци интерфейса Entity, а также для фильтров в функциях БД
-*/
+// isDefault проверяет, переданы ли какие-либо данные в структуру User.
+// Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (u *User) isDefault() bool {
 	return u.Id == 0 || u.Email == "" || u.Password == ""
 }
 
-// Структура для более удобного и понятного взаимодействия с таблицой users
+// userTable предоставляет методы для работы с таблицей пользователей в базе данных.
 type userTable struct {
-	// Указатель на подключение к базе данных
-	db *sql.DB
-	tm *transactionMaker
+	db *sql.DB           // Указатель на подключение к базе данных
+	tm *transactionMaker // Создатель транзакций
 }
 
+// Add добавляет пользователя в базу данных.
+// Принимает указатель на User с заполненными полями.
+// Возвращает nil при успешном добавлении.
+//
+// Прим:
+// user := &User{Email: "example@example.com", Password: "example"}
+// err := ...Add(user) // err == nil если все хорошо
 func (ut *userTable) Add(u *User) error {
 
 	// Проверяем были ли переданы данные в u
@@ -50,7 +54,13 @@ func (ut *userTable) Add(u *User) error {
 	return nil
 }
 
-// Возвращает пользователя(массив из одного элемента) из базы данных
+// GetById возвращает данные пользователя из базы данных по указанному идентификатору.
+// Принимает указатель на User с заполненным полем Id.
+// Возвращает заполненную структуру User и nil при успешном запросе.
+//
+// Прим:
+// user := &User{Id: 1}
+// user, err := ...GetById(user) // err == nil если все хорошо
 func (ut *userTable) GetById(u *User) (*User, error) {
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
@@ -66,7 +76,7 @@ func (ut *userTable) GetById(u *User) (*User, error) {
 		return nil, fmt.Errorf("User.Get: %v", err)
 	}
 	defer rows.Close()
-	// TODO: исправить условие снизу
+	// Сканируем данные из результата запроса и заполняем структуру User
 	if rows.Next() {
 		if err := rows.Scan(&u.Email, &u.Password); err != nil {
 			return nil, err
@@ -78,6 +88,13 @@ func (ut *userTable) GetById(u *User) (*User, error) {
 	return u, nil
 }
 
+// Check проверяет наличие пользователя в базе данных и соответствие введенного пароля.
+// Принимает указатель на User с заполненными полями Email и Password.
+// Возвращает заполненную структуру User и nil при успешном запросе.
+//
+// Прим:
+// user := &User{Email: "example@example.com", Password: "example"}
+// user, err := ...Check(user) // err == nil если все хорошо
 func (ut *userTable) Check(u *User) (*User, error) {
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
@@ -93,7 +110,7 @@ func (ut *userTable) Check(u *User) (*User, error) {
 		return nil, fmt.Errorf("User.Check: %v", err)
 	}
 	defer rows.Close()
-	// TODO: исправить условие снизу
+	// Сканируем данные из результата запроса и заполняем структуру User
 	if rows.Next() {
 		if err := rows.Scan(&pass, &id); err != nil {
 			return nil, err
@@ -102,7 +119,7 @@ func (ut *userTable) Check(u *User) (*User, error) {
 		return nil, errors.New("User.Check: no rows returned")
 	}
 
-	// Сравниваем хеш из бд с тем, что мы получили из веба
+	// Сравниваем хеш из базы данных с хешем введенного пароля
 	if errHash := bcrypt.CompareHashAndPassword([]byte(pass), []byte(u.Password)); errHash != nil {
 		return nil, errors.New("Users.Check: incorrect password!")
 	}
@@ -112,8 +129,15 @@ func (ut *userTable) Check(u *User) (*User, error) {
 	return u, nil
 }
 
+// Delete удаляет данные пользователя из базы данных по указанному идентификатору.
+// Принимает указатель на User с заполненным полем Id.
+// Возвращает nil при успешном удалении.
+//
+// Прим:
+// user := &User{Id: 1}
+// err := ...Delete(user) // err == nil если все хорошо
 func (ut *userTable) Delete(u *User) error {
-	//  Проверяем дали ли нам нужные данные
+	// Проверяем дали ли нам нужные данные
 	if u.isDefault() {
 		return errors.New("User.Delete: wrong data! *User.Id is empty")
 	}

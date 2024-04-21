@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -6,31 +6,34 @@ import (
 	"fmt"
 )
 
+// UserData представляет сущность данных о пользователе в системе.
 type UserData struct {
-	Id         int    `json:"id"`
-	Name       string `json:"name"`
-	Bio        string `json:"bio"`
-	UsefulData string `json:"useful_data"`
-	Role       string `json:"role"`
+	Id         int    `json:"id"`          // Уникальный идентификатор данных пользователя
+	Name       string `json:"name"`        // Имя пользователя
+	Bio        string `json:"bio"`         // Биография пользователя
+	UsefulData string `json:"useful_data"` // Дополнительные данные пользователя
+	Role       string `json:"role"`        // Роль пользователя в системе
 }
 
-/*
-Проверяет, переданы ли какие-либо данные в структуру.
-Необходимо для реализаци интерфейса Entity, а также для фильтров в функциях БД
-*/
+// isDefault проверяет, переданы ли какие-либо данные в структуру UserData.
+// Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (ud *UserData) isDefault() bool {
 	return ud.Id == 0 || ud.Name == "" || ud.Bio == "" || ud.UsefulData == "" || ud.Role == ""
 }
 
-// Структура для более удобного и понятного взаимодействия с таблицой users_data
+// userDataTable предоставляет методы для работы с таблицей users_data в базе данных.
 type userDataTable struct {
-	// Указатель на подключение к базе данных
-	db *sql.DB
-	// Единый мьютекс, используемый при подключении к базе данных
-	// mu *sync.Mutex
-	tm transactionMaker
+	db *sql.DB          // Указатель на подключение к базе данных
+	tm transactionMaker // Создатель транзакций
 }
 
+// Add добавляет данные пользователя в базу данных.
+// Принимает указатель на UserData с заполненными полями.
+// Возвращает nil при успешном добавлении.
+//
+// Прим:
+// userData := &UserData{Name: "John", Bio: "Example bio", UsefulData: "Additional data", Role: "user"}
+// err := ...Add(userData) // err == nil если все хорошо
 func (udt *userDataTable) Add(ud *UserData) error {
 
 	// Проверяем были ли переданы данные в ud
@@ -51,7 +54,13 @@ func (udt *userDataTable) Add(ud *UserData) error {
 	return nil
 }
 
-// Возвращает данные пользователя из базы данных по ID
+// GetById возвращает данные пользователя из базы данных по указанному идентификатору.
+// Принимает указатель на UserData с заполненным полем Id.
+// Возвращает заполненную структуру UserData и nil при успешном запросе.
+//
+// Прим:
+// userData := &UserData{Id: 1}
+// userData, err := ...GetById(userData) // err == nil если все хорошо
 func (udt *userDataTable) GetById(ud *UserData) (*UserData, error) {
 	// Проверяем переданы ли данные в функцию
 	if ud.isDefault() {
@@ -69,7 +78,7 @@ func (udt *userDataTable) GetById(ud *UserData) (*UserData, error) {
 		return nil, fmt.Errorf("UserData.GetById: %v", err)
 	}
 	defer rows.Close()
-	// TODO: исправить условие снизу
+	// Сканируем данные из результата запроса и заполняем структуру UserData
 	if rows.Next() {
 		if err := rows.Scan(&ud.Name, &ud.Bio, &ud.UsefulData, &ud.Role); err != nil {
 			return nil, err
@@ -81,12 +90,14 @@ func (udt *userDataTable) GetById(ud *UserData) (*UserData, error) {
 	return ud, nil
 }
 
-// Возвращает данные пользователя из базы данных по имени
+// GetByName возвращает данные пользователя из базы данных по указанному имени.
+// Принимает указатель на UserData с заполненным полем Name.
+// Возвращает заполненную структуру UserData и nil при успешном запросе.
+//
+// Прим:
+// userData := &UserData{Name: "John"}
+// userData, err := ...GetByName(userData) // err == nil если все хорошо
 func (udt *userDataTable) GetByName(ud *UserData) (*UserData, error) {
-	// Проверяем переданы ли данные в функцию
-	// if ud.isDefault() {
-	// 	return nil, errors.New("UserData.GetByName: wrong data! provided *UserData is empty")
-	// }
 	// Проверяем передано ли имя пользователя
 	if ud.Name == "" {
 		return nil, errors.New("UserData.GetByName: wrong data! provided *UserData.Name is empty")
@@ -99,7 +110,7 @@ func (udt *userDataTable) GetByName(ud *UserData) (*UserData, error) {
 		return nil, fmt.Errorf("UserData.GetByName: %v", err)
 	}
 	defer rows.Close()
-	// TODO: исправить условие снизу
+	// Сканируем данные из результата запроса и заполняем структуру UserData
 	if rows.Next() {
 		if err := rows.Scan(&ud.Id, &ud.Bio, &ud.UsefulData, &ud.Role); err != nil {
 			return nil, err
@@ -111,12 +122,14 @@ func (udt *userDataTable) GetByName(ud *UserData) (*UserData, error) {
 	return ud, nil
 }
 
-// Возвращает пользователя(массив из одного элемента) из базы данных
+// GetRoleById возвращает роль пользователя из базы данных по указанному идентификатору.
+// Принимает указатель на UserData с заполненным полем Id.
+// Возвращает заполненную структуру UserData и nil при успешном запросе.
+//
+// Прим:
+// userData := &UserData{Id: 1}
+// userData, err := ...GetRoleById(userData) // err == nil если все хорошо
 func (udt *userDataTable) GetRoleById(ud *UserData) (*UserData, error) {
-	// Проверяем переданы ли данные в функцию
-	// if ud.isDefault() {
-	// 	return nil, errors.New("UsersData.GetRoleById: wrong data! provided *UserData is empty")
-	// }
 	// Проверяем передан ли id
 	if ud.Id == 0 {
 		return nil, errors.New("UserData.GetRoleById: wrong data! provided *UserData.Id is empty")
@@ -129,7 +142,7 @@ func (udt *userDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 		return nil, fmt.Errorf("UserData.GetRoleById: %v", err)
 	}
 	defer rows.Close()
-	// TODO: исправить условие снизу
+	// Сканируем данные из результата запроса и заполняем структуру UserData
 	if rows.Next() {
 		if err := rows.Scan(&ud.Role); err != nil {
 			return nil, err
@@ -141,12 +154,15 @@ func (udt *userDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 	return ud, nil
 }
 
+// Delete удаляет данные пользователя из базы данных по указанному идентификатору.
+// Принимает указатель на UserData с заполненным полем Id.
+// Возвращает nil при успешном удалении.
+//
+// Прим:
+// userData := &UserData{Id: 1}
+// err := ...Delete(userData) // err == nil если все хорошо
 func (udt *userDataTable) Delete(ud *UserData) error {
-	//  Проверяем дали ли нам нужные данные
-	// if ud.isDefault() {
-	// 	return errors.New("UsersData.Delete: wrong data! *UserData.Id is empty")
-	// }
-
+	// Проверяем дали ли нам нужные данные
 	if ud.Id == 0 {
 		return errors.New("UserData.Delete: wrong data! *UserData.Id is empty")
 	}

@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -9,37 +9,36 @@ import (
 	"github.com/lib/pq"
 )
 
-/*
-Сущность статьи (новости), может отдельно использоваться как News, так и как NewsBlock,
-подробнее смотрите в database/news.go
-*/
+// News представляет сущность новости в системе.
 type News struct {
-	Id              int      `json:"id"`
-	Header          string   `json:"header"`
-	Link            string   `json:"link,omitempty"`
-	Content         string   `json:"content,omitempty"`
-	ImageLinks      []string `json:"image_link"`
-	Tags            []string `json:"tags"`
-	PublicationTime string   `json:"publication_time"`
+	Id              int      `json:"id"`                // Id новости
+	Header          string   `json:"header"`            // Заголовок новости
+	Link            string   `json:"link,omitempty"`    // Ссылка на новость
+	Content         string   `json:"content,omitempty"` // Содержание новости (текст)
+	ImageLinks      []string `json:"image_link"`        // Ссылки на изображения
+	Tags            []string `json:"tags"`              // Теги
+	PublicationTime string   `json:"publication_time"`  // Время публикации новости в формате "DD.MM.YYYY"
 }
 
-/*
-Проверяет, переданы ли какие-либо данные в структуру.
-Необходимо для реализаци интерфейса Entity, а также для фильтров в функциях БД
-*/
+// isDefault проверяет, переданы ли какие-либо данные в структуру News.
 func (n *News) isDefault() bool {
 	return n.Id == 0 || n.Header == "" || n.Link == "" || n.Content == "" || n.ImageLinks == nil || n.Tags == nil || n.PublicationTime == ""
 }
 
-// Структура для более удобного и понятного взаимодействия с таблицой users
+// newsTable предоставляет методы для работы с таблицей новостей в базе данных.
 type newsTable struct {
-	db *sql.DB
-	qm queryMaker
+	db *sql.DB    // Указатель на подключение к базе данных
+	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
 
+// Add добавляет новость в базу данных.
+// Принимает указатель на News с заполненными полями.
+// Возвращает nil при успешном добавлении.
+//
+// Прим:
+// n := &News{Header: "Новость", Link: "http://example.com", Content: "Содержание", ImageLinks: []string{"http://example.com/image1.jpg"}, Tags: []string{"tag1", "tag2"}, PublicationTime: "01.01.2024"}
+// err := ...Add(n) // err == nil если все хорошо
 func (nt *newsTable) Add(n *News) error {
-
-	// Проверяем были ли переданы данные в u
 	if n.isDefault() {
 		return errors.New("News.Add: wrong data! provided *News is empty")
 	}
@@ -50,14 +49,13 @@ func (nt *newsTable) Add(n *News) error {
 	}
 	n.PublicationTime = formattedDate.Format("2006-01-02 15:04:05")
 
-	// Выполняем дефолтный инсерт в базу данных (вставка в таблицу)
 	err = nt.qm.makeInsert(nt.db,
-		`INSERT INTO News (Header, Link, NewsText, ImageLinks, Tags, PubliactionTime)
+		`INSERT INTO News (Header, Link, NewsText, ImageLinks, Tags, PublicationTime)
 			SELECT $1, $2, $3, $4, $5, $6
 			WHERE NOT EXISTS (
-    		SELECT 1 FROM News WHERE Header = $1 AND PubliactionTime = $6
-)
-`,
+				SELECT 1 FROM News WHERE Header = $1 AND PublicationTime = $6
+			)
+		`,
 		n.Header, n.Link, n.Content, n.ImageLinks, n.Tags, n.PublicationTime)
 
 	if err != nil {
@@ -67,13 +65,20 @@ func (nt *newsTable) Add(n *News) error {
 	return nil
 }
 
+// GetById возвращает новость из базы данных по указанному идентификатору.
+// Принимает указатель на News с заполненным полем Id.
+// Возвращает заполненную структуру News и nil при успешном запросе.
+//
+// Прим:
+// n := &News{Id: 123}
+// news, err := ...GetById(n) // err == nil если все хорошо
 func (nt *newsTable) GetById(n *News) (*News, error) {
 	if n.isDefault() {
 		return nil, errors.New("News.GetById: wrong data! provided *News is empty")
 	}
 
 	if n.Id == 0 {
-		return nil, errors.New("News.Delete: wrong data! provided *News has empty ID")
+		return nil, errors.New("News.GetById: wrong data! provided *News has empty ID")
 	}
 
 	rows, err := nt.qm.makeSelect(nt.db,
@@ -94,8 +99,13 @@ func (nt *newsTable) GetById(n *News) (*News, error) {
 	return n, nil
 }
 
+// GetLatestBlocks возвращает указанное количество последних новостных блоков.
+// Принимает количество блоков и смещение.
+// Возвращает срез News и nil при успешном запросе.
+//
+// Прим:
+// blocks, err := ...GetLatestBlocks(10, 0) // Получить 10 последних новостных блоков
 func (nt *newsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
-
 	rows, err := nt.qm.makeSelect(nt.db,
 		"SELECT NewsId, Header, Link, ImageLinks, PublicationTime FROM News ORDER BY PublicationTime DESC LIMIT $1 OFFSET $2",
 		count, offset,
@@ -109,13 +119,20 @@ func (nt *newsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
 	var resultNews News
 
 	for rows.Next() {
-		rows.Scan(&resultNews.Id, &resultNews.Header, &resultNews.Link, pq.Array(&resultNews.ImageLinks), resultNews.PublicationTime)
+		rows.Scan(&resultNews.Id, &resultNews.Header, &resultNews.Link, pq.Array(&resultNews.ImageLinks), &resultNews.PublicationTime)
 		resultNewsArr = append(resultNewsArr, resultNews)
 	}
 
 	return &resultNewsArr, nil
 }
 
+// Delete удаляет новость из базы данных по указанному идентификатору.
+// Принимает указатель на News с заполненным полем Id.
+// Возвращает nil при успешном удалении.
+//
+// Прим:
+// n := &News{Id: 123}
+// err := ...Delete(n) // err == nil если все хорошо
 func (nt *newsTable) Delete(n *News) error {
 	if n.isDefault() {
 		return errors.New("News.Delete: wrong data! provided *News is empty")

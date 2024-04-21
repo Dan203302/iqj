@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"

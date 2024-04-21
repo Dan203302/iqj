@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -8,32 +8,44 @@ import (
 	"github.com/lib/pq"
 )
 
+// Структура учебной пары
 type Class struct {
-	Id       int
-	Groups   []int
-	Teacher  int
-	Count    int
-	Weekday  int
-	Week     int
-	Name     string
-	Type     string
-	Location string
+	Id       int    `json:"class_id"`                  // Id пары
+	Groups   []int  `json:"class_group_ids,omitempty"` // Список Id групп, для которых пара
+	Teacher  int    `json:"class_teacher_id"`          // Id преподавателя, который ведет пару
+	Count    int    `json:"class_count"`               // Какая пара по счету за день
+	Weekday  int    `json:"class_weekday"`             // Номер дня недели
+	Week     int    `json:"class_week"`                // Номер учебной неделяя
+	Name     string `json:"class_name"`                // Название пары
+	Type     string `json:"class_type"`                // Тип пары
+	Location string `json:"class_location"`            // Местонахождение
 }
 
+// Проверяет переданы ли в структуру какие-либо данные
 func (c *Class) isDefault() bool {
 	return c.Id == 0 || c.Groups == nil || c.Teacher == 0 || c.Count == 0 || c.Weekday == 0 || c.Week == 0 || c.Name == "" || c.Type == "" || c.Location == ""
 }
 
+// Структура для взаимодействия с таблицой Classes
 type classTable struct {
-	db *sql.DB
-	qm queryMaker
+	db *sql.DB    // Указатель на подключение к бд
+	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов (см. query_maker.go)
 }
 
+// Add добавляет данные в базу данных.
+// Принимает указатель на Class с непустыми полями Groups, Teacher, Count, Weekday, Week, Name, Type, Location\n
+// Возвращает nil при успешном добавлении.
+//
+// Прим:\n
+// a := &Class{Groups: []int{1,2,3}, Teacher: 123, Count: 123, Weekday: 123, Week:123, Name: "123", Type: "123", Location:"123"}\n
+// err := ...Add(a) // err == nil если все хорошо
 func (ct *classTable) Add(c *Class) error {
+	// Проверяем были ли переданы данные в c
 	if c.isDefault() {
 		return errors.New("Class.Add: wrong data! provided *Class is empty")
 	}
 
+	// Используем queryMaker для исполнения запроса
 	err := ct.qm.makeInsert(ct.db,
 		`INSERT INTO Classes (ClassGroupIds, ClassTeacherId, Count, Weekday, Week, ClassName, ClassType, ClassLocation)
 		SELECT $1, $2, $3, $4, $5, $6, $7, $8
@@ -56,11 +68,20 @@ func (ct *classTable) Add(c *Class) error {
 	return nil
 }
 
+// GetById получает данные о паре из базы данных по её Id.
+// Принимает указатель на Class с непустым полем Id\n
+// Возвращает заполненный *Class, nil при успешном получении.
+//
+// Прим:\n
+// a := &Class{Id: 123}\n
+// cl, err := ...GetById(a) // err == nil если все хорошо
 func (ct *classTable) GetById(c *Class) (*Class, error) {
+	// Проверяем были ли переданы данные в с
 	if c.isDefault() {
 		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
 	}
 
+	// Используем queryMaker для создания и исполнения select запроса
 	row, err := ct.qm.makeSelect(ct.db,
 		`SELECT ClassGroupIds, ClassTeacherId, Count, Weekday, Week, ClassName, ClassType, ClassLocation
 FROM Classes
@@ -72,17 +93,24 @@ WHERE ClassId = $1;
 	}
 
 	if !row.Next() {
-		return nil, err // todo: написать ошибку
+		return nil, nil
 	}
 	row.Scan(pq.Array(&c.Groups), &c.Teacher, &c.Count, &c.Weekday, &c.Week, &c.Name, &c.Type, &c.Location)
 
-	return c, err
+	return c, nil
 
 }
 
+// GetForWeekByTeacher получает данные парах для преподавателя на конкретную неделю из базы данных.
+// Принимает указатель на Class с непустыми полями Id,Week\n
+// Возвращает слайс заполненных *Class, nil при успешном получении.
+//
+// Прим:\n
+// a := &Class{Id: 123, Week:123}\n
+// cls, err := ...GetById(a) // err == nil если все хорошо
 func (ct *classTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
 	if c.isDefault() {
-		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
+		return nil, errors.New("Class.GetForWeekByTeacher: wrong data! provided *Class is empty")
 	}
 
 	rows, err := ct.qm.makeSelect(ct.db,
@@ -91,7 +119,7 @@ func (ct *classTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
 		WHERE ClassTeacherId = $1 AND Week = $2;`,
 		c.Id, c.Week)
 	if err != nil {
-		return nil, fmt.Errorf("Class.GetById: %v", err)
+		return nil, fmt.Errorf("Class.GetForWeekByTeacher: %v", err)
 	}
 
 	var resultClasses []Class
@@ -106,6 +134,13 @@ func (ct *classTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
 	return &resultClasses, nil
 }
 
+// GetForWeekByTeacher получает данные парах для преподавателя на конкретную неделю из базы данных.
+// Принимает указатель на Class с непустыми полями Id,Week,Weekday\n
+// Возвращает слайс заполненных *Class, nil при успешном получении.
+//
+// Прим:\n
+// a := &Class{Id: 123, Week:123,Weekday:123}\n
+// cls, err := ...GetById(a) // err == nil если все хорошо
 func (ct *classTable) GetForDayByTeacher(c *Class) (*[]Class, error) {
 	if c.isDefault() {
 		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")

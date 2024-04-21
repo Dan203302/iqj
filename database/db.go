@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -11,10 +11,14 @@ var Database2 database123
 
 // Структура, реализующая двухуровневое внедрение зависимостей, для более удобного доступа и управления базой данных
 type database123 struct {
-	User     *userTable
-	UserData *userDataTable
-	News     *newsTable
-	Teacher  *teacherTable
+	User          *userTable
+	UserData      *userDataTable
+	News          *newsTable
+	Student       *studentTable
+	StudentGroup  *studentGroupTable
+	Class         *classTable
+	Advertisement *advertisementTable
+	Teacher       *teacherTable
 }
 
 // Интерфейс структур, отвечающий за доступ к базе данных (по большей части сделан для написания тестов)
@@ -31,11 +35,9 @@ type Entity interface {
 	isDefault() bool
 }
 
-/*
-NewDatabaseInstance() создает новое подключение к базе данных, не возвращает ошибку,
-если подключение создать не удалось, чтобы не захламлять main(), вызывает панику
-при ошибке.
-*/
+// NewDatabaseInstance() создает новое подключение к базе данных, не возвращает ошибку,
+// если подключение создать не удалось, чтобы не захламлять main(), вызывает панику
+// при ошибке.
 func NewDatabaseInstance() {
 
 	// iqj/config/config.go, дальше думаю разберетесь
@@ -58,7 +60,7 @@ func NewDatabaseInstance() {
 	}
 }
 
-// Подключает базу данных используя connectionString, а также sql.Open(), также раздает зависимостям доступ к базе данных.
+// Подключает базу данных используя connectionString, а также sql.Open(), раздает зависимостям доступ к базе данных.
 func (st *database123) connectDatabase(connectionString string) error {
 
 	db, err := sql.Open("postgres", connectionString)
@@ -79,7 +81,6 @@ func (st *database123) connectDatabase(connectionString string) error {
 		return fmt.Errorf("could not ping the database: %v", err)
 	}
 
-	// Раздаем зависимости (подключение к БД) для функций доступа к отдельным таблицам
 	st.connectTables(db)
 
 	// возвращаем nil вместо ошибки если все хорошо и никто не потерял конфиги
@@ -87,9 +88,14 @@ func (st *database123) connectDatabase(connectionString string) error {
 	return nil
 }
 
+// раздаем указатели на подключение декораторам
 func (st *database123) connectTables(db *sql.DB) {
 	st.User.db = db
 	st.UserData.db = db
 	st.News.db = db
+	st.Student.db = db
+	st.StudentGroup.db = db
+	st.Class.db = db
+	st.Advertisement.db = db
 	st.Teacher.db = db
 }

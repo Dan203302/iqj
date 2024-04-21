@@ -1,4 +1,4 @@
-package databaserework
+package database
 
 import (
 	"database/sql"
@@ -8,26 +8,37 @@ import (
 	"github.com/lib/pq"
 )
 
+// StudentGroup представляет сущность группы студентов в системе.
 type StudentGroup struct {
-	Id        int
-	Grade     int
-	Institute string
-	Name      string
-	Students  []int
+	Id        int    // Уникальный идентификатор группы
+	Grade     int    // Курс группы
+	Institute string // Название института
+	Name      string // Название группы
+	Students  []int  // Идентификаторы студентов в группе
 }
 
+// isDefault проверяет, переданы ли какие-либо данные в структуру StudentGroup.
+// Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (sg *StudentGroup) isDefault() bool {
 	return sg.Id == 0 || sg.Grade == 0 || sg.Institute == "" || sg.Name == "" || sg.Students == nil
 }
 
+// studentGroupTable предоставляет методы для работы с таблицей групп студентов в базе данных.
 type studentGroupTable struct {
-	db *sql.DB
-	qm queryMaker
+	db *sql.DB    // Указатель на подключение к базе данных
+	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
 
+// GetByID возвращает группу студентов из базы данных по указанному идентификатору.
+// Принимает указатель на StudentGroup с заполненным полем Id.
+// Возвращает заполненную структуру StudentGroup и nil при успешном запросе.
+//
+// Прим:
+// sg := &StudentGroup{Id: 1}
+// group, err := ...GetByID(sg) // err == nil если все хорошо
 func (sgt *studentGroupTable) GetByID(sg *StudentGroup) (*StudentGroup, error) {
 	if sg.isDefault() {
-		return nil, errors.New("StudentGroup.GetById: wrong data! provided *StudentGroup is empty!")
+		return nil, errors.New("StudentGroup.GetByID: wrong data! provided *StudentGroup is empty!")
 	}
 
 	row, err := sgt.qm.makeSelect(sgt.db,
@@ -49,6 +60,13 @@ func (sgt *studentGroupTable) GetByID(sg *StudentGroup) (*StudentGroup, error) {
 	return sg, nil
 }
 
+// GetStudent возвращает группу студентов из базы данных по указанному идентификатору студента.
+// Принимает указатель на StudentGroup с заполненным полем Id.
+// Возвращает заполненную структуру StudentGroup и nil при успешном запросе.
+//
+// Прим:
+// sg := &StudentGroup{Id: 1}
+// group, err := ...GetStudent(sg) // err == nil если все хорошо
 func (sgt *studentGroupTable) GetStudent(sg *StudentGroup) (*StudentGroup, error) {
 	if sg.isDefault() {
 		return nil, errors.New("StudentGroup.GetStudent: wrong data! provided *StudentGroup is empty!")
@@ -58,21 +76,27 @@ func (sgt *studentGroupTable) GetStudent(sg *StudentGroup) (*StudentGroup, error
 		"SELECT sg.Grade, sg.Institute, sg.StudentGroupName, sg.StudentGroupStudentsIds FROM StudentsGroups sg JOIN Students s ON sg.StudentsGroupId = s.StudentGroupId WHERE s.StudentId = $1",
 		sg.Id)
 	if err != nil {
-		return nil, fmt.Errorf("studentGroupTable.GetStudentByID: %v", err)
+		return nil, fmt.Errorf("studentGroupTable.GetStudent: %v", err)
 	}
 	defer row.Close()
 
 	if row.Next() {
 		if err := row.Scan(&sg.Grade, &sg.Institute, &sg.Name, pq.Array(&sg.Students)); err != nil {
-			return nil, fmt.Errorf("studentGroupTable.GetStudenD: %v", err)
+			return nil, fmt.Errorf("studentGroupTable.GetStudent: %v", err)
 		}
 	} else {
-		return nil, errors.New("studentGroupTable.GetStudentByID: no rows returned")
+		return nil, errors.New("studentGroupTable.GetStudent: no rows returned")
 	}
 
 	return sg, nil
 }
 
+// GetGroupsByInstituteAndGrade возвращает группы студентов из базы данных по названию института и курсу.
+// Принимает название института и номер курса.
+// Возвращает срез указателей на структуры StudentGroup и nil при успешном запросе.
+//
+// Прим:
+// groups, err := ...GetGroupsByInstituteAndGrade("Институт", 3) // Получить группы для 3 курса в институте
 func (sgt *studentGroupTable) GetGroupsByInstituteAndGrade(institute string, grade int) ([]*StudentGroup, error) {
 	groups := []*StudentGroup{}
 
@@ -95,6 +119,13 @@ func (sgt *studentGroupTable) GetGroupsByInstituteAndGrade(institute string, gra
 	return groups, nil
 }
 
+// GetGroupsByInstitute возвращает группы студентов из базы данных по названию института.
+// Принимает указатель на структуру StudentGroup с заполненным полем Institute.
+// Возвращает срез указателей на структуры StudentGroup и nil при успешном запросе.
+//
+// Прим:
+// sg := &StudentGroup{Institute: "Институт"}
+// groups, err := ...GetGroupsByInstitute(sg) // Получить группы в институте
 func (sgt *studentGroupTable) GetGroupsByInstitute(sg *StudentGroup) ([]*StudentGroup, error) {
 	groups := []*StudentGroup{}
 
@@ -117,6 +148,13 @@ func (sgt *studentGroupTable) GetGroupsByInstitute(sg *StudentGroup) ([]*Student
 	return groups, nil
 }
 
+// GetGroupsByGrade возвращает группы студентов из базы данных по номеру курса.
+// Принимает указатель на структуру StudentGroup с заполненным полем Grade.
+// Возвращает срез указателей на структуры StudentGroup и nil при успешном запросе.
+//
+// Прим:
+// sg := &StudentGroup{Grade: 3}
+// groups, err := ...GetGroupsByGrade(sg) // Получить группы на 3 курсе
 func (sgt *studentGroupTable) GetGroupsByGrade(sg *StudentGroup) ([]*StudentGroup, error) {
 	groups := []*StudentGroup{}
 
@@ -139,6 +177,13 @@ func (sgt *studentGroupTable) GetGroupsByGrade(sg *StudentGroup) ([]*StudentGrou
 	return groups, nil
 }
 
+// Add добавляет группу студентов в базу данных.
+// Принимает указатель на структуру StudentGroup с заполненными полями.
+// Возвращает nil при успешном добавлении.
+//
+// Прим:
+// group := &StudentGroup{Grade: 1, Institute: "Институт", Name: "Группа 1", Students: []int{1, 2, 3}}
+// err := ...Add(group) // err == nil если все хорошо
 func (sgt *studentGroupTable) Add(group *StudentGroup) error {
 	if group.isDefault() {
 		return errors.New("studentGroupTable.Add: wrong data! provided *StudentGroup is empty")
@@ -154,6 +199,13 @@ func (sgt *studentGroupTable) Add(group *StudentGroup) error {
 	return nil
 }
 
+// Update обновляет данные о группе студентов в базе данных.
+// Принимает указатель на структуру StudentGroup с заполненными полями.
+// Возвращает nil при успешном обновлении.
+//
+// Прим:
+// group := &StudentGroup{Id: 1, Grade: 2, Institute: "Институт", Name: "Группа 2", Students: []int{4, 5, 6}}
+// err := ...Update(group) // err == nil если все хорошо
 func (sgt *studentGroupTable) Update(group *StudentGroup) error {
 	if group.isDefault() {
 		return errors.New("studentGroupTable.Update: wrong data! provided *StudentGroup is empty")
@@ -168,6 +220,13 @@ func (sgt *studentGroupTable) Update(group *StudentGroup) error {
 	return nil
 }
 
+// Delete удаляет группу студентов из базы данных по указанному идентификатору.
+// Принимает указатель на структуру StudentGroup с заполненным полем Id.
+// Возвращает nil при успешном удалении.
+//
+// Прим:
+// sg := &StudentGroup{Id: 1}
+// err := ...Delete(sg) // err == nil если все хорошо
 func (sgt *studentGroupTable) Delete(sg *StudentGroup) error {
 	_, err := sgt.db.Exec("DELETE FROM StudentsGroups WHERE StudentsGroupId = $1", sg.Id)
 	if err != nil {
