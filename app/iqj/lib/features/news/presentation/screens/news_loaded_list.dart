@@ -71,7 +71,7 @@ class NewsCard extends StatelessWidget {
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 6)),
                     Text(
-                      "${DateFormat('dd.MM.yyyy hh:mm').format(news.publicationTime)} - ID: ${news.id}",
+                      "${DateFormat('dd.MM.yyyy hh:mm').format(news.publicationTime)}",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),

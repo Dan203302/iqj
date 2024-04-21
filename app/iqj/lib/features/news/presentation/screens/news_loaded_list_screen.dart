@@ -325,15 +325,15 @@ class _NewsListState extends State<NewsList> {
                                     ),
                                     Row(
                                       children: [
-                                        Text(
-                                          "ID: $newsId",
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                            fontSize: 16,
-                                          ),
-                                        ),
+                                        // Text(
+                                        //   "ID: $newsId",
+                                        //   style: TextStyle(
+                                        //     color: Theme.of(context)
+                                        //         .colorScheme
+                                        //         .onSurfaceVariant,
+                                        //     fontSize: 16,
+                                        //   ),
+                                        // ),
                                         if (flagOpenTags)
                                           IconButton(
                                             onPressed: () {
@@ -426,88 +426,36 @@ class NewsTags extends StatelessWidget {
         ),
       );
     } else {
+      List<String> tags=["Tag1","Tag2","Tag3"];
       return Container(
         margin: EdgeInsets.only(bottom: 6),
         child: Row(
-          children: [
-            Padding(
-            padding: const EdgeInsets.only(top: 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 5),
-                  height: 35,
-                  decoration: BoxDecoration(
-                    //borderRadius: BorderRadius.circular(50),
-                    borderRadius: BorderRadius.circular(24.0),
-                    color: Theme.of(context).colorScheme.onInverseSurface,
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                    },
-                    child: Text(
-                      "Тег 1",
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(
+            tags.length,
+            (index) => Container(
+              margin: const EdgeInsets.only(right: 5),
+              height: 35,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24.0),
+                color: Theme.of(context).colorScheme.onInverseSurface,
+              ),
+              child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  tags[index], // берем название тега из массива
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  margin: const EdgeInsets.only(right: 5),
-                  height: 35,
-                  decoration: BoxDecoration(
-                    //borderRadius: BorderRadius.circular(50),
-                    borderRadius: BorderRadius.circular(24.0),
-                    color: Theme.of(context).colorScheme.onInverseSurface,
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                    },
-                    child: Text(
-                      "Тег 2",
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 5),
-                  height: 35,
-                  decoration: BoxDecoration(
-                    //borderRadius: BorderRadius.circular(50),
-                    borderRadius: BorderRadius.circular(24.0),
-                    color: Theme.of(context).colorScheme.onInverseSurface,
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                    },
-                    child: Text(
-                      "Тег 3",
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-          ],
-        ),
+        )
       );
     }
   }
