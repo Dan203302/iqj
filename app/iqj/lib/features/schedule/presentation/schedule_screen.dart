@@ -24,6 +24,13 @@ class ScheduleScreen extends StatelessWidget {
             'Расписание',
             style: Theme.of(context).textTheme.titleLarge,
           ),
+          actions: [
+            SvgPicture.asset(
+              'assets/schedule/dots.svg',
+              width: 4.17,
+              height: 16,
+            )
+          ],
         ),
         body: ListView(
           children: const [
