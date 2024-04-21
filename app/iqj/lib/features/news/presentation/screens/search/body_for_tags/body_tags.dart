@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Widget create_body_tags(BuildContext context) {
+  TextEditingController TagPickerController = TextEditingController();
+  List<String> tags = ["ИПТИП","Физика","Наука"];
   return Container(
     height: 220,
     child: Column(
@@ -13,6 +15,7 @@ Widget create_body_tags(BuildContext context) {
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
+            controller: TagPickerController,
             maxLines: 1,
             decoration: InputDecoration(
               contentPadding:
@@ -69,8 +72,10 @@ Widget create_body_tags(BuildContext context) {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
+
+                children: List.generate(
+                  tags.length,
+                  (index) => Container(
                     margin: const EdgeInsets.only(top: 6, right: 6),
                     height: 35,
                     decoration: BoxDecoration(
@@ -79,9 +84,11 @@ Widget create_body_tags(BuildContext context) {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        TagPickerController.text = tags[index];
+                      },
                       child: Text(
-                        "ИПТИП",
+                        tags[index],
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14,
@@ -91,49 +98,7 @@ Widget create_body_tags(BuildContext context) {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 6, right: 6),
-                    height: 35,
-                    decoration: BoxDecoration(
-                      //borderRadius: BorderRadius.circular(50),
-                      borderRadius: BorderRadius.circular(24.0),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Физика",
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 6, right: 6),
-                    height: 35,
-                    decoration: BoxDecoration(
-                      //borderRadius: BorderRadius.circular(50),
-                      borderRadius: BorderRadius.circular(24.0),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Наука",
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
