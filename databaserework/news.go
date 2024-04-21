@@ -94,6 +94,28 @@ func (nt *newsTable) GetById(n *News) (*News, error) {
 	return n, nil
 }
 
+func (nt *newsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
+
+	rows, err := nt.qm.makeSelect(nt.db,
+		"SELECT NewsId, Header, Link, ImageLinks, PublicationTime FROM News ORDER BY PublicationTime DESC LIMIT $1 OFFSET $2",
+		count, offset,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("News.GetLatest: %v", err)
+	}
+
+	var resultNewsArr []News
+	var resultNews News
+
+	for rows.Next() {
+		rows.Scan(&resultNews.Id, &resultNews.Header, &resultNews.Link, pq.Array(&resultNews.ImageLinks), resultNews.PublicationTime)
+		resultNewsArr = append(resultNewsArr, resultNews)
+	}
+
+	return &resultNewsArr, nil
+}
+
 func (nt *newsTable) Delete(n *News) error {
 	if n.isDefault() {
 		return errors.New("News.Delete: wrong data! provided *News is empty")
@@ -104,7 +126,7 @@ func (nt *newsTable) Delete(n *News) error {
 	}
 
 	err := nt.qm.makeDelete(nt.db,
-		"",
+		"DELETE FROM News WHERE NewsId = $1",
 		n.Id)
 
 	if err != nil {
