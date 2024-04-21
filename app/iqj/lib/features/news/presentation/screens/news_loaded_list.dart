@@ -14,7 +14,7 @@ class NewsCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           'newslist',
-          arguments: news,
+          arguments: {'id':news.id},
         );
       },
       child: Card(
@@ -47,8 +47,8 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            //news.title,
-                            news.id,
+                            news.title,
+                            //news.id,
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class NewsCard extends StatelessWidget {
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 6)),
                     Text(
-                      DateFormat('dd.MM.yyyy').format(news.publicationTime),
+                      "${DateFormat('dd.MM.yyyy hh:mm').format(news.publicationTime)} - ID: ${news.id}",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
