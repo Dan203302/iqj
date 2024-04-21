@@ -216,7 +216,7 @@ class _NewsListState extends State<NewsList> {
     final Map<String, String> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     final String newsId = args['id']!;
-    final NewsTags ntags = NewsTags(flagOpenTags: flagOpenTags);
+    final NewsTags ntags = NewsTags();
     final NewsLoadBloc bloc =
         NewsLoadBloc(newsId); // Здесь передать нужный ID новости
     final loadCompleter = Completer();
@@ -265,7 +265,7 @@ class _NewsListState extends State<NewsList> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is NewsLoadLoaded) {
-              final News news = state.news; // Это ужас и я ненавижу себя
+              final News news = state.news; // Это ужас и я ненавижу себя // да норм вроде
               return ListView(
                 children: [
                   Card(
@@ -360,7 +360,7 @@ class _NewsListState extends State<NewsList> {
                                     ),
                                   ],
                                 ),
-                                ntags,
+                                if (!flagOpenTags) ntags ,
                                 Container(
                                   decoration: BoxDecoration(
                                     border: Border(
@@ -409,23 +409,9 @@ class _NewsListState extends State<NewsList> {
 }
 
 class NewsTags extends StatelessWidget {
-  final bool flagOpenTags;
-
-  NewsTags({required this.flagOpenTags});
 
   @override
   Widget build(BuildContext context) {
-    if (flagOpenTags) {
-      return Container(
-        height: 1,
-        child: const Row(
-          children: [
-            Text('A'),
-            Text('B'),
-          ],
-        ),
-      );
-    } else {
       List<String> tags=["Tag1","Tag2","Tag3"];
       return Container(
         margin: EdgeInsets.only(bottom: 6),
@@ -457,6 +443,5 @@ class NewsTags extends StatelessWidget {
           ),
         )
       );
-    }
   }
 }
