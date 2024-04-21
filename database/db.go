@@ -7,18 +7,18 @@ import (
 )
 
 // Переменная (объект базы данных) используемая для доступа к её зависимостям(хендлерам конкретных таблиц)
-var Database2 database123
+var Database DatabaseRepository
 
 // Структура, реализующая двухуровневое внедрение зависимостей, для более удобного доступа и управления базой данных
-type database123 struct {
-	User          *userTable
-	UserData      *userDataTable
-	News          *newsTable
-	Student       *studentTable
-	StudentGroup  *studentGroupTable
-	Class         *classTable
-	Advertisement *advertisementTable
-	Teacher       *teacherTable
+type DatabaseRepository struct {
+	User          *UserTable
+	UserData      *UserDataTable
+	News          *NewsTable
+	Student       *StudentTable
+	StudentGroup  *StudentGroupTable
+	Class         *ClassTable
+	Advertisement *AdvertisementTable
+	Teacher       *TeacherTable
 }
 
 // Интерфейс структур, отвечающий за доступ к базе данных (по большей части сделан для написания тестов)
@@ -51,7 +51,7 @@ func NewDatabaseInstance() {
 
 	// подключает приложение к базе данных, инициализирует и подгатавливает
 	// зависимости (даже создает таблицы)
-	err := Database2.connectDatabase(connectionString)
+	err := Database.connectDatabase(connectionString)
 
 	if err != nil {
 		// если че то пошло не так, то дает пизды всей программе, ибо че вы
@@ -61,7 +61,7 @@ func NewDatabaseInstance() {
 }
 
 // Подключает базу данных используя connectionString, а также sql.Open(), раздает зависимостям доступ к базе данных.
-func (st *database123) connectDatabase(connectionString string) error {
+func (st *DatabaseRepository) connectDatabase(connectionString string) error {
 
 	db, err := sql.Open("postgres", connectionString)
 
@@ -89,7 +89,7 @@ func (st *database123) connectDatabase(connectionString string) error {
 }
 
 // раздаем указатели на подключение декораторам
-func (st *database123) connectTables(db *sql.DB) {
+func (st *DatabaseRepository) connectTables(db *sql.DB) {
 	st.User.db = db
 	st.UserData.db = db
 	st.News.db = db

@@ -21,8 +21,8 @@ func (ud *UserData) isDefault() bool {
 	return ud.Id == 0 || ud.Name == "" || ud.Bio == "" || ud.UsefulData == "" || ud.Role == ""
 }
 
-// userDataTable предоставляет методы для работы с таблицей users_data в базе данных.
-type userDataTable struct {
+// UserDataTable предоставляет методы для работы с таблицей users_data в базе данных.
+type UserDataTable struct {
 	db *sql.DB          // Указатель на подключение к базе данных
 	tm transactionMaker // Создатель транзакций
 }
@@ -34,7 +34,7 @@ type userDataTable struct {
 // Прим:
 // userData := &UserData{Name: "John", Bio: "Example bio", UsefulData: "Additional data", Role: "user"}
 // err := ...Add(userData) // err == nil если все хорошо
-func (udt *userDataTable) Add(ud *UserData) error {
+func (udt *UserDataTable) Add(ud *UserData) error {
 
 	// Проверяем были ли переданы данные в ud
 	if ud.isDefault() {
@@ -61,7 +61,7 @@ func (udt *userDataTable) Add(ud *UserData) error {
 // Прим:
 // userData := &UserData{Id: 1}
 // userData, err := ...GetById(userData) // err == nil если все хорошо
-func (udt *userDataTable) GetById(ud *UserData) (*UserData, error) {
+func (udt *UserDataTable) GetById(ud *UserData) (*UserData, error) {
 	// Проверяем переданы ли данные в функцию
 	if ud.isDefault() {
 		return nil, errors.New("UserData.GetById: wrong data! provided *UserData is empty")
@@ -97,7 +97,7 @@ func (udt *userDataTable) GetById(ud *UserData) (*UserData, error) {
 // Прим:
 // userData := &UserData{Name: "John"}
 // userData, err := ...GetByName(userData) // err == nil если все хорошо
-func (udt *userDataTable) GetByName(ud *UserData) (*UserData, error) {
+func (udt *UserDataTable) GetByName(ud *UserData) (*UserData, error) {
 	// Проверяем передано ли имя пользователя
 	if ud.Name == "" {
 		return nil, errors.New("UserData.GetByName: wrong data! provided *UserData.Name is empty")
@@ -129,7 +129,7 @@ func (udt *userDataTable) GetByName(ud *UserData) (*UserData, error) {
 // Прим:
 // userData := &UserData{Id: 1}
 // userData, err := ...GetRoleById(userData) // err == nil если все хорошо
-func (udt *userDataTable) GetRoleById(ud *UserData) (*UserData, error) {
+func (udt *UserDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 	// Проверяем передан ли id
 	if ud.Id == 0 {
 		return nil, errors.New("UserData.GetRoleById: wrong data! provided *UserData.Id is empty")
@@ -161,7 +161,7 @@ func (udt *userDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 // Прим:
 // userData := &UserData{Id: 1}
 // err := ...Delete(userData) // err == nil если все хорошо
-func (udt *userDataTable) Delete(ud *UserData) error {
+func (udt *UserDataTable) Delete(ud *UserData) error {
 	// Проверяем дали ли нам нужные данные
 	if ud.Id == 0 {
 		return errors.New("UserData.Delete: wrong data! *UserData.Id is empty")

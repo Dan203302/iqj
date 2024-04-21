@@ -17,8 +17,8 @@ func (a *Advertisement) isDefault() bool {
 	return a.Id == 0 || a.Content == ""
 }
 
-// advertisementTable предоставляет методы для работы с таблицей Advertisements
-type advertisementTable struct {
+// AdvertisementTable предоставляет методы для работы с таблицей Advertisements
+type AdvertisementTable struct {
 	db *sql.DB    // Указатель на подключение к базе данных
 	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов (см. query_maker.go)
 }
@@ -30,7 +30,7 @@ type advertisementTable struct {
 // Прим:\n
 // a := &Advertisement{Content : "123"} // Content != "" !!!!!!\n
 // err := ...Add(a) // err == nil если все хорошо
-func (at *advertisementTable) Add(a *Advertisement) error {
+func (at *AdvertisementTable) Add(a *Advertisement) error {
 	// Проверяем были ли переданы данные в a
 	if a.isDefault() {
 		return errors.New("Advertisement.Add: wrong data! provided *Advertisement is empty")
@@ -56,7 +56,7 @@ func (at *advertisementTable) Add(a *Advertisement) error {
 // Прим:\n
 // a := &Advertisement{Id:123} // Id != 0 !!!!!!\n
 // ad, err := ...GetById(a) // err == nil если все хорошо
-func (at *advertisementTable) GetById(a *Advertisement) (*Advertisement, error) {
+func (at *AdvertisementTable) GetById(a *Advertisement) (*Advertisement, error) {
 	// Проверяем передан ли ID рекламного объявления
 	if a.Id == 0 {
 		return nil, errors.New("Advertisement.GetById: wrong data! provided advertisementID is empty")
@@ -94,7 +94,7 @@ func (at *advertisementTable) GetById(a *Advertisement) (*Advertisement, error) 
 // Прим:\n
 // a := &Advertisement{Id:123} // Id != 0 !!!!!!\n
 // err := ...Delete(a) // err == nil если все хорошо
-func (at *advertisementTable) Delete(a *Advertisement) error {
+func (at *AdvertisementTable) Delete(a *Advertisement) error {
 	// Проверяем передан ли ID рекламного объявления
 	if a.Id == 0 {
 		return errors.New("Advertisement.Delete: wrong data! provided advertisementID is empty")

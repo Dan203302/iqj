@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"github.com/gin-gonic/gin"
 	"iqj/api/middleware"
 	"iqj/database"
 	"iqj/models"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Вход в систему

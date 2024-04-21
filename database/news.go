@@ -25,8 +25,8 @@ func (n *News) isDefault() bool {
 	return n.Id == 0 || n.Header == "" || n.Link == "" || n.Content == "" || n.ImageLinks == nil || n.Tags == nil || n.PublicationTime == ""
 }
 
-// newsTable предоставляет методы для работы с таблицей новостей в базе данных.
-type newsTable struct {
+// NewsTable предоставляет методы для работы с таблицей новостей в базе данных.
+type NewsTable struct {
 	db *sql.DB    // Указатель на подключение к базе данных
 	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
@@ -38,7 +38,7 @@ type newsTable struct {
 // Прим:
 // n := &News{Header: "Новость", Link: "http://example.com", Content: "Содержание", ImageLinks: []string{"http://example.com/image1.jpg"}, Tags: []string{"tag1", "tag2"}, PublicationTime: "01.01.2024"}
 // err := ...Add(n) // err == nil если все хорошо
-func (nt *newsTable) Add(n *News) error {
+func (nt *NewsTable) Add(n *News) error {
 	if n.isDefault() {
 		return errors.New("News.Add: wrong data! provided *News is empty")
 	}
@@ -72,7 +72,7 @@ func (nt *newsTable) Add(n *News) error {
 // Прим:
 // n := &News{Id: 123}
 // news, err := ...GetById(n) // err == nil если все хорошо
-func (nt *newsTable) GetById(n *News) (*News, error) {
+func (nt *NewsTable) GetById(n *News) (*News, error) {
 	if n.isDefault() {
 		return nil, errors.New("News.GetById: wrong data! provided *News is empty")
 	}
@@ -105,7 +105,7 @@ func (nt *newsTable) GetById(n *News) (*News, error) {
 //
 // Прим:
 // blocks, err := ...GetLatestBlocks(10, 0) // Получить 10 последних новостных блоков
-func (nt *newsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
+func (nt *NewsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
 	rows, err := nt.qm.makeSelect(nt.db,
 		"SELECT NewsId, Header, Link, ImageLinks, PublicationTime FROM News ORDER BY PublicationTime DESC LIMIT $1 OFFSET $2",
 		count, offset,
@@ -133,7 +133,7 @@ func (nt *newsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
 // Прим:
 // n := &News{Id: 123}
 // err := ...Delete(n) // err == nil если все хорошо
-func (nt *newsTable) Delete(n *News) error {
+func (nt *NewsTable) Delete(n *News) error {
 	if n.isDefault() {
 		return errors.New("News.Delete: wrong data! provided *News is empty")
 	}

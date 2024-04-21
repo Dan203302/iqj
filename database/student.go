@@ -21,8 +21,8 @@ func (s *Student) isDefault() bool {
 	return s.Id == 0 || s.Group == 0 || s.Teachers == nil
 }
 
-// studentTable предоставляет методы для работы с таблицей студентов в базе данных.
-type studentTable struct {
+// StudentTable предоставляет методы для работы с таблицей студентов в базе данных.
+type StudentTable struct {
 	db *sql.DB    // Указатель на подключение к базе данных
 	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
@@ -34,7 +34,7 @@ type studentTable struct {
 // Прим:
 // s := &Student{Id: 1, Group: 101, Teachers: []int{1, 2, 3}}
 // err := ...Add(s) // err == nil если все хорошо
-func (st *studentTable) Add(s *Student) error {
+func (st *StudentTable) Add(s *Student) error {
 
 	// Проверяем были ли переданы данные в s
 	if s.isDefault() {
@@ -61,7 +61,7 @@ func (st *studentTable) Add(s *Student) error {
 // Прим:
 // s := &Student{Id: 1}
 // student, err := ...GetById(s) // err == nil если все хорошо
-func (st *studentTable) GetById(s *Student) (*Student, error) {
+func (st *StudentTable) GetById(s *Student) (*Student, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if s.isDefault() {
@@ -97,7 +97,7 @@ func (st *studentTable) GetById(s *Student) (*Student, error) {
 // Прим:
 // s := &Student{Id: 1}
 // classes, err := ...GetClasses(s) // err == nil если все хорошо
-func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
+func (st *StudentTable) GetClasses(s *Student) (*[]Class, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if s.isDefault() {
@@ -140,7 +140,7 @@ func (st *studentTable) GetClasses(s *Student) (*[]Class, error) {
 // Прим:
 // s := &Student{Id: 1, Week: 1, Weekday: 3}
 // classes, err := ...GetClassesByCurrentDay(s, 1, 3) // Получить классы на 3-м дне недели первой недели
-func (st *studentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class, error) {
+func (st *StudentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if s.isDefault() {
@@ -184,7 +184,7 @@ func (st *studentTable) GetClassesByCurrentDay(s *Student, wc, wd int) (*[]Class
 // Прим:
 // s := &Student{Id: 1}
 // err := ...Delete(s) // err == nil если все хорошо
-func (st *studentTable) Delete(s *Student) error {
+func (st *StudentTable) Delete(s *Student) error {
 	// Проверяем дали ли нам нужные данные
 	if s.isDefault() {
 		return errors.New("Student.Delete: wrong data! *UserData.Id is empty")

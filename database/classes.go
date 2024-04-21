@@ -27,7 +27,7 @@ func (c *Class) isDefault() bool {
 }
 
 // Структура для взаимодействия с таблицой Classes
-type classTable struct {
+type ClassTable struct {
 	db *sql.DB    // Указатель на подключение к бд
 	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов (см. query_maker.go)
 }
@@ -39,7 +39,7 @@ type classTable struct {
 // Прим:\n
 // a := &Class{Groups: []int{1,2,3}, Teacher: 123, Count: 123, Weekday: 123, Week:123, Name: "123", Type: "123", Location:"123"}\n
 // err := ...Add(a) // err == nil если все хорошо
-func (ct *classTable) Add(c *Class) error {
+func (ct *ClassTable) Add(c *Class) error {
 	// Проверяем были ли переданы данные в c
 	if c.isDefault() {
 		return errors.New("Class.Add: wrong data! provided *Class is empty")
@@ -75,7 +75,7 @@ func (ct *classTable) Add(c *Class) error {
 // Прим:\n
 // a := &Class{Id: 123}\n
 // cl, err := ...GetById(a) // err == nil если все хорошо
-func (ct *classTable) GetById(c *Class) (*Class, error) {
+func (ct *ClassTable) GetById(c *Class) (*Class, error) {
 	// Проверяем были ли переданы данные в с
 	if c.isDefault() {
 		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
@@ -108,7 +108,7 @@ WHERE ClassId = $1;
 // Прим:\n
 // a := &Class{Id: 123, Week:123}\n
 // cls, err := ...GetById(a) // err == nil если все хорошо
-func (ct *classTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
+func (ct *ClassTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
 	if c.isDefault() {
 		return nil, errors.New("Class.GetForWeekByTeacher: wrong data! provided *Class is empty")
 	}
@@ -141,7 +141,7 @@ func (ct *classTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
 // Прим:\n
 // a := &Class{Id: 123, Week:123,Weekday:123}\n
 // cls, err := ...GetById(a) // err == nil если все хорошо
-func (ct *classTable) GetForDayByTeacher(c *Class) (*[]Class, error) {
+func (ct *ClassTable) GetForDayByTeacher(c *Class) (*[]Class, error) {
 	if c.isDefault() {
 		return nil, errors.New("Class.GetById: wrong data! provided *Class is empty")
 	}
@@ -167,7 +167,7 @@ func (ct *classTable) GetForDayByTeacher(c *Class) (*[]Class, error) {
 	return &resultClasses, nil
 }
 
-func (ct *classTable) Delete(c *Class) error {
+func (ct *ClassTable) Delete(c *Class) error {
 	if c.isDefault() {
 		return errors.New("Class.Delete: wrong data! provided *Class is empty")
 	}

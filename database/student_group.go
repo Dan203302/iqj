@@ -23,8 +23,8 @@ func (sg *StudentGroup) isDefault() bool {
 	return sg.Id == 0 || sg.Grade == 0 || sg.Institute == "" || sg.Name == "" || sg.Students == nil
 }
 
-// studentGroupTable предоставляет методы для работы с таблицей групп студентов в базе данных.
-type studentGroupTable struct {
+// StudentGroupTable предоставляет методы для работы с таблицей групп студентов в базе данных.
+type StudentGroupTable struct {
 	db *sql.DB    // Указатель на подключение к базе данных
 	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
@@ -36,7 +36,7 @@ type studentGroupTable struct {
 // Прим:
 // sg := &StudentGroup{Id: 1}
 // group, err := ...GetByID(sg) // err == nil если все хорошо
-func (sgt *studentGroupTable) GetByID(sg *StudentGroup) (*StudentGroup, error) {
+func (sgt *StudentGroupTable) GetByID(sg *StudentGroup) (*StudentGroup, error) {
 	if sg.isDefault() {
 		return nil, errors.New("StudentGroup.GetByID: wrong data! provided *StudentGroup is empty!")
 	}
@@ -67,7 +67,7 @@ func (sgt *studentGroupTable) GetByID(sg *StudentGroup) (*StudentGroup, error) {
 // Прим:
 // sg := &StudentGroup{Id: 1}
 // group, err := ...GetStudent(sg) // err == nil если все хорошо
-func (sgt *studentGroupTable) GetStudent(sg *StudentGroup) (*StudentGroup, error) {
+func (sgt *StudentGroupTable) GetStudent(sg *StudentGroup) (*StudentGroup, error) {
 	if sg.isDefault() {
 		return nil, errors.New("StudentGroup.GetStudent: wrong data! provided *StudentGroup is empty!")
 	}
@@ -97,7 +97,7 @@ func (sgt *studentGroupTable) GetStudent(sg *StudentGroup) (*StudentGroup, error
 //
 // Прим:
 // groups, err := ...GetGroupsByInstituteAndGrade("Институт", 3) // Получить группы для 3 курса в институте
-func (sgt *studentGroupTable) GetGroupsByInstituteAndGrade(institute string, grade int) ([]*StudentGroup, error) {
+func (sgt *StudentGroupTable) GetGroupsByInstituteAndGrade(institute string, grade int) ([]*StudentGroup, error) {
 	groups := []*StudentGroup{}
 
 	rows, err := sgt.qm.makeSelect(sgt.db,
@@ -126,7 +126,7 @@ func (sgt *studentGroupTable) GetGroupsByInstituteAndGrade(institute string, gra
 // Прим:
 // sg := &StudentGroup{Institute: "Институт"}
 // groups, err := ...GetGroupsByInstitute(sg) // Получить группы в институте
-func (sgt *studentGroupTable) GetGroupsByInstitute(sg *StudentGroup) ([]*StudentGroup, error) {
+func (sgt *StudentGroupTable) GetGroupsByInstitute(sg *StudentGroup) ([]*StudentGroup, error) {
 	groups := []*StudentGroup{}
 
 	rows, err := sgt.qm.makeSelect(sgt.db,
@@ -155,7 +155,7 @@ func (sgt *studentGroupTable) GetGroupsByInstitute(sg *StudentGroup) ([]*Student
 // Прим:
 // sg := &StudentGroup{Grade: 3}
 // groups, err := ...GetGroupsByGrade(sg) // Получить группы на 3 курсе
-func (sgt *studentGroupTable) GetGroupsByGrade(sg *StudentGroup) ([]*StudentGroup, error) {
+func (sgt *StudentGroupTable) GetGroupsByGrade(sg *StudentGroup) ([]*StudentGroup, error) {
 	groups := []*StudentGroup{}
 
 	rows, err := sgt.qm.makeSelect(sgt.db,
@@ -184,7 +184,7 @@ func (sgt *studentGroupTable) GetGroupsByGrade(sg *StudentGroup) ([]*StudentGrou
 // Прим:
 // group := &StudentGroup{Grade: 1, Institute: "Институт", Name: "Группа 1", Students: []int{1, 2, 3}}
 // err := ...Add(group) // err == nil если все хорошо
-func (sgt *studentGroupTable) Add(group *StudentGroup) error {
+func (sgt *StudentGroupTable) Add(group *StudentGroup) error {
 	if group.isDefault() {
 		return errors.New("studentGroupTable.Add: wrong data! provided *StudentGroup is empty")
 	}
@@ -206,7 +206,7 @@ func (sgt *studentGroupTable) Add(group *StudentGroup) error {
 // Прим:
 // group := &StudentGroup{Id: 1, Grade: 2, Institute: "Институт", Name: "Группа 2", Students: []int{4, 5, 6}}
 // err := ...Update(group) // err == nil если все хорошо
-func (sgt *studentGroupTable) Update(group *StudentGroup) error {
+func (sgt *StudentGroupTable) Update(group *StudentGroup) error {
 	if group.isDefault() {
 		return errors.New("studentGroupTable.Update: wrong data! provided *StudentGroup is empty")
 	}
@@ -227,7 +227,7 @@ func (sgt *studentGroupTable) Update(group *StudentGroup) error {
 // Прим:
 // sg := &StudentGroup{Id: 1}
 // err := ...Delete(sg) // err == nil если все хорошо
-func (sgt *studentGroupTable) Delete(sg *StudentGroup) error {
+func (sgt *StudentGroupTable) Delete(sg *StudentGroup) error {
 	_, err := sgt.db.Exec("DELETE FROM StudentsGroups WHERE StudentsGroupId = $1", sg.Id)
 	if err != nil {
 		return fmt.Errorf("studentGroupTable.Delete: %v", err)

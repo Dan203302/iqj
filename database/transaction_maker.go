@@ -5,8 +5,25 @@ import (
 	"fmt"
 )
 
+// transactionMaker предоставляет методы для выполнения SQL-запросов в рамках транзакции к базе данных.
 type transactionMaker struct{}
 
+// makeSelect выполняет SELECT SQL-запрос в рамках транзакции к базе данных.
+// Принимает указатель на подключение к базе данных (db), строку SQL-запроса (query) и ключ (key) для подстановки в запрос.
+// Возвращает указатель на объект sql.Rows, содержащий результаты запроса, и ошибку при её возникновении.
+//
+// Прим:
+// rows, err := tm.makeSelect(db, "SELECT * FROM users WHERE id = $1", 1)
+//
+//	if err != nil {
+//	    // Обработка ошибки
+//	}
+//
+// defer rows.Close()
+//
+//	for rows.Next() {
+//	    // Обработка результатов запроса
+//	}
 func (tm *transactionMaker) makeSelect(db *sql.DB, query string, key interface{}) (*sql.Rows, error) {
 	tx, err := db.Begin()
 	if err != nil {
@@ -27,6 +44,16 @@ func (tm *transactionMaker) makeSelect(db *sql.DB, query string, key interface{}
 	return rows, nil
 }
 
+// makeInsert выполняет INSERT SQL-запрос в рамках транзакции к базе данных.
+// Принимает указатель на подключение к базе данных (db), строку SQL-запроса (query) и переменное количество значений (values) для подстановки в запрос.
+// Возвращает ошибку при её возникновении.
+//
+// Прим:
+// err := tm.makeInsert(db, "INSERT INTO users (name, age) VALUES ($1, $2)", "John", 30)
+//
+//	if err != nil {
+//	    // Обработка ошибки
+//	}
 func (tm *transactionMaker) makeInsert(db *sql.DB, query string, values ...interface{}) error {
 	tx, err := db.Begin()
 	if err != nil {
@@ -46,6 +73,16 @@ func (tm *transactionMaker) makeInsert(db *sql.DB, query string, values ...inter
 	return nil
 }
 
+// makeUpdate выполняет UPDATE SQL-запрос в рамках транзакции к базе данных.
+// Принимает указатель на подключение к базе данных (db), строку SQL-запроса (query), ключ (key) и переменное количество значений (values) для подстановки в запрос.
+// Возвращает ошибку при её возникновении.
+//
+// Прим:
+// err := tm.makeUpdate(db, "UPDATE users SET age = $1 WHERE name = $2", 31, "John")
+//
+//	if err != nil {
+//	    // Обработка ошибки
+//	}
 func (tm *transactionMaker) makeUpdate(db *sql.DB, query string, key interface{}, values ...interface{}) error {
 	tx, err := db.Begin()
 	if err != nil {
@@ -67,6 +104,16 @@ func (tm *transactionMaker) makeUpdate(db *sql.DB, query string, key interface{}
 	return nil
 }
 
+// makeDelete выполняет DELETE SQL-запрос в рамках транзакции к базе данных.
+// Принимает указатель на подключение к базе данных (db), строку SQL-запроса (query) и ключ (key) для подстановки в запрос.
+// Возвращает ошибку при её возникновении.
+//
+// Прим:
+// err := tm.makeDelete(db, "DELETE FROM users WHERE id = $1", 1)
+//
+//	if err != nil {
+//	    // Обработка ошибки
+//	}
 func (tm *transactionMaker) makeDelete(db *sql.DB, query string, key interface{}) error {
 	tx, err := db.Begin()
 	if err != nil {

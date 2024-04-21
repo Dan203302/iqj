@@ -21,8 +21,8 @@ func (u *User) isDefault() bool {
 	return u.Id == 0 || u.Email == "" || u.Password == ""
 }
 
-// userTable предоставляет методы для работы с таблицей пользователей в базе данных.
-type userTable struct {
+// UserTable предоставляет методы для работы с таблицей пользователей в базе данных.
+type UserTable struct {
 	db *sql.DB           // Указатель на подключение к базе данных
 	tm *transactionMaker // Создатель транзакций
 }
@@ -34,7 +34,7 @@ type userTable struct {
 // Прим:
 // user := &User{Email: "example@example.com", Password: "example"}
 // err := ...Add(user) // err == nil если все хорошо
-func (ut *userTable) Add(u *User) error {
+func (ut *UserTable) Add(u *User) error {
 
 	// Проверяем были ли переданы данные в u
 	if u.isDefault() {
@@ -61,7 +61,7 @@ func (ut *userTable) Add(u *User) error {
 // Прим:
 // user := &User{Id: 1}
 // user, err := ...GetById(user) // err == nil если все хорошо
-func (ut *userTable) GetById(u *User) (*User, error) {
+func (ut *UserTable) GetById(u *User) (*User, error) {
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
 		return nil, errors.New("User.Get: wrong data! provided *User is empty")
@@ -95,7 +95,7 @@ func (ut *userTable) GetById(u *User) (*User, error) {
 // Прим:
 // user := &User{Email: "example@example.com", Password: "example"}
 // user, err := ...Check(user) // err == nil если все хорошо
-func (ut *userTable) Check(u *User) (*User, error) {
+func (ut *UserTable) Check(u *User) (*User, error) {
 	// Проверяем переданы ли данные в функцию
 	if u.isDefault() {
 		return nil, errors.New("User.Check: wrong data! *User is empty")
@@ -136,7 +136,7 @@ func (ut *userTable) Check(u *User) (*User, error) {
 // Прим:
 // user := &User{Id: 1}
 // err := ...Delete(user) // err == nil если все хорошо
-func (ut *userTable) Delete(u *User) error {
+func (ut *UserTable) Delete(u *User) error {
 	// Проверяем дали ли нам нужные данные
 	if u.isDefault() {
 		return errors.New("User.Delete: wrong data! *User.Id is empty")

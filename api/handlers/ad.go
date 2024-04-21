@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"iqj/database"
-	"iqj/models"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func HandleGetAd(c *gin.Context) {
@@ -17,7 +17,7 @@ func HandleGetAd(c *gin.Context) {
 		return
 	}
 
-	ads, err := database.Database.GetAd(count)
+	ads, err := database.Database.Advertisement.Get(count) // TODO: что за count? надо комментарии и GetById
 	fmt.Println(ads)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "")
@@ -33,8 +33,8 @@ func HandlePostAd(c *gin.Context) {
 	}
 	userId := userIdToConv.(int)
 
-	user, err := database.Database.GetRole( // у этого юзера будет роль, все хорошо -> user.Role
-		&models.User{
+	user, err := database.Database.UserData.GetRoleById( // у этого юзера будет роль, все хорошо -> user.Role
+		&database.UserData{
 			Id: userId,
 		})
 	if err != nil {
@@ -42,14 +42,14 @@ func HandlePostAd(c *gin.Context) {
 	}
 
 	if user.Role == "moderator" {
-		var ad models.Ad
+		var ad models.Ad // TODO: исправить
 
 		err := c.BindJSON(&ad)
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 		}
 
-		ok := database.Database.AddAd(ad)
+		ok := database.Database.Advertisement.Add(&ad)
 		if ok != nil {
 			c.JSON(http.StatusInternalServerError, ok.Error())
 		}

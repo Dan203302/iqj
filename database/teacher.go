@@ -20,8 +20,8 @@ func (t *Teacher) isDefault() bool {
 	return t.Id == 0 || t.Groups == nil
 }
 
-// teacherTable предоставляет методы для работы с таблицей преподавателей в базе данных.
-type teacherTable struct {
+// TeacherTable предоставляет методы для работы с таблицей преподавателей в базе данных.
+type TeacherTable struct {
 	db *sql.DB    // Указатель на подключение к базе данных
 	qm queryMaker // Исполнитель ОБЫЧНЫХ sql запросов
 }
@@ -33,7 +33,7 @@ type teacherTable struct {
 // Прим:
 // teacher := &Teacher{Id: 1, Groups: []int{101, 102}}
 // err := ...Add(teacher) // err == nil если все хорошо
-func (tt *teacherTable) Add(t *Teacher) error {
+func (tt *TeacherTable) Add(t *Teacher) error {
 
 	// Проверяем были ли переданы данные в t
 	if t.isDefault() {
@@ -60,7 +60,7 @@ func (tt *teacherTable) Add(t *Teacher) error {
 // Прим:
 // teacher := &Teacher{Id: 1}
 // teacher, err := ...GetById(teacher) // err == nil если все хорошо
-func (tt *teacherTable) GetById(t *Teacher) (*Teacher, error) {
+func (tt *TeacherTable) GetById(t *Teacher) (*Teacher, error) {
 
 	// Проверяем переданы ли данные в функцию
 	if t.isDefault() {
@@ -94,7 +94,7 @@ func (tt *teacherTable) GetById(t *Teacher) (*Teacher, error) {
 // Прим:
 // teacher := &Teacher{Id: 1, Groups: []int{101, 102}}
 // teacher, err := ...UpdateGroups(teacher) // err == nil если все хорошо
-func (tt *teacherTable) UpdateGroups(t *Teacher) (*Teacher, error) {
+func (tt *TeacherTable) UpdateGroups(t *Teacher) (*Teacher, error) {
 	// Проверяем переданы ли данные в функцию
 	if t.isDefault() {
 		return nil, errors.New("Teachers.UpdateGroups: wrong data! provided *Teacher is empty")

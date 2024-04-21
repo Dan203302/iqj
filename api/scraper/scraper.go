@@ -2,10 +2,11 @@ package scraper
 
 import (
 	"fmt"
-	"github.com/gocolly/colly"
 	"iqj/database"
 	"iqj/models"
 	"time"
+
+	"github.com/gocolly/colly"
 )
 
 // Тикер, который запускает главную функцию каждые 30 секунд.
