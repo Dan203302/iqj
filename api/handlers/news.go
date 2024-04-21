@@ -2,12 +2,11 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"iqj/database"
 	"iqj/models"
 	"net/http"
 	"strconv"
-
-	"github.com/gin-gonic/gin"
 )
 
 // Получает offset и count из запроса, вызывает функцию GetLatestNewsBlocks,
@@ -24,9 +23,26 @@ func HandleGetNews(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
+	switch {
+	case offset < 0:
+		c.JSON(http.StatusBadRequest, "Offset < 0")
+		return
+	case offset > 999999:
+		c.JSON(http.StatusBadRequest, "Offset > 999999")
+		return
+	}
+
 	count, err := strconv.Atoi(countStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	switch {
+	case count < 1:
+		c.JSON(http.StatusBadRequest, "Count < 1")
+		return
+	case count > 999999:
+		c.JSON(http.StatusBadRequest, "Count > 999999")
 		return
 	}
 
@@ -47,6 +63,14 @@ func HandleGetNewsById(c *gin.Context) {
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
+	}
+	switch {
+	case id < 0:
+		c.JSON(http.StatusBadRequest, "Id < 0")
+		return
+	case id > 999999:
+		c.JSON(http.StatusBadRequest, "Id > 999999")
+		return
 	}
 
 	news, err := database.Database.GetNewsByID(id)
