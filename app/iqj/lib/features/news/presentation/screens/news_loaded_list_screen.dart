@@ -84,6 +84,7 @@ import 'package:iqj/features/news/domain/news.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 
 abstract class NewsLoadEvent {}
 
@@ -182,7 +183,6 @@ Future<News> getNewsFull(String id) async {
       );
       newsList.add(news);
     }
-    //print(newsList[0]);
     return newsList[0];
   } else {
     throw Exception(response.statusCode);
@@ -190,7 +190,6 @@ Future<News> getNewsFull(String id) async {
 }
 
 class NewsList extends StatelessWidget {
-
   const NewsList({super.key});
 
   @override
@@ -204,21 +203,20 @@ class NewsList extends StatelessWidget {
       child: _NewsListWidget(),
     );
   }
-
 }
 
 class _NewsListWidget extends StatefulWidget {
-
+  bool bookmarked = false;
   @override
   __NewsListWidgetState createState() => __NewsListWidgetState();
 }
 
 class __NewsListWidgetState extends State<_NewsListWidget> {
   bool flagOpenTags = true;
+  bool bookmarked = false;
   Map dataf = {};
   // late final NewsLoadBloc _newsLoadBloc;
 
-  
   // void _initializeBloc() async {
   //   _newsLoadBloc = NewsLoadBloc('15');
   //   //await _newsLoadBloc.initialize(); // Предполагается, что у вашего блока есть метод инициализации
@@ -226,22 +224,27 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     final NewsLoadBloc bloc = context.read<NewsLoadBloc>();
     final loadCompleter = Completer();
-    bloc.add(LoadNewsLoadList(
-      completer: loadCompleter,
-    ),);
-    
+    bloc.add(
+      LoadNewsLoadList(
+        completer: loadCompleter,
+      ),
+    );
+
     final NewsTags ntags = NewsTags();
 
-
     void openCloseTags() {
-    setState(() {
-      flagOpenTags = !flagOpenTags;
-    });
-  }
+      setState(() {
+        flagOpenTags = !flagOpenTags;
+      });
+    }
 
+    void bookmarkFlagger() {
+      setState(() {
+        bookmarked = !bookmarked;
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -253,13 +256,44 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
               children: [
                 IconButton(
                   onPressed: () {
-
+                    bookmarkFlagger();
                   },
-                  icon: const Icon(Icons.bookmark_outline_rounded),
+                  icon: widget.bookmarked
+                      ? (Icon(
+                          Icons.bookmark_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                        ))
+                      : (Icon(
+                          Icons.bookmark_outline_rounded,
+                        )),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.more_vert),
+                PopupMenuButton<String>(
+                  onSelected: handleClick,
+                  itemBuilder: (BuildContext context) {
+                    return {'Поделиться...', 'Подробнее...'}
+                        .map((String choice) {
+                      return 
+                      choice == "Поделиться..." ? 
+                      PopupMenuItem<String>(
+                        value: choice,
+                        child: Row(children: [
+                          Icon(Icons.share_outlined),
+                          Padding(padding: EdgeInsets.only(right: 12),),
+                          Text(choice),
+                          ],
+                          ),
+                      ) :
+                      PopupMenuItem<String>(
+                        value: choice,
+                        child: Row(children: [
+                          Icon(Icons.info_outline_rounded),
+                          Padding(padding: EdgeInsets.only(right: 12),),
+                          Text(choice),
+                          ],
+                          ),
+                      );
+                    }).toList();
+                  },
                 ),
               ],
             ),
@@ -280,7 +314,7 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is NewsLoadLoaded) {
-              final News news = state.news; 
+              final News news = state.news;
               return ListView(
                 children: [
                   Card(
@@ -293,7 +327,8 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                         children: [
                           Center(
                             child: Container(
-                              margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                              margin:
+                                  EdgeInsets.only(left: 12, right: 12, top: 12),
                               width: double.infinity,
                               height: 256,
                               child: ClipRRect(
@@ -354,7 +389,7 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                         if (flagOpenTags)
                                           IconButton(
                                             onPressed: () {
-                                              openCloseTags(); 
+                                              openCloseTags();
                                             },
                                             icon: //SvgPicture.asset('assets/icons/news/open_tags.svg'),
                                                 const Icon(
@@ -377,7 +412,7 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                     ),
                                   ],
                                 ),
-                                if (!flagOpenTags) ntags ,
+                                if (!flagOpenTags) ntags,
                                 Container(
                                   decoration: BoxDecoration(
                                     border: Border(
@@ -406,6 +441,13 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                         .onSurfaceVariant,
                                     fontSize: 16,
                                   ),
+                                  linkStyle: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 16,
+                                    decorationColor:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                               ],
@@ -433,41 +475,42 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
 class NewsTags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-      List<String> tags=["Tag1","Tag2","Tag3"];
-      return AnimatedSize(
-        curve: Curves.easeIn,
-        duration: const Duration(milliseconds: 250),
-        child: Container(
-        margin: EdgeInsets.only(bottom: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(
-            tags.length,
-            (index) => Container(
-              margin: const EdgeInsets.only(right: 5),
-              height: 35,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24.0),
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: TextButton(
-                onPressed: () {},
-                child: Text(
-                  tags[index], // берем название тега из массива
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface,
+    List<String> tags = ["Tag 1", "Tag 2", "Tag 3"];
+    return AnimatedSize(
+      curve: Curves.easeIn,
+      duration: const Duration(milliseconds: 250),
+      child: Container(
+          margin: EdgeInsets.only(bottom: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(
+              tags.length,
+              (index) => Container(
+                margin: const EdgeInsets.only(right: 5),
+                height: 35,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24.0),
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    // Переходим к ленте новостей с фильтром по нажатому тегу
+                  },
+                  child: Text(
+                    tags[index], // берем название тега из массива
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        )
-      ),
-      );
+          )),
+    );
   }
 }
 
@@ -475,4 +518,13 @@ String cleanText(String text) {
   text = text.replaceAll(RegExp(r'\n{3,}'), '\n\n');
   text = text.replaceAll('\t', '');
   return text;
+}
+
+void handleClick(String value) {
+  switch (value) {
+    case 'Поделиться...':
+      break;
+    case 'Подробнее...':
+      break;
+  }
 }

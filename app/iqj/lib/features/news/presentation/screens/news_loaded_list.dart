@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iqj/features/news/domain/news.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class NewsCard extends StatelessWidget {
+class NewsCard extends StatefulWidget {
   final News news;
+  bool bookmarked = false;
 
-  const NewsCard({super.key, required this.news});
+  NewsCard({super.key, required this.news, this.bookmarked = false});
+  
+  @override
+  State<StatefulWidget> createState() => _NewsCard();
+}
+
+class _NewsCard extends State<NewsCard>{
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +22,7 @@ class NewsCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           'newslist',
-          arguments: {'id':news.id},
+          arguments: {'id':widget.news.id},
         );
       },
       child: Card(
@@ -31,7 +39,7 @@ class NewsCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Image.network(
-                      news.thumbnails,
+                      widget.news.thumbnails,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -48,7 +56,7 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            news.title,
+                            widget.news.title,
                             //news.id,
                             style: const TextStyle(
                               fontSize: 24,
@@ -59,20 +67,32 @@ class NewsCard extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            // Обработка нажатия кнопки
-                          },
-                          icon: const Icon(
+                          icon: widget.bookmarked ? 
+                          (Icon(
+                            Icons.bookmark_rounded,
+                            size: 28,
+                            color: Theme.of(context).colorScheme.primary,
+                          ))
+                          :
+                          (Icon(
                             Icons.bookmark_border,
                             size: 28,
-                          ),
-                          color: Theme.of(context).colorScheme.onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          )),
+                          onPressed: () {
+                            setState(() {
+                              widget.bookmarked = !widget.bookmarked;
+                            });
+                            // SharedPreferences prefs = SharedPreferences.getInstance() as SharedPreferences;
+                            // Map<String, dynamic> user = {'Username':'tom','Password':'pass@123'};
+                            // bool result = await prefs.setString('user', jsonEncode(user));
+                          },
                         ),
                       ],
                     ),
                     const Padding(padding: EdgeInsets.only(bottom: 6)),
                     Text(
-                      "${DateFormat('dd.MM.yyyy hh:mm').format(news.publicationTime)}",
+                      "${DateFormat('dd.MM.yyyy hh:mm').format(widget.news.publicationTime)}",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
