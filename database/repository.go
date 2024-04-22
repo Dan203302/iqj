@@ -1,15 +1,16 @@
 package database
 
-type Authorization struct {
+type Authorization interface {
+	Add(u User) error
 }
 
-type NewsRepo struct {
+type NewsRepo interface {
 }
 
-type AdvertisementRepo struct {
+type AdvertisementRepo interface {
 }
 
-type Schedule struct {
+type Schedule interface {
 }
 
 type Repository struct {

@@ -2,16 +2,17 @@ package service
 
 import "iqj/database"
 
-type Authorization struct {
+type Authorization interface {
+	Add(u database.User) error
 }
 
-type News struct {
+type News interface {
 }
 
-type Advertisement struct {
+type Advertisement interface {
 }
 
-type Schedule struct {
+type Schedule interface {
 }
 
 type Service struct {
