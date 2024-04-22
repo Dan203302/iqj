@@ -1,10 +1,9 @@
-package handlers
+package handler
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"iqj/database"
-	"iqj/models"
 	"net/http"
 	"strconv"
 )
@@ -13,7 +12,7 @@ import (
 // которая вернет массив с последними новостями.
 // Выдает новости пользователю в формате JSON.
 // Например при GET /news?offset=1&count=5 вернет новости с первой по шестую.
-func HandleGetNews(c *gin.Context) {
+func (h *Handler) HandleGetNews(c *gin.Context) {
 	// Получаем промежуток пропуска и количество блоков новостей
 	offsetStr := c.Query("offset")
 	countStr := c.Query("count")
@@ -46,7 +45,7 @@ func HandleGetNews(c *gin.Context) {
 		return
 	}
 
-	latestnews, err := database.Database.GetLatestNewsBlocks(offset, count)
+	latestnews, err := database.Database.News.GetLatestBlocks(offset, count)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "")
 	}
@@ -57,7 +56,7 @@ func HandleGetNews(c *gin.Context) {
 // вызывает функцию GetNewsByID, которая получает полную новость из бд.
 // Выдает полную новость пользователю в формате JSON.
 // Например при GET /newsid?id=13 вернет новость с id = 13.
-func HandleGetNewsById(c *gin.Context) {
+func (h *Handler) HandleGetNewsById(c *gin.Context) {
 	idStr := c.Query("id")
 
 	id, err := strconv.Atoi(idStr)
@@ -73,38 +72,36 @@ func HandleGetNewsById(c *gin.Context) {
 		return
 	}
 
-	news, err := database.Database.GetNewsByID(id)
+	var newsDB database.News
+	newsDB.Id = id
+
+	news, err := database.Database.News.GetById(&newsDB)
 	if err != nil {
 		fmt.Println(err)
 	}
 	c.JSON(http.StatusOK, news)
 }
 
-func HandleAddNews(c *gin.Context) {
+func (h *Handler) HandleAddNews(c *gin.Context) {
 	userIdToConv, exists := c.Get("userId")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, "User ID not found")
 		return
 	}
 	userId := userIdToConv.(int)
-	user, err := database.Database.GetRole( // у этого юзера будет роль, все хорошо -> user.Role
-		&models.User{
-			Id: userId,
-		})
+	var userDB database.UserData
+	userDB.Id = userId
+	user, err := database.Database.UserData.GetRoleById(&userDB)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "")
 	}
 	if user.Role == "moderator" {
-		var news struct {
-			models.NewsBlock
-			Text string
-		}
+		var news database.News
 		err := c.BindJSON(&news)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 		}
-		newsBl := models.NewsBlock{Header: news.Header, ImageLink: news.ImageLink, Link: "", Tags: news.Tags, PublicationTime: news.PublicationTime}
-		ok := database.Database.AddNews(newsBl, news.Text)
+		ok := database.Database.News.Add(&news)
 		if ok != nil {
 			c.JSON(http.StatusInternalServerError, ok.Error())
 		}
