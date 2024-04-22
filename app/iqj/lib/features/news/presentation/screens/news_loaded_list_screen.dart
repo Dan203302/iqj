@@ -82,6 +82,8 @@ import 'package:http/http.dart' as http;
 import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/domain/news.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 abstract class NewsLoadEvent {}
 
@@ -123,16 +125,16 @@ class NewsLoadListLoadingFail extends NewsLoadState {
 class NewsLoadBloc extends Bloc<NewsLoadEvent, NewsLoadState> {
   final String id;
   NewsLoadBloc(this.id) : super(NewsLoadInitial()) {
-    print("init bloc");
+    //print("init bloc");
     on<LoadNewsLoadList>((event, emit) async {
       try {
         if (state is! NewsLoadLoaded) {
-          print("news load loading now");
+          //print("news load loading now");
           emit(NewsLoadLoading());
         }
-        print("Start load news");
+        //print("Start load news");
         final News news = await getNewsFull(id);
-        print("News loaded");
+        //print("News loaded");
         emit(NewsLoadLoaded(news, false));
       } catch (e) {
         print("error: " + NewsLoadListLoadingFail(except: e).toString());
@@ -180,32 +182,43 @@ Future<News> getNewsFull(String id) async {
       );
       newsList.add(news);
     }
-    print(newsList[0]);
+    //print(newsList[0]);
     return newsList[0];
   } else {
     throw Exception(response.statusCode);
   }
 }
 
-class NewsList extends StatefulWidget {
+class NewsList extends StatelessWidget {
 
   const NewsList({super.key});
 
   @override
-  _NewsListState createState() => _NewsListState();
+  Widget build(BuildContext context) {
+    final Map<String, String> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    final String newsId = args['id']!;
+
+    return BlocProvider(
+      create: (context) => NewsLoadBloc(newsId),
+      child: _NewsListWidget(),
+    );
+  }
+
 }
 
-class _NewsListState extends State<NewsList> {
+class _NewsListWidget extends StatefulWidget {
+
+  @override
+  __NewsListWidgetState createState() => __NewsListWidgetState();
+}
+
+class __NewsListWidgetState extends State<_NewsListWidget> {
   bool flagOpenTags = true;
   Map dataf = {};
   // late final NewsLoadBloc _newsLoadBloc;
 
-  @override
-  void initState() {
-    super.initState();
-    // _initializeBloc();
-  }
-
+  
   // void _initializeBloc() async {
   //   _newsLoadBloc = NewsLoadBloc('15');
   //   //await _newsLoadBloc.initialize(); // Предполагается, что у вашего блока есть метод инициализации
@@ -213,23 +226,23 @@ class _NewsListState extends State<NewsList> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-    final String newsId = args['id']!;
-    final NewsTags ntags = NewsTags();
-    final NewsLoadBloc bloc =
-        NewsLoadBloc(newsId); // Здесь передать нужный ID новости
+
+    final NewsLoadBloc bloc = context.read<NewsLoadBloc>();
     final loadCompleter = Completer();
     bloc.add(LoadNewsLoadList(
-      //id: "Сюда можно вписать что угодно, но без этой строчки работать не будет XD",
       completer: loadCompleter,
-    ));
+    ),);
+    
+    final NewsTags ntags = NewsTags();
+
+
     void openCloseTags() {
     setState(() {
-      print("tag state switched");
       flagOpenTags = !flagOpenTags;
     });
   }
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Новость'),
@@ -239,7 +252,9 @@ class _NewsListState extends State<NewsList> {
             child: Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+
+                  },
                   icon: const Icon(Icons.bookmark_outline_rounded),
                 ),
                 IconButton(
@@ -265,7 +280,7 @@ class _NewsListState extends State<NewsList> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is NewsLoadLoaded) {
-              final News news = state.news; // Это ужас и я ненавижу себя // да норм вроде
+              final News news = state.news; 
               return ListView(
                 children: [
                   Card(
@@ -278,7 +293,9 @@ class _NewsListState extends State<NewsList> {
                         children: [
                           Center(
                             child: Container(
+                              margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                               width: double.infinity,
+                              height: 256,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: Image.network(
@@ -337,7 +354,7 @@ class _NewsListState extends State<NewsList> {
                                         if (flagOpenTags)
                                           IconButton(
                                             onPressed: () {
-                                              openCloseTags(); // Вместо того чтобы просто открыть теги, здесь мы ПЕРЕЗАГРУЖАЕМ ВСЮ СТРАНИЦУ и открываем теги - пофикси пожалуйста
+                                              openCloseTags(); 
                                             },
                                             icon: //SvgPicture.asset('assets/icons/news/open_tags.svg'),
                                                 const Icon(
@@ -376,8 +393,13 @@ class _NewsListState extends State<NewsList> {
                                 ),
                                 const SizedBox(height: 8),
                                 //Text(news?.description ?? '...'),  ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
-                                Text(
-                                  news.description,
+                                Linkify(
+                                  // onOpen: (link) async { FIX ME
+                                  //   if (!await launchUrl(Uri.parse(link.url))) {
+                                  //     throw Exception('Could not launch ${link.url}');
+                                  //   }
+                                  // },
+                                  text: cleanText(news.description),
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -409,12 +431,14 @@ class _NewsListState extends State<NewsList> {
 }
 
 class NewsTags extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
       List<String> tags=["Tag1","Tag2","Tag3"];
-      return Container(
-        margin: EdgeInsets.only(bottom: 6),
+      return AnimatedSize(
+        curve: Curves.easeIn,
+        duration: const Duration(milliseconds: 250),
+        child: Container(
+        margin: EdgeInsets.only(bottom: 12),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,7 +449,7 @@ class NewsTags extends StatelessWidget {
               height: 35,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24.0),
-                color: Theme.of(context).colorScheme.onInverseSurface,
+                color: Theme.of(context).colorScheme.primaryContainer,
               ),
               child: TextButton(
                 onPressed: () {},
@@ -442,6 +466,13 @@ class NewsTags extends StatelessWidget {
             ),
           ),
         )
+      ),
       );
   }
+}
+
+String cleanText(String text) {
+  text = text.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+  text = text.replaceAll('\t', '');
+  return text;
 }

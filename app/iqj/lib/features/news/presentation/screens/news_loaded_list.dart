@@ -27,6 +27,7 @@ class NewsCard extends StatelessWidget {
               Center(
                 child: Container(
                   width: double.infinity,
+                  height: 256,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
                     child: Image.network(
