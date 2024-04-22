@@ -11,11 +11,12 @@ import (
 )
 
 func main() {
-	services := service.NewService()
-	handlers := handler.NewHandler(services)
-
 	// БД
 	database.NewDatabaseInstance()
+
+	repository := database.NewRepository()
+	services := service.NewService(repository)
+	handlers := handler.NewHandler(services)
 
 	// Запускает парсер новостей
 	go scraper.ScrapTick()
