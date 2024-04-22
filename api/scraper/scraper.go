@@ -3,11 +3,18 @@ package scraper
 import (
 	"fmt"
 	"iqj/database"
-	"iqj/models"
 	"time"
 
 	"github.com/gocolly/colly"
 )
+
+type NewsBlock struct {
+	Header          string
+	Link            string
+	PublicationTime string
+	ImageLink       []string
+	Tags            []string
+}
 
 // Тикер, который запускает главную функцию каждые 30 секунд.
 func ScrapTick() {
@@ -29,11 +36,11 @@ func Scraper() {
 }
 
 // Парсим блочные новости для сотрудников с первой страницы и добавляем их в массив.
-func scraper(url string) []models.NewsBlock {
-	var newsblarr []models.NewsBlock
+func scraper(url string) []NewsBlock {
+	var newsblarr []NewsBlock
 	c := colly.NewCollector()
 	c.OnHTML(".uk-card.uk-card-default", func(e *colly.HTMLElement) {
-		newsblock := models.NewsBlock{}
+		newsblock := NewsBlock{}
 
 		x := e.ChildText(".uk-link-reset")
 		newsblock.Header = x[:len(x)-18]
@@ -41,7 +48,7 @@ func scraper(url string) []models.NewsBlock {
 		newsblock.PublicationTime = e.ChildText(".uk-margin-small-bottom.uk-text-small")
 		imgStr := "https://www.mirea.ru" + e.ChildAttr(".enableSrcset", "data-src")
 		newsblock.ImageLink = append(newsblock.ImageLink, imgStr)
-		newsblarr = append([]models.NewsBlock{newsblock}, newsblarr...)
+		newsblarr = append([]NewsBlock{newsblock}, newsblarr...)
 	})
 
 	// Переключение на следующую страницу
@@ -55,9 +62,9 @@ func scraper(url string) []models.NewsBlock {
 }
 
 // Парсим полные новости для сотрудников по ссылкам из блочных и добавляем их в массив и базу данных.
-func scraper2(newsblarr []models.NewsBlock) {
+func scraper2(newsblarr []NewsBlock) {
 	c := colly.NewCollector()
-	news := models.News{}
+	news := database.News{}
 	var title, text string
 
 	c.OnHTML("h1", func(e *colly.HTMLElement) {
@@ -81,14 +88,14 @@ func scraper2(newsblarr []models.NewsBlock) {
 	for i := range newsblarr {
 		c.Visit(newsblarr[i].Link)
 		news.Header = title
-		news.Text = text
-		news.ImageLink = mas
+		news.Link = newsblarr[i].Link
+		news.Content = text
+		news.ImageLinks = mas
 		mas = nil
 		news.Tags = tags
 		tags = nil
 		news.PublicationTime = newsblarr[i].PublicationTime
-		n1 := models.NewsBlock{Header: newsblarr[i].Header, Link: newsblarr[i].Link, ImageLink: news.ImageLink, PublicationTime: newsblarr[i].PublicationTime, Tags: news.Tags}
-		err := database.Database.AddNews(n1, news.Text)
+		err := database.Database.News.Add(&news)
 		if err != nil {
 			fmt.Println(err)
 		}
