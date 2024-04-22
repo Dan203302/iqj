@@ -1,40 +1,38 @@
-package handlers
+package handler
 
 import (
 	"fmt"
 	"iqj/database"
-	"iqj/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HandleSignUp(c *gin.Context) {
-	var user models.User
+func (h *Handler) HandleSignUp(c *gin.Context) {
+	var user database.User
 
 	ok := c.BindJSON(&user)
 	if ok != nil {
 		c.String(http.StatusBadRequest, ok.Error())
 	}
 
-	if user.Data.Email == "" {
+	if user.Email == "" {
 		c.JSON(http.StatusBadRequest, "There is no email")
 	}
 
-	if user.Data.Password == "" {
+	if user.Password == "" {
 		c.JSON(http.StatusBadRequest, "There is no password")
 	}
 
-	password := user.Data.Password
+	password := user.Password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 	}
 
-	user.Data.Password = string(hashedPassword)
-
-	if err = database.Database.AddUser(&user); err != nil {
+	user.Password = string(hashedPassword)
+	if err = database.Database.User.Add(&user); err != nil {
 		fmt.Println(err)
 	}
 
