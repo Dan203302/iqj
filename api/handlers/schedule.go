@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"iqj/api/excelparser"
-	"iqj/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
