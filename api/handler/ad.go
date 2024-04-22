@@ -1,4 +1,4 @@
-package handlers
+package handler
 
 import (
 	"fmt"
@@ -9,23 +9,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HandleGetAd(c *gin.Context) {
-	countStr := c.Query("count")
-	count, ok := strconv.Atoi(countStr)
+func (h *Handler) HandleGetAd(c *gin.Context) {
+	idStr := c.Query("id")
+	id, ok := strconv.Atoi(idStr)
 	if ok != nil {
 		c.JSON(http.StatusBadRequest, ok.Error())
 		return
 	}
 
-	ads, err := database.Database.Advertisement.Get(count) // TODO: что за count? надо комментарии и GetById
-	fmt.Println(ads)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "")
+	var advertisementBD database.Advertisement
+	advertisementBD.Id = id
+	if advertisementBD.Id != 0 {
+		advertisement, err := database.Database.Advertisement.GetById(&advertisementBD) // TODO: что за count? надо комментарии и GetById
+		fmt.Println(advertisement)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "")
+		}
+		c.JSON(http.StatusOK, advertisement)
 	}
-	c.JSON(http.StatusOK, ads)
 }
 
-func HandlePostAd(c *gin.Context) {
+func (h *Handler) HandlePostAd(c *gin.Context) {
 	userIdToConv, ok := c.Get("userId")
 	if !ok {
 		c.String(http.StatusUnauthorized, "User ID not found")
@@ -42,19 +46,19 @@ func HandlePostAd(c *gin.Context) {
 	}
 
 	if user.Role == "moderator" {
-		var ad models.Ad // TODO: исправить
+		var advertisement database.Advertisement // TODO: исправить
 
-		err := c.BindJSON(&ad)
+		err := c.BindJSON(&advertisement)
 		if err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 		}
 
-		ok := database.Database.Advertisement.Add(&ad)
+		ok := database.Database.Advertisement.Add(&advertisement)
 		if ok != nil {
 			c.JSON(http.StatusInternalServerError, ok.Error())
 		}
 
-		c.JSON(http.StatusOK, ad)
+		c.JSON(http.StatusOK, advertisement)
 	} else {
 		c.JSON(http.StatusForbidden, "There are not enough rights for this action")
 	}
