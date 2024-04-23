@@ -29,7 +29,7 @@ class ScheduleScreen extends StatelessWidget {
               'assets/schedule/dots.svg',
               width: 4.17,
               height: 16,
-            )
+            ),
           ],
         ),
         body: ListView(
