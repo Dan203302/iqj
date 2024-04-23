@@ -9,6 +9,7 @@ import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_date.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_tags.dart';
+import 'package:iqj/features/news/data/bookmarks.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});

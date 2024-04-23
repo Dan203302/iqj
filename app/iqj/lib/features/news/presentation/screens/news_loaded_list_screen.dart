@@ -83,6 +83,7 @@ import 'package:iqj/features/news/data/news_repository.dart';
 import 'package:iqj/features/news/domain/news.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -170,6 +171,7 @@ Future<News> getNewsFull(String id) async {
                 ? json['image_link'][0] as String
                 : '',
             link: json['link'] as String,
+            //bookmarked: false,
           )));
     } else if (decodedData is Map<String, dynamic>) {
       final News news = News(
@@ -180,6 +182,7 @@ Future<News> getNewsFull(String id) async {
         thumbnails: decodedData['image_link'][0] as String,
         link: "decodedData['link'] as String",
         description: decodedData['text'] as String,
+        //bookmarked: false,
       );
       newsList.add(news);
     }
@@ -195,7 +198,7 @@ class NewsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, String> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+        ModalRoute.of(context)!.settings.arguments! as Map<String, String>;
     final String newsId = args['id']!;
 
     return BlocProvider(
@@ -246,227 +249,265 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Новость'),
-        actions: [
-          Container(
-            padding: const EdgeInsets.only(right: 12),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    bookmarkFlagger();
-                  },
-                  icon: widget.bookmarked
-                      ? (Icon(
-                          Icons.bookmark_rounded,
-                          color: Theme.of(context).colorScheme.primary,
-                        ))
-                      : (Icon(
-                          Icons.bookmark_outline_rounded,
-                        )),
-                ),
-                PopupMenuButton<String>(
-                  onSelected: handleClick,
-                  itemBuilder: (BuildContext context) {
-                    return {'Поделиться...', 'Подробнее...'}
-                        .map((String choice) {
-                      return 
-                      choice == "Поделиться..." ? 
-                      PopupMenuItem<String>(
-                        value: choice,
-                        child: Row(children: [
-                          Icon(Icons.share_outlined),
-                          Padding(padding: EdgeInsets.only(right: 12),),
-                          Text(choice),
-                          ],
-                          ),
-                      ) :
-                      PopupMenuItem<String>(
-                        value: choice,
-                        child: Row(children: [
-                          Icon(Icons.info_outline_rounded),
-                          Padding(padding: EdgeInsets.only(right: 12),),
-                          Text(choice),
-                          ],
-                          ),
-                      );
-                    }).toList();
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider<NewsLoadBloc>(
-            create: (_) => bloc,
-          ),
-        ],
-        child: BlocBuilder<NewsLoadBloc, NewsLoadState>(
-          bloc: bloc,
-          builder: (context, state) {
-            if (state is NewsLoadLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is NewsLoadLoaded) {
-              final News news = state.news;
-              return ListView(
-                children: [
-                  Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.all(8),
-                    child: Padding(
-                      padding: EdgeInsets.zero,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Container(
-                              margin:
-                                  EdgeInsets.only(left: 12, right: 12, top: 12),
-                              width: double.infinity,
-                              height: 256,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Image.network(
-                                  news.thumbnails,
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(bottom: 6)),
-                          Container(
-                            margin: const EdgeInsets.only(left: 12, right: 12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        news.title,
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                          // title,
-                                          // style: textTheme.titleLarge
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      DateFormat('dd.MM.yyyy hh:mm')
-                                          .format(news.publicationTime),
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        // Text(
-                                        //   "ID: $newsId",
-                                        //   style: TextStyle(
-                                        //     color: Theme.of(context)
-                                        //         .colorScheme
-                                        //         .onSurfaceVariant,
-                                        //     fontSize: 16,
-                                        //   ),
-                                        // ),
-                                        if (flagOpenTags)
-                                          IconButton(
-                                            onPressed: () {
-                                              openCloseTags();
-                                            },
-                                            icon: //SvgPicture.asset('assets/icons/news/open_tags.svg'),
-                                                const Icon(
-                                                    Icons.expand_more_rounded),
-                                          )
-                                        else
-                                          IconButton(
-                                            onPressed: () {
-                                              openCloseTags();
-                                            },
-                                            icon: //SvgPicture.asset('assets/icons/news/open_tags_yel.svg'),
-                                                Icon(
-                                              Icons.expand_less_rounded,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                            ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NewsLoadBloc>(
+          create: (_) => bloc,
+        ),
+      ],
+      child: BlocBuilder<NewsLoadBloc, NewsLoadState>(
+        bloc: bloc,
+        builder: (context, state) {
+          if (state is NewsLoadLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is NewsLoadLoaded) {
+            final News news = state.news;
+
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Новость'),
+                actions: [
+                  Container(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            bookmarkFlagger();
+                          },
+                          icon: widget.bookmarked
+                              ? (Icon(
+                                  Icons.bookmark_rounded,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ))
+                              : (Icon(
+                                  Icons.bookmark_outline_rounded,
+                                )),
+                        ),
+                        PopupMenuButton<String>(
+                          onSelected: (String choice) {
+                            handleMenuSelection(
+                                choice,
+                                context,
+                                DateFormat('dd.MM.yyyy hh:mm')
+                                    .format(news.publicationTime),
+                                news.id);
+                          },
+                          itemBuilder: (BuildContext context) {
+                            return {'Поделиться...', 'Подробнее...'}
+                                .map((String choice) {
+                              return choice == "Поделиться..."
+                                  ? PopupMenuItem<String>(
+                                      value: choice,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.share_outlined),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 12),
                                           ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                if (!flagOpenTags) ntags,
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .surface,
-                                        width: 2,
+                                          Text(choice),
+                                        ],
                                       ),
-                                      //bottom: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                //Text(news?.description ?? '...'),  ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
-                                Linkify(
-                                  // onOpen: (link) async { FIX ME
-                                  //   if (!await launchUrl(Uri.parse(link.url))) {
-                                  //     throw Exception('Could not launch ${link.url}');
-                                  //   }
-                                  // },
-                                  text: cleanText(news.description),
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                    fontSize: 16,
-                                  ),
-                                  linkStyle: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    fontSize: 16,
-                                    decorationColor:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                                    )
+                                  : PopupMenuItem<String>(
+                                      value: choice,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.info_outline_rounded),
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 12),
+                                          ),
+                                          Text(choice),
+                                        ],
+                                      ),
+                                    );
+                            }).toList();
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              );
-            } else if (state is NewsLoadListLoadingFail) {
-              return Center(
-                child: Text(state.except?.toString() ?? "Error"),
-              );
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
+              ),
+              body: MultiBlocProvider(
+                providers: [
+                  BlocProvider<NewsLoadBloc>(
+                    create: (_) => bloc,
+                  ),
+                ],
+                child: BlocBuilder<NewsLoadBloc, NewsLoadState>(
+                  bloc: bloc,
+                  builder: (context, state) {
+                    if (state is NewsLoadLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is NewsLoadLoaded) {
+                      final News news = state.news;
+                      return ListView(
+                        children: [
+                          Card(
+                            elevation: 2,
+                            margin: const EdgeInsets.all(8),
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                          left: 12, right: 12, top: 12),
+                                      width: double.infinity,
+                                      height: 256,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: Image.network(
+                                          news.thumbnails,
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Padding(
+                                      padding: EdgeInsets.only(bottom: 6)),
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 12, right: 12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                news.title,
+                                                style: const TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  // title,
+                                                  // style: textTheme.titleLarge
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              DateFormat('dd.MM.yyyy hh:mm')
+                                                  .format(news.publicationTime),
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                // Text(
+                                                //   "ID: $newsId",
+                                                //   style: TextStyle(
+                                                //     color: Theme.of(context)
+                                                //         .colorScheme
+                                                //         .onSurfaceVariant,
+                                                //     fontSize: 16,
+                                                //   ),
+                                                // ),
+                                                if (flagOpenTags)
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      openCloseTags();
+                                                    },
+                                                    icon: //SvgPicture.asset('assets/icons/news/open_tags.svg'),
+                                                        const Icon(Icons
+                                                            .expand_more_rounded),
+                                                  )
+                                                else
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      openCloseTags();
+                                                    },
+                                                    icon: //SvgPicture.asset('assets/icons/news/open_tags_yel.svg'),
+                                                        Icon(
+                                                      Icons.expand_less_rounded,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        if (!flagOpenTags) ntags,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .surface,
+                                                width: 2,
+                                              ),
+                                              //bottom: BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        //Text(news?.description ?? '...'),  ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+                                        Linkify(
+                                          // onOpen: (link) async { FIX ME
+                                          //   if (!await launchUrl(Uri.parse(link.url))) {
+                                          //     throw Exception('Could not launch ${link.url}');
+                                          //   }
+                                          // },
+                                          text: cleanText(news.description),
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                            fontSize: 16,
+                                          ),
+                                          linkStyle: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            fontSize: 16,
+                                            decorationColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else if (state is NewsLoadListLoadingFail) {
+                      return Center(
+                        child: Text(state.except?.toString() ?? "Error"),
+                      );
+                    }
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                ),
+              ),
+            );
+          }
+          return const Text('Что-то пошло не так!');
+        },
       ),
     );
   }
@@ -520,11 +561,63 @@ String cleanText(String text) {
   return text;
 }
 
-void handleClick(String value) {
-  switch (value) {
-    case 'Поделиться...':
-      break;
-    case 'Подробнее...':
-      break;
+void handleMenuSelection(String choice, BuildContext context,
+    String newsDate, String newsId,) {
+  if (choice == 'Поделиться...') {
+    //Share.share('Прочитайте эту новость МИРЭА: ' + newsLink); 
+    // Ссылка не передается в запросе /news_id, поэтому это не работает. 
+    // Пусть будут передавать чтобы можно было поделиться новостью)
+  } else if (choice == 'Подробнее...') {
+    showDetailsDialog(context, newsDate, newsId);
   }
+}
+
+void showDetailsDialog(
+    BuildContext context, String newsDate, String newsId) {
+  final Widget closeButton = TextButton(
+    style: const ButtonStyle(
+      overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
+    ),
+    child: const Text(
+      "Закрыть",
+      style: TextStyle(
+        color: Color.fromARGB(255, 239, 172, 0),
+      ),
+    ),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  final AlertDialog alert = AlertDialog(
+    title: const Text(
+      "Детали",
+      style: TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    content: SizedBox(
+      height: 20,
+      child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Дата публикации: $newsDate'),
+        //Text('ID: $newsId'),
+        //Linkify(text: 'Ссылка: $newsLink'),
+      ],
+    ),
+    ),
+    actions: [
+      closeButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
