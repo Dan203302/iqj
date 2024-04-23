@@ -278,7 +278,7 @@ class _GeneralNews extends State<GeneralNews> {
             ),
             child: Column(
               children: [
-                create_body_tags_black(context),
+                create_body_tags(context),
               ],
             ),
           ),

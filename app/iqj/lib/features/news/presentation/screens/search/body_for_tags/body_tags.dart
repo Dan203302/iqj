@@ -1,66 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget create_body_tags() {
-  return Container(
-    height: 220,
-    width: 325,
-    child: Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: const TextField(
-            decoration: InputDecoration(
-              // border: OutlineInputBorder(
-              //   borderRadius: BorderRadius.circular(20.0),
-              // ),
-              //icon: Icon(Icons.search),
-              hintText: "Поиск...",
-              hintStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                fontSize: 16.0,
-                height: 1.5,
-              ),
-              icon: Icon(Icons.search),
-            ),
-          ),
-        ),
-        Container(
-          //padding: const EdgeInsets.only(bottom: 5),
-          height: 150,
-          width: 275,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            border: Border(
-              top:
-                  BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
-              bottom:
-                  BorderSide(color: Color.fromRGBO(202, 196, 208, 1), width: 2),
-            ),
-          ),
-          //padding: EdgeInsets.all(8),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Популярные',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-                textAlign: TextAlign.left,
-              )
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget create_body_tags_black(BuildContext context) {
+Widget create_body_tags(BuildContext context) {
+  TextEditingController TagPickerController = TextEditingController();
+  List<String> tags = ["ИПТИП","Физика","Наука"];
   return Container(
     height: 220,
     child: Column(
@@ -72,6 +15,7 @@ Widget create_body_tags_black(BuildContext context) {
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextField(
+            controller: TagPickerController,
             maxLines: 1,
             decoration: InputDecoration(
               contentPadding:
@@ -128,8 +72,10 @@ Widget create_body_tags_black(BuildContext context) {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
+
+                children: List.generate(
+                  tags.length,
+                  (index) => Container(
                     margin: const EdgeInsets.only(top: 6, right: 6),
                     height: 35,
                     decoration: BoxDecoration(
@@ -138,9 +84,11 @@ Widget create_body_tags_black(BuildContext context) {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        TagPickerController.text = tags[index];
+                      },
                       child: Text(
-                        "ИПТИП",
+                        tags[index],
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14,
@@ -150,49 +98,7 @@ Widget create_body_tags_black(BuildContext context) {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 6, right: 6),
-                    height: 35,
-                    decoration: BoxDecoration(
-                      //borderRadius: BorderRadius.circular(50),
-                      borderRadius: BorderRadius.circular(24.0),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Физика",
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 6, right: 6),
-                    height: 35,
-                    decoration: BoxDecoration(
-                      //borderRadius: BorderRadius.circular(50),
-                      borderRadius: BorderRadius.circular(24.0),
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Наука",
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
@@ -201,3 +107,4 @@ Widget create_body_tags_black(BuildContext context) {
     ),
   );
 }
+

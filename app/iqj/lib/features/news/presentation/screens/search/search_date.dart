@@ -44,7 +44,7 @@ void searchdata(BuildContext context) {
     ),
     backgroundColor: Theme.of(context).colorScheme.background,
     surfaceTintColor: Colors.white,
-    content: create_body_date(context),
+    content: Create_body_date(),
     actions: [
       okButton,
       searchButton,

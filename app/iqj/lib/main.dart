@@ -44,7 +44,7 @@ class _AppState extends State<App> {
       title: 'IQJ',
       theme: lightTheme,
       darkTheme: darkTheme,
-      initialRoute: firstLaunch ? 'welcome' : '/',
+      //initialRoute: firstLaunch ? 'welcome' : '/',
       routes: {
         '/': (context) => const HomeScreen(),
         'welcome': (context) => const Welcome(),
