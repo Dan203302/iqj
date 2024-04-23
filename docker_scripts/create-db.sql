@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS News (
     NewsText TEXT NOT NULL,
     ImageLinks TEXT[],
     Tags VARCHAR(255)[],
-    PubliactionTime TIMESTAMP
+    PublicationTime TIMESTAMP
 );
 
 -- Создание таблицы пользователей (users)
