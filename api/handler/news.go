@@ -45,7 +45,7 @@ func (h *Handler) HandleGetNews(c *gin.Context) {
 		return
 	}
 
-	latestnews, err := database.Database.News.GetLatestBlocks(offset, count)
+	latestnews, err := database.Database.News.GetLatestBlocks(count, offset)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "")
 	}

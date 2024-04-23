@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"iqj/api/middleware"
 	"iqj/service"
+	"net/http"
 )
 
 type Handler struct {
@@ -16,8 +17,9 @@ func NewHandler(services *service.Service) *Handler {
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	// Вызов хэндлеров исходя из запроса.
-	r := gin.New()
+	r := gin.Default()
 
+	r.GET("/", h.Hello)
 	r.POST("/sign-up", h.HandleSignUp)
 	r.POST("/sign-in", h.HandleSignIn)
 
@@ -36,4 +38,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		authGroup.POST("/ad", h.HandlePostAd)
 	}
 	return r
+}
+
+func (h *Handler) Hello(c *gin.Context) {
+	c.String(http.StatusOK, "Добро пожаловать в IQJ")
 }
