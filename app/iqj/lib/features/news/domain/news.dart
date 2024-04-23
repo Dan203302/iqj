@@ -7,6 +7,7 @@ class News {
   final DateTime publicationTime;
   final String description; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
   final String link;
+  final bool bookmarked;
   News({
     required this.id,
     required this.title,
@@ -15,5 +16,6 @@ class News {
     required this.publicationTime,
     required this.description, ///////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
     required this.link,
+    required this.bookmarked,
   });
 }

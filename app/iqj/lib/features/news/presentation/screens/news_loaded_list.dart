@@ -3,18 +3,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:iqj/features/news/domain/news.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:iqj/features/news/data/bookmarks.dart';
 
 class NewsCard extends StatefulWidget {
   final News news;
-  bool bookmarked = false;
+  bool bookmarked;
 
-  NewsCard({super.key, required this.news, this.bookmarked = false});
+  NewsCard({super.key, required this.news, required this.bookmarked});
   
   @override
   State<StatefulWidget> createState() => _NewsCard();
 }
 
 class _NewsCard extends State<NewsCard>{
+
+  bool bookmarked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +85,7 @@ class _NewsCard extends State<NewsCard>{
                           onPressed: () {
                             setState(() {
                               widget.bookmarked = !widget.bookmarked;
+                              BookmarkProvider.toggleBookmark(widget.news.id);
                             });
                             // SharedPreferences prefs = SharedPreferences.getInstance() as SharedPreferences;
                             // Map<String, dynamic> user = {'Username':'tom','Password':'pass@123'};

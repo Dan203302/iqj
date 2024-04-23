@@ -86,6 +86,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:iqj/features/news/data/bookmarks.dart';
 
 abstract class NewsLoadEvent {}
 
@@ -162,7 +163,9 @@ Future<News> getNewsFull(String id) async {
     final dynamic decodedData = json.decode(response.body);
     List<News> newsList = [];
     if (decodedData is List) {
-      newsList = List<News>.from(decodedData.map((json) => News(
+      newsList = List<News>.from(
+        decodedData.map(
+          (json) => News(
             description: json['text'] as String,
             id: json['id'] as String,
             title: json['header'] as String,
@@ -171,8 +174,10 @@ Future<News> getNewsFull(String id) async {
                 ? json['image_link'][0] as String
                 : '',
             link: json['link'] as String,
-            //bookmarked: false,
-          )));
+            bookmarked: false,
+          ),
+        ),
+      );
     } else if (decodedData is Map<String, dynamic>) {
       final News news = News(
         id: decodedData['id'] as String,
@@ -182,7 +187,7 @@ Future<News> getNewsFull(String id) async {
         thumbnails: decodedData['image_link'][0] as String,
         link: "decodedData['link'] as String",
         description: decodedData['text'] as String,
-        //bookmarked: false,
+        bookmarked: false,
       );
       newsList.add(news);
     }
@@ -203,13 +208,16 @@ class NewsList extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => NewsLoadBloc(newsId),
-      child: _NewsListWidget(),
+      child: _NewsListWidget(newsId: newsId),
     );
   }
 }
 
 class _NewsListWidget extends StatefulWidget {
-  bool bookmarked = false;
+  final String newsId;
+
+  _NewsListWidget({required this.newsId, Key? key}) : super(key: key);
+
   @override
   __NewsListWidgetState createState() => __NewsListWidgetState();
 }
@@ -249,6 +257,16 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
       });
     }
 
+    Future<void> checkBookmarked() async {
+      List<String> bookmarks = await BookmarkProvider.getBookmarks();
+
+      if (bookmarks.contains(widget.newsId)) {
+        bookmarked = true;
+      }
+    }
+
+    checkBookmarked();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<NewsLoadBloc>(
@@ -266,6 +284,7 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
             final News news = state.news;
 
             return Scaffold(
+              
               appBar: AppBar(
                 title: const Text('Новость'),
                 actions: [
@@ -276,24 +295,26 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                         IconButton(
                           onPressed: () {
                             bookmarkFlagger();
+                            BookmarkProvider.toggleBookmark(widget.newsId);
                           },
-                          icon: widget.bookmarked
+                          icon: bookmarked
                               ? (Icon(
                                   Icons.bookmark_rounded,
                                   color: Theme.of(context).colorScheme.primary,
                                 ))
-                              : (Icon(
+                              : (const Icon(
                                   Icons.bookmark_outline_rounded,
                                 )),
                         ),
                         PopupMenuButton<String>(
                           onSelected: (String choice) {
                             handleMenuSelection(
-                                choice,
-                                context,
-                                DateFormat('dd.MM.yyyy hh:mm')
-                                    .format(news.publicationTime),
-                                news.id);
+                              choice,
+                              context,
+                              DateFormat('dd.MM.yyyy hh:mm')
+                                  .format(news.publicationTime),
+                              widget.newsId,
+                            );
                           },
                           itemBuilder: (BuildContext context) {
                             return {'Поделиться...', 'Подробнее...'}
@@ -303,8 +324,8 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                       value: choice,
                                       child: Row(
                                         children: [
-                                          Icon(Icons.share_outlined),
-                                          Padding(
+                                          const Icon(Icons.share_outlined),
+                                          const Padding(
                                             padding: EdgeInsets.only(right: 12),
                                           ),
                                           Text(choice),
@@ -315,8 +336,9 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                       value: choice,
                                       child: Row(
                                         children: [
-                                          Icon(Icons.info_outline_rounded),
-                                          Padding(
+                                          const Icon(
+                                              Icons.info_outline_rounded),
+                                          const Padding(
                                             padding: EdgeInsets.only(right: 12),
                                           ),
                                           Text(choice),
@@ -358,8 +380,11 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                 children: [
                                   Center(
                                     child: Container(
-                                      margin: EdgeInsets.only(
-                                          left: 12, right: 12, top: 12),
+                                      margin: const EdgeInsets.only(
+                                        left: 12,
+                                        right: 12,
+                                        top: 12,
+                                      ),
                                       width: double.infinity,
                                       height: 256,
                                       child: ClipRRect(
@@ -372,10 +397,13 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                     ),
                                   ),
                                   const Padding(
-                                      padding: EdgeInsets.only(bottom: 6)),
+                                    padding: EdgeInsets.only(bottom: 6),
+                                  ),
                                   Container(
                                     margin: const EdgeInsets.only(
-                                        left: 12, right: 12),
+                                      left: 12,
+                                      right: 12,
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -411,23 +439,24 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                             ),
                                             Row(
                                               children: [
-                                                // Text(
-                                                //   "ID: $newsId",
-                                                //   style: TextStyle(
-                                                //     color: Theme.of(context)
-                                                //         .colorScheme
-                                                //         .onSurfaceVariant,
-                                                //     fontSize: 16,
-                                                //   ),
-                                                // ),
+                                                Text(
+                                                  "ID: ${widget.newsId}",
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurfaceVariant,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
                                                 if (flagOpenTags)
                                                   IconButton(
                                                     onPressed: () {
                                                       openCloseTags();
                                                     },
                                                     icon: //SvgPicture.asset('assets/icons/news/open_tags.svg'),
-                                                        const Icon(Icons
-                                                            .expand_more_rounded),
+                                                        const Icon(
+                                                      Icons.expand_more_rounded,
+                                                    ),
                                                   )
                                                 else
                                                   IconButton(
@@ -516,41 +545,42 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
 class NewsTags extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<String> tags = ["Tag 1", "Tag 2", "Tag 3"];
+    final List<String> tags = ["Tag 1", "Tag 2", "Tag 3"];
     return AnimatedSize(
       curve: Curves.easeIn,
       duration: const Duration(milliseconds: 250),
       child: Container(
-          margin: EdgeInsets.only(bottom: 12),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(
-              tags.length,
-              (index) => Container(
-                margin: const EdgeInsets.only(right: 5),
-                height: 35,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24.0),
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    // Переходим к ленте новостей с фильтром по нажатому тегу
-                  },
-                  child: Text(
-                    tags[index], // берем название тега из массива
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(
+            tags.length,
+            (index) => Container(
+              margin: const EdgeInsets.only(right: 5),
+              height: 35,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24.0),
+                color: Theme.of(context).colorScheme.primaryContainer,
+              ),
+              child: TextButton(
+                onPressed: () {
+                  // Переходим к ленте новостей с фильтром по нажатому тегу
+                },
+                child: Text(
+                  tags[index], // берем название тега из массива
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -561,11 +591,15 @@ String cleanText(String text) {
   return text;
 }
 
-void handleMenuSelection(String choice, BuildContext context,
-    String newsDate, String newsId,) {
+void handleMenuSelection(
+  String choice,
+  BuildContext context,
+  String newsDate,
+  String newsId,
+) {
   if (choice == 'Поделиться...') {
-    //Share.share('Прочитайте эту новость МИРЭА: ' + newsLink); 
-    // Ссылка не передается в запросе /news_id, поэтому это не работает. 
+    //Share.share('Прочитайте эту новость МИРЭА: ' + newsLink);
+    // Ссылка не передается в запросе /news_id, поэтому это не работает.
     // Пусть будут передавать чтобы можно было поделиться новостью)
   } else if (choice == 'Подробнее...') {
     showDetailsDialog(context, newsDate, newsId);
@@ -573,7 +607,10 @@ void handleMenuSelection(String choice, BuildContext context,
 }
 
 void showDetailsDialog(
-    BuildContext context, String newsDate, String newsId) {
+  BuildContext context,
+  String newsDate,
+  String newsId,
+) {
   final Widget closeButton = TextButton(
     style: const ButtonStyle(
       overlayColor: MaterialStatePropertyAll(Color.fromARGB(64, 239, 172, 0)),
@@ -599,15 +636,16 @@ void showDetailsDialog(
     ),
     backgroundColor: Theme.of(context).colorScheme.surface,
     content: SizedBox(
-      height: 20,
+      height: double.minPositive + 40,
       child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Дата публикации: $newsDate'),
-        //Text('ID: $newsId'),
-        //Linkify(text: 'Ссылка: $newsLink'),
-      ],
-    ),
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Дата публикации: $newsDate'),
+          Text('ID: $newsId'),
+          //Linkify(text: 'Ссылка: $newsLink'),
+        ],
+      ),
     ),
     actions: [
       closeButton,

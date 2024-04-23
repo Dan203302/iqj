@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/admin_button.dart';
+import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
+import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_date.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_tags.dart';
 import 'package:iqj/features/news/data/bookmarks.dart';
@@ -46,6 +48,30 @@ class _NewsBloc extends State<NewsScreen> {
     setState(() {
       flag_close = false;
     });
+  }
+
+  // Inside the NewsBloc or relevant screen/widget
+  bool _isBookmarkedView = false;
+  bool bookmarked = false;
+
+  Future<List<NewsList>> _getFilteredNews(List<NewsList> newsList, String id) async {
+    if (_isBookmarkedView) {
+      List<String> bookmarkedNewsIds = await BookmarkProvider.getBookmarks();
+      return newsList
+          .where((news) => bookmarkedNewsIds.contains(id))
+          .toList();
+    } else {
+      return newsList;
+    }
+  }
+
+  Future<bool> checkBookmarked(String id) async {
+    List<String> bookmarks = await BookmarkProvider.getBookmarks();
+
+    if (bookmarks.contains(id)) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -135,7 +161,14 @@ class _NewsBloc extends State<NewsScreen> {
                           searchfilter();
                         },
                         //icon: SvgPicture.asset('assets/icons/news/filter2.svg'),
-                        icon: const Icon(Icons.tune_rounded),
+                        icon: Icon(
+                          Icons.tune_rounded,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.primary.withAlpha(64),
+                        )),
                       ),
                     ],
                   ),
@@ -147,15 +180,39 @@ class _NewsBloc extends State<NewsScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.bookmarks_outlined),
+                        onPressed: () {
+                          setState(() {
+                            _isBookmarkedView = !_isBookmarkedView;
+                          });
+                        },
+                        icon: _isBookmarkedView
+                            ? Icon(
+                                Icons.bookmarks_rounded,
+                                color: Theme.of(context).colorScheme.primary,
+                              )
+                            : const Icon(Icons.bookmarks_outlined),
+                        style: _isBookmarkedView
+                            ? ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withAlpha(64),
+                              ))
+                            : const ButtonStyle(),
                       ),
                       IconButton(
                         onPressed: () {
                           searchfilter();
                         },
                         icon: //SvgPicture.asset('assets/icons/news/filter2.svg'),
-                            const Icon(Icons.tune_rounded),
+                            _isFilter
+                                ? Icon(
+                                    Icons.tune_rounded,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  )
+                                : const Icon(Icons.tune_rounded),
                       ),
                     ],
                   ),
@@ -362,14 +419,42 @@ class _NewsBloc extends State<NewsScreen> {
                     //     );
                     //   },
                     // );
+                    final List<News> filteredNews = _isBookmarkedView
+                        ? state.newsList
+                            .where((news) => news.bookmarked)
+                            .toList()
+                        : state.newsList;
+                    if (filteredNews.isEmpty && _isBookmarkedView) {
+                      return Center(
+                        child: Text(
+                          'Закладок нет.',
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }
                     return ListView.builder(
                       itemCount: state.newsList.length,
                       //itemCount: state.data!.length,
                       itemBuilder: (context, index) {
                         final news = state.newsList[index];
-                        //print(news.thumbnail);
-                        return NewsCard(
-                          news: news,
+                        return FutureBuilder<bool>(
+                          future: checkBookmarked(state.newsList[index].id),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(); 
+                            } else {
+                              final bool ff = snapshot.data!;
+                              return NewsCard(
+                                news: news,
+                                bookmarked: ff,
+                              );
+                            }
+                          },
                         );
                       },
                     );

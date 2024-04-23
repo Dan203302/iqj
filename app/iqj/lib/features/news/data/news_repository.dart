@@ -45,6 +45,7 @@ Future<List<News>> getNews() async {
         thumbnails: json['image_link'][0] as String,
         description: "dd", ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         link: json['link'] as String,
+        bookmarked: false,
       );
     }).toList();
     return newsList;
@@ -158,7 +159,8 @@ Future<News> getNewsFull(String id) async {
           ? json['image_link'][0] as String
           : '',
         link: json['link'] as String,
-      )));
+        bookmarked: false,
+      ),),);
     } else if (decodedData is Map<String, dynamic>) {
       // Handle case where decodedData is a Map
       News news = News(
@@ -168,6 +170,7 @@ Future<News> getNewsFull(String id) async {
         thumbnails: decodedData['image_link'][0] as String,
         link: "decodedData['link'] as String",
         description: decodedData['text'] as String,
+        bookmarked: false,
       );
       newsList.add(news);
     }
