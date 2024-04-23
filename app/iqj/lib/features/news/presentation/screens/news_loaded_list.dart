@@ -8,16 +8,37 @@ import 'package:iqj/features/news/data/bookmarks.dart';
 class NewsCard extends StatefulWidget {
   final News news;
   bool bookmarked;
+  final Function onBookmarkToggle;
 
-  NewsCard({super.key, required this.news, required this.bookmarked});
-  
+  NewsCard({super.key, required this.news, required this.bookmarked, required this.onBookmarkToggle});
+
   @override
   State<StatefulWidget> createState() => _NewsCard();
 }
 
-class _NewsCard extends State<NewsCard>{
-
+class _NewsCard extends State<NewsCard> {
   bool bookmarked = false;
+
+  Widget _buildThumbnailImage() {
+    try {
+      return Container(
+        width: double.infinity,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: Image.network(
+            widget.news.thumbnails,
+            fit: BoxFit.fitWidth,
+            height: 256,
+            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+              return Container();
+            }
+          ),
+        ),
+      );
+    } catch (e) {
+      return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +46,7 @@ class _NewsCard extends State<NewsCard>{
       onTap: () {
         Navigator.of(context).pushNamed(
           'newslist',
-          arguments: {'id':widget.news.id},
+          arguments: {'id': widget.news.id},
         );
       },
       child: Card(
@@ -36,17 +57,7 @@ class _NewsCard extends State<NewsCard>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Container(
-                  width: double.infinity,
-                  height: 256,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(6),
-                    child: Image.network(
-                      widget.news.thumbnails,
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
+                child: _buildThumbnailImage(),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 6)),
               Container(
@@ -70,18 +81,18 @@ class _NewsCard extends State<NewsCard>{
                           ),
                         ),
                         IconButton(
-                          icon: widget.bookmarked ? 
-                          (Icon(
-                            Icons.bookmark_rounded,
-                            size: 28,
-                            color: Theme.of(context).colorScheme.primary,
-                          ))
-                          :
-                          (Icon(
-                            Icons.bookmark_border,
-                            size: 28,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          )),
+                          icon: widget.bookmarked
+                              ? (Icon(
+                                  Icons.bookmark_rounded,
+                                  size: 28,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ))
+                              : (Icon(
+                                  Icons.bookmark_border,
+                                  size: 28,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                )),
                           onPressed: () {
                             setState(() {
                               widget.bookmarked = !widget.bookmarked;

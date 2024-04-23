@@ -1,17 +1,18 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, avoid_print
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/admin_button.dart';
+import 'package:iqj/features/news/data/bookmarks.dart';
 import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_date.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_tags.dart';
-import 'package:iqj/features/news/data/bookmarks.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -50,16 +51,14 @@ class _NewsBloc extends State<NewsScreen> {
     });
   }
 
-  // Inside the NewsBloc or relevant screen/widget
   bool _isBookmarkedView = false;
   bool bookmarked = false;
 
-  Future<List<NewsList>> _getFilteredNews(List<NewsList> newsList, String id) async {
+  Future<List<NewsList>> _getFilteredNews(
+      List<NewsList> newsList, String id) async {
     if (_isBookmarkedView) {
       List<String> bookmarkedNewsIds = await BookmarkProvider.getBookmarks();
-      return newsList
-          .where((news) => bookmarkedNewsIds.contains(id))
-          .toList();
+      return newsList.where((news) => bookmarkedNewsIds.contains(id)).toList();
     } else {
       return newsList;
     }
@@ -419,11 +418,7 @@ class _NewsBloc extends State<NewsScreen> {
                     //     );
                     //   },
                     // );
-                    final List<News> filteredNews = _isBookmarkedView
-                        ? state.newsList
-                            .where((news) => news.bookmarked)
-                            .toList()
-                        : state.newsList;
+                    final List<News> filteredNews = state.newsList.where((news) => _isBookmarkedView ? news.bookmarked : true).toList();
                     if (filteredNews.isEmpty && _isBookmarkedView) {
                       return Center(
                         child: Text(
@@ -436,24 +431,55 @@ class _NewsBloc extends State<NewsScreen> {
                         ),
                       );
                     }
+                    // return ListView.builder(
+                    //   itemCount: state.newsList.length,
+                    //   itemBuilder: (context, index) {
+                    //     final news = state.newsList[index];
+                    //     return FutureBuilder<bool>(
+                    //       future: checkBookmarked(state.newsList[index].id),
+                    //       builder: (context, snapshot) {
+                    //         if (snapshot.connectionState ==
+                    //             ConnectionState.waiting) {
+                    //           return Container();
+                    //         } else {
+                    //           final bool ff = snapshot.data!;
+                    //           return NewsCard(
+                    //             news: news,
+                    //             bookmarked: ff,
+                    //           );
+                    //         }
+                    //       },
+                    //     );
+                    //   },
+                    // );
+
+                    // Old
+                    //   return ListView.builder(
+                    //   itemCount: state.newsList.length,
+                    //   itemBuilder: (context, index) {
+                    //     final news = state.newsList[index];
+                    //     return NewsCard(
+                    //       news: news,
+                    //       bookmarked: true,
+                    //     );
+                    //   },
+                    // );
+
                     return ListView.builder(
                       itemCount: state.newsList.length,
-                      //itemCount: state.data!.length,
                       itemBuilder: (context, index) {
                         final news = state.newsList[index];
-                        return FutureBuilder<bool>(
-                          future: checkBookmarked(state.newsList[index].id),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Container(); 
+                        return NewsCard(
+                          news: news,
+                          bookmarked: news.bookmarked,
+                          onBookmarkToggle: () {
+                            if (news.bookmarked) {
+                              news.bookmarked = false;
                             } else {
-                              final bool ff = snapshot.data!;
-                              return NewsCard(
-                                news: news,
-                                bookmarked: ff,
-                              );
+                              news.bookmarked = true;
                             }
+                            BlocProvider.of<NewsBloc>(context)
+                                .add(CheckBookmark(news: news));
                           },
                         );
                       },

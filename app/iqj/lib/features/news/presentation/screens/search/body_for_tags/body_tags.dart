@@ -5,8 +5,8 @@ Widget create_body_tags(BuildContext context) {
   TextEditingController TagPickerController = TextEditingController();
   List<String> tags = ["ИПТИП","Физика","Наука"];
   return Container(
-    height: 220,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           margin: const EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -45,7 +45,7 @@ Widget create_body_tags(BuildContext context) {
           margin: const EdgeInsets.only(left: 6, right: 6),
           alignment: Alignment.topLeft,
           //padding: const EdgeInsets.only(bottom: 5),
-          height: 150,
+          
 
           decoration: const BoxDecoration(
             color: Colors.transparent,
@@ -76,7 +76,7 @@ Widget create_body_tags(BuildContext context) {
                 children: List.generate(
                   tags.length,
                   (index) => Container(
-                    margin: const EdgeInsets.only(top: 6, right: 6),
+                    margin: const EdgeInsets.only(top: 6, right: 6, bottom: 12),
                     height: 35,
                     decoration: BoxDecoration(
                       //borderRadius: BorderRadius.circular(50),

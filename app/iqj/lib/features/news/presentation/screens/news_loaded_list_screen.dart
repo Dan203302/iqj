@@ -267,6 +267,28 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
 
     checkBookmarked();
 
+    Widget _buildThumbnailImage(String image) {
+    try {
+      return Container(
+        margin: const EdgeInsets.only(top: 12),
+        width: double.infinity,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: Image.network(
+            image,
+            fit: BoxFit.fitWidth,
+            height: 256,
+            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+              return Container();
+            },
+          ),
+        ),
+      );
+    } catch (e) {
+      return Container();
+    }
+  }
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<NewsLoadBloc>(
@@ -383,17 +405,11 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                       margin: const EdgeInsets.only(
                                         left: 12,
                                         right: 12,
-                                        top: 12,
+                                        
                                       ),
                                       width: double.infinity,
-                                      height: 256,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
-                                        child: Image.network(
-                                          news.thumbnails,
-                                          fit: BoxFit.fitWidth,
-                                        ),
-                                      ),
+                                      
+                                      child: _buildThumbnailImage(news.thumbnails),
                                     ),
                                   ),
                                   const Padding(

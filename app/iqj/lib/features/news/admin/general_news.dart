@@ -163,7 +163,6 @@ class _GeneralNews extends State<GeneralNews> {
             ),
           ),
           Container(
-            height: 64,
             margin:
                 const EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 12),
             decoration: BoxDecoration(
@@ -215,7 +214,7 @@ class _GeneralNews extends State<GeneralNews> {
             ),
           ),
           Container(
-            height: 128,
+            
             margin:
                 const EdgeInsets.only(top: 10, left: 12, right: 12, bottom: 12),
             decoration: BoxDecoration(
