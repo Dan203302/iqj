@@ -14,7 +14,7 @@ type Advertisement struct {
 
 // isDefault проверяет, переданы ли какие-либо данные в структуру Advertisement
 func (a *Advertisement) isDefault() bool {
-	return a.Id == 0 || a.Content == ""
+	return a.Id == 0 && a.Content == ""
 }
 
 // AdvertisementTable предоставляет методы для работы с таблицей Advertisements

@@ -20,7 +20,7 @@ type StudentGroup struct {
 // isDefault проверяет, переданы ли какие-либо данные в структуру StudentGroup.
 // Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (sg *StudentGroup) isDefault() bool {
-	return sg.Id == 0 || sg.Grade == 0 || sg.Institute == "" || sg.Name == "" || sg.Students == nil
+	return sg.Id == 0 && sg.Grade == 0 && sg.Institute == "" && sg.Name == "" && sg.Students == nil
 }
 
 // StudentGroupTable предоставляет методы для работы с таблицей групп студентов в базе данных.

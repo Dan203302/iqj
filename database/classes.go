@@ -23,7 +23,7 @@ type Class struct {
 
 // Проверяет переданы ли в структуру какие-либо данные
 func (c *Class) isDefault() bool {
-	return c.Id == 0 || c.Groups == nil || c.Teacher == 0 || c.Count == 0 || c.Weekday == 0 || c.Week == 0 || c.Name == "" || c.Type == "" || c.Location == ""
+	return c.Id == 0 && c.Groups == nil && c.Teacher == 0 && c.Count == 0 && c.Weekday == 0 && c.Week == 0 && c.Name == "" && c.Type == "" && c.Location == ""
 }
 
 // Структура для взаимодействия с таблицой Classes

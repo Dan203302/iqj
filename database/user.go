@@ -18,7 +18,7 @@ type User struct {
 // isDefault проверяет, переданы ли какие-либо данные в структуру User.
 // Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (u *User) isDefault() bool {
-	return u.Id == 0 || u.Email == "" || u.Password == ""
+	return u.Id == 0 && u.Email == "" && u.Password == ""
 }
 
 // UserTable предоставляет методы для работы с таблицей пользователей в базе данных.

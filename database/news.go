@@ -22,7 +22,7 @@ type News struct {
 
 // isDefault проверяет, переданы ли какие-либо данные в структуру News.
 func (n *News) isDefault() bool {
-	return n.Id == 0 || n.Header == "" || n.Link == "" || n.Content == "" || n.ImageLinks == nil || n.Tags == nil || n.PublicationTime == ""
+	return n.Id == 0 && n.Header == "" && n.Link == "" && n.Content == "" && n.ImageLinks == nil && n.Tags == nil && n.PublicationTime == ""
 }
 
 // NewsTable предоставляет методы для работы с таблицей новостей в базе данных.

@@ -17,7 +17,7 @@ type Teacher struct {
 // isDefault проверяет, переданы ли какие-либо данные в структуру Teacher.
 // Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (t *Teacher) isDefault() bool {
-	return t.Id == 0 || t.Groups == nil
+	return t.Id == 0 && t.Groups == nil
 }
 
 // TeacherTable предоставляет методы для работы с таблицей преподавателей в базе данных.

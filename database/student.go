@@ -18,7 +18,7 @@ type Student struct {
 // isDefault проверяет, переданы ли какие-либо данные в структуру Student.
 // Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (s *Student) isDefault() bool {
-	return s.Id == 0 || s.Group == 0 || s.Teachers == nil
+	return s.Id == 0 && s.Group == 0 && s.Teachers == nil
 }
 
 // StudentTable предоставляет методы для работы с таблицей студентов в базе данных.

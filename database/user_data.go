@@ -18,7 +18,7 @@ type UserData struct {
 // isDefault проверяет, переданы ли какие-либо данные в структуру UserData.
 // Необходимо для реализации интерфейса Entity и фильтров в функциях БД.
 func (ud *UserData) isDefault() bool {
-	return ud.Id == 0 || ud.Name == "" || ud.Bio == "" || ud.UsefulData == "" || ud.Role == ""
+	return ud.Id == 0 && ud.Name == "" && ud.Bio == "" && ud.UsefulData == "" && ud.Role == ""
 }
 
 // UserDataTable предоставляет методы для работы с таблицей users_data в базе данных.
