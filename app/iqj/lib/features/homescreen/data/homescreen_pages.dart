@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iqj/features/account/presentation/screens/account_screen.dart';
-import 'package:iqj/features/chats/chats_screen.dart';
+import 'package:iqj/features/messenger/presentation/screens/messenger_screen.dart';
 import 'package:iqj/features/homescreen/domain/homescreen_page.dart';
 import 'package:iqj/features/news/presentation/screens/news_screen.dart';
 import 'package:iqj/features/schedule/presentation/schedule_screen.dart';
@@ -43,7 +43,7 @@ final pages = <HomeScreenPage>[
         BlendMode.srcIn,
       ),
     ),
-    widget: ChatsScreen(),
+    widget: const MessengerScreen(),
   ),
   HomeScreenPage(
     label: 'ЛК',
