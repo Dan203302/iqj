@@ -105,7 +105,7 @@ func (ut *UserTable) Check(u *User) (*User, error) {
 	id := 0
 	pass := ""
 
-	rows, err := ut.tm.makeSelect(ut.db, "SELECT Password, Id FROM Users WHERE Email = $1", u.Email)
+	rows, err := ut.tm.makeSelect(ut.db, "SELECT Password, UserId FROM Users WHERE Email = $1", u.Email)
 	if err != nil {
 		return nil, fmt.Errorf("User.Check: %v", err)
 	}
