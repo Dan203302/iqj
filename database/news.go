@@ -56,7 +56,7 @@ func (nt *NewsTable) Add(n *News) error {
 				SELECT 1 FROM News WHERE Header = $1 AND PublicationTime = $6
 			)
 		`,
-		n.Header, n.Link, n.Content, n.ImageLinks, n.Tags, n.PublicationTime)
+		n.Header, n.Link, n.Content, pq.Array(n.ImageLinks), pq.Array(n.Tags), n.PublicationTime)
 
 	if err != nil {
 		return fmt.Errorf("News.Add: %v", err)
