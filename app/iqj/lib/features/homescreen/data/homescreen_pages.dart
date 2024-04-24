@@ -5,6 +5,7 @@ import 'package:iqj/features/homescreen/domain/homescreen_page.dart';
 import 'package:iqj/features/news/presentation/screens/news_screen.dart';
 import 'package:iqj/features/schedule/presentation/schedule_screen.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iqj/features/services/presentation/screens/services_screen.dart';
 
 final pages = <HomeScreenPage>[
   HomeScreenPage(
@@ -67,6 +68,6 @@ final pages = <HomeScreenPage>[
         BlendMode.srcIn,
       ),
     ),
-    widget: const Text('Здесь будут сервисы'),
+    widget: const ServicesScreen(),
   ),
 ];

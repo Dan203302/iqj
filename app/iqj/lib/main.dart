@@ -5,6 +5,8 @@ import 'package:iqj/features/homescreen/presentation/homescreen.dart';
 import 'package:iqj/features/messenger/presentation/chats_loaded_screen.dart';
 import 'package:iqj/features/messenger/presentation/screens/messenger_screen.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
+import 'package:iqj/features/services/presentation/screens/about_screen.dart';
+import 'package:iqj/features/services/presentation/screens/services_screen.dart';
 import 'package:iqj/features/welcome/presentation/welcome.dart';
 import 'package:iqj/theme/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +35,7 @@ class _AppState extends State<App> {
     final prefs = await SharedPreferences.getInstance();
     setState(
       () {
-        firstLaunch = prefs.getBool('firstLaunch') ?? true;
+        // firstLaunch = prefs.getBool('firstLaunch') ?? true;
       },
     );
   }
@@ -57,6 +59,8 @@ class _AppState extends State<App> {
         'successreg': (context) => const SuccessReg(),
         'messenger': (context) => const MessengerScreen(),
         'chatslist': (context) => const ChatsList(),
+        'services': (context) => const ServicesScreen(),
+        'about': (context) => const AboutScreen(),
        },
     );
   }
