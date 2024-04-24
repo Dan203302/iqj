@@ -53,7 +53,7 @@ func (h *Handler) HandleGetNews(c *gin.Context) {
 
 	latestnews, err := database.Database.News.GetLatestBlocks(count, offset)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, err.Error())
 		fmt.Println("HandleGetNews:", err)
 		return
 	}
@@ -89,7 +89,7 @@ func (h *Handler) HandleGetNewsById(c *gin.Context) {
 
 	news, err := database.Database.News.GetById(&newsDB)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, err.Error())
 		fmt.Println("HandleGetNewsById:", err)
 		return
 	}
@@ -126,7 +126,7 @@ func (h *Handler) HandleAddNews(c *gin.Context) {
 	userDB.Id = userId
 	user, err := database.Database.UserData.GetRoleById(&userDB)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "")
+		c.JSON(http.StatusInternalServerError, err.Error())
 		fmt.Println("HandleAddNews:", err)
 		return
 	}
