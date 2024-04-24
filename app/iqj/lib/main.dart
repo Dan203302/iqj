@@ -51,7 +51,6 @@ class _AppState extends State<App> {
         'welcome': (context) => const Welcome(),
         'authorise': (context) => const AuthScreen(),
         'newslist': (context) => const NewsList(),
-        //'newslist': (context) => Container(),
         'account': (context) => const AccountScreen(),
         'registration': (context) => const RegScreen(),
         'successreg': (context) => const SuccessReg(),

@@ -12,6 +12,12 @@ class MessengerScreen extends StatefulWidget {
 class _MessengerBloc extends State<MessengerScreen> {
   bool _isSearch = false;
 
+  void searchfilter() {
+    setState(() {
+      _isSearch = !_isSearch;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +55,9 @@ class _MessengerBloc extends State<MessengerScreen> {
                           icon: const Icon(
                             Icons.search,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _isSearch = !_isSearch;
+                          },
                         ),
                       ),
                     ),
@@ -68,7 +76,7 @@ class _MessengerBloc extends State<MessengerScreen> {
               children: [
                 IconButton(
                   onPressed: () {
-                    _isSearch = !_isSearch;
+                    searchfilter();
                   },
                   icon: const Icon(Icons.search),
                 ),
