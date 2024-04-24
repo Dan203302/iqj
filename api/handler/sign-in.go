@@ -29,13 +29,11 @@ func (h *Handler) HandleSignIn(c *gin.Context) {
 	}
 
 	// Проверяем существует ли такой пользователь и проверяем верный ли пароль
-
 	user, err := database.Database.User.Check(&signingUser)
 	if err != nil {
 		c.String(http.StatusUnauthorized, "") // Если пользователя нет или пароль неверный вернем пустую строку и ошибку
 		return
 	}
-
 	// Если все хорошо сделаем JWT токен
 
 	// Получаем токен для пользователя
