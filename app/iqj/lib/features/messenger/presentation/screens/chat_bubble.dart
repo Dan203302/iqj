@@ -48,6 +48,8 @@ class _ChatBubble extends State<ChatBubble> {
 
   @override
   Widget build(BuildContext context) {
+    //final String username = "А. Б. Веселухов";
+
     return Column(
       children: [
         Container(
@@ -67,7 +69,13 @@ class _ChatBubble extends State<ChatBubble> {
                 ),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              //String name = widget.chatTitle;
+              Navigator.of(context).pushNamed(
+              'chatslist',
+              arguments: {'name': widget.chatTitle,'url':widget.imageUrl},
+          );
+            },
             child: Container(
               margin: const EdgeInsets.only(
                 top: 12,
@@ -91,7 +99,7 @@ class _ChatBubble extends State<ChatBubble> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "А. Б. Веселухов",
+                        widget.chatTitle,
                         style: TextStyle(
                           color:
                               Theme.of(context).colorScheme.onPrimaryContainer,
