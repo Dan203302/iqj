@@ -4,8 +4,8 @@ CREATE DATABASE iqj;
 -- Создание таблицы новостей (news)
 CREATE TABLE IF NOT EXISTS News (
     NewsId SERIAL PRIMARY KEY,
-    Header VARCHAR(255) NOT NULL,
-    Link VARCHAR(255) NOT NULL,
+    Header TEXT NOT NULL,
+    Link TEXT NOT NULL,
     NewsText TEXT NOT NULL,
     ImageLinks TEXT[],
     Tags VARCHAR(255)[],
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS StudentsGroups (
     StudentsGroupId SERIAL PRIMARY KEY,
     Grade INT NOT NULL,
     Institute VARCHAR(128) NOT NULL,
-    StudentGroupName VARCHAR(10) NOT NULL,
+    StudentGroupName VARCHAR(11) NOT NULL,
     StudentGroupStudentsIds INT[]
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Classes (
     Count INT NOT NULL,
     Weekday INT NOT NULL,
     Week INT NOT NULL,
-    ClassName VARCHAR(128),
+    ClassName VARCHAR(255),
     ClassType VARCHAR(30),
     ClassLocation VARCHAR(40) NOT NULL
 );
