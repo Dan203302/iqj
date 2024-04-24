@@ -8,8 +8,10 @@ import (
 
 // Структура объявления
 type Advertisement struct {
-	Id      int    `json:"ad_id"`      // id объявления
-	Content string `json:"ad_content"` // содержание объявления (текст)
+	Id             int    `json:"ad_id"`           // id объявления
+	Content        string `json:"ad_content"`      // содержание объявления (текст)
+	CreationDate   string `json:"creation_date"`   // дата создания объявления
+	ExpirationDate string `json:"expiration_date"` // срок годности объявления
 }
 
 // isDefault проверяет, переданы ли какие-либо данные в структуру Advertisement
@@ -56,7 +58,7 @@ func (at *AdvertisementTable) Add(a *Advertisement) error {
 // Прим:\n
 // a := &Advertisement{Id:123} // Id != 0 !!!!!!\n
 // ad, err := ...GetById(a) // err == nil если все хорошо
-func (at *AdvertisementTable) GetById(a *Advertisement) (*Advertisement, error) {
+func (at *AdvertisementTable) Get(a *Advertisement) (*Advertisement, error) {
 	// Проверяем передан ли ID рекламного объявления
 	if a.Id == 0 {
 		return nil, errors.New("Advertisement.GetById: wrong data! provided advertisementID is empty")
