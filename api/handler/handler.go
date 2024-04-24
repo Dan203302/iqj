@@ -15,6 +15,8 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
+// Функция для создания роутера, добавления к нему CORSMiddleware
+// и объявления путей для всех запросов.
 func (h *Handler) InitRoutes() *gin.Engine {
 	r := gin.Default()
 

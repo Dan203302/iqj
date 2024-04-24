@@ -53,7 +53,7 @@ func (h *Handler) HandlePostAdvertisement(c *gin.Context) {
 	}
 
 	if user.Role == "moderator" {
-		var advertisement database.Advertisement // TODO: исправить
+		var advertisement database.Advertisement
 
 		err := c.BindJSON(&advertisement)
 		if err != nil {
