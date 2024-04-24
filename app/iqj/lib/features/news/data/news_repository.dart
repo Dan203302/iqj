@@ -61,7 +61,7 @@ Future<List<SpecialNews>> getSpecialNews() async {
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
-      path: '/news',
+      path: '/ad',
       queryParameters: {'offset': '0', 'count': '15'},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
@@ -89,9 +89,9 @@ Future<List<SpecialNews>> getSpecialNews() async {
     newsList = jsonList.map((json) {
       return SpecialNews(
         id: json['id'] as String,
-        text: json['header'] as String,
-        publishFromTime: DateTime.parse(json['publication_time'] as String),
-        publishUntilTime: DateTime.parse(json['publication_time'] as String),
+        text: json['content'] as String,
+        //publishFromTime: DateTime.parse(json['publication_time'] as String),
+        //publishUntilTime: DateTime.parse(json['publication_time'] as String),
       );
     }).toList();
     return newsList;
@@ -113,22 +113,22 @@ Future<http.Response> postGeneralNews(
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
-      path: '/news',
+      path: '/api/news',
     ),
   );
 }
 
 Future<http.Response> postSpecialNews(
   String text,
-  String publishFromTime,
-  String publishUntilTime,
+  //String publishFromTime,
+  //String publishUntilTime,
 ) async {
   return http.post(
     Uri(
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
-      path: '/news',
+      path: '/api/ad',
     ),
   );
 }
