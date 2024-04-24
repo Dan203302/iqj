@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/features/messenger/presentation/screens/chat_bubble.dart';
+import 'package:iqj/features/messenger/presentation/screens/highlight_chat_bubble.dart';
 
 class MessengerScreen extends StatefulWidget {
   const MessengerScreen({super.key});
@@ -18,7 +20,7 @@ class _MessengerBloc extends State<MessengerScreen> {
         scrolledUnderElevation: 0,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: _isSearch
-            ? Container(
+            ? SizedBox(
                 width: 500,
                 height: 45,
                 child: Container(
@@ -32,7 +34,9 @@ class _MessengerBloc extends State<MessengerScreen> {
                       hintFadeDuration: const Duration(milliseconds: 100),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10,),
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
                       hintStyle: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w400,
@@ -121,7 +125,8 @@ class _MessengerBloc extends State<MessengerScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.primaryContainer,),
+                      Theme.of(context).colorScheme.primaryContainer,
+                    ),
                   ),
                   child: const Text('Все'),
                 ),
@@ -130,7 +135,8 @@ class _MessengerBloc extends State<MessengerScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.onSurface,),
+                      Theme.of(context).colorScheme.onSurface,
+                    ),
                     //backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.primaryContainer),
                   ),
                   child: const Text('Группы'),
@@ -140,7 +146,8 @@ class _MessengerBloc extends State<MessengerScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.onSurface,),
+                      Theme.of(context).colorScheme.onSurface,
+                    ),
                     //backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.primaryContainer),
                   ),
                   child: const Text('Студенты'),
@@ -150,7 +157,8 @@ class _MessengerBloc extends State<MessengerScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.onSurface,),
+                      Theme.of(context).colorScheme.onSurface,
+                    ),
                     //backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.primaryContainer),
                   ),
                   child: const Text('Преподаватели'),
@@ -160,7 +168,8 @@ class _MessengerBloc extends State<MessengerScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.onSurface,),
+                      Theme.of(context).colorScheme.onSurface,
+                    ),
                     //backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.primaryContainer),
                   ),
                   child: const Text('Руководство'),
@@ -170,7 +179,8 @@ class _MessengerBloc extends State<MessengerScreen> {
                   onPressed: () {},
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.onSurface,),
+                      Theme.of(context).colorScheme.onSurface,
+                    ),
                     //backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.primaryContainer),
                   ),
                   child: const Text('Прочее'),
@@ -181,569 +191,61 @@ class _MessengerBloc extends State<MessengerScreen> {
           ),
           Expanded(
             child: ListView(
-              children: [
-
+              children: const [
                 // Чат текущей пары
-                Container(
-                  margin: const EdgeInsets.only(right: 12, left: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.primaryContainer,
-                      ),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Текущая пара",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 26,
-                                ),
-                              ),
-                              Text(
-                                "до 15:50",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 12)),
-                          Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.network(
-                                  'https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg',
-                                  fit: BoxFit.fill,
-                                  height: 64,
-                                  width: 64,
-                                  errorBuilder: (BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace,) {
-                                    return Container();
-                                  },
-                                ),
-                              ),
-                              const Padding(padding: EdgeInsets.only(right: 12)),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "ЯЮБО-02-23",
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimaryContainer,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Павел К. печатает...",
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Padding(padding: EdgeInsets.only(right: 12,)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(bottom: 18)),
+                HighlightChatBubble(
+                    imageUrl:
+                        'https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
 
                 // Чат обычный
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      surfaceTintColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.background,
-                      ),
-                      shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                              fit: BoxFit.fill,
-                              height: 64,
-                              width: 64,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace,) {
-                                return Container();
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "А. Б. Веселухов",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                "печатает...",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
 
-                const Padding(padding: EdgeInsets.only(bottom: 6)),
-
-                // Чат обычный
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      surfaceTintColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.background,
-                      ),
-                      shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              'https://cdn.britannica.com/22/215522-131-FB1512ED/green-grass-close-up.jpg',
-                              fit: BoxFit.fill,
-                              height: 64,
-                              width: 64,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace,) {
-                                return Container();
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Потрогай травку",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                "Вы: возьми больничный",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.outline,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const Padding(padding: EdgeInsets.only(bottom: 6)),
-
-                // Чат обычный
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      surfaceTintColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.background,
-                      ),
-                      shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              'https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg',
-                              fit: BoxFit.fill,
-                              height: 64,
-                              width: 64,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace,) {
-                                return Container();
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "ЯЮБО-02-23",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                "Павел К. печатает...",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const Padding(padding: EdgeInsets.only(bottom: 6)),
-
-                // Чат обычный
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      surfaceTintColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.background,
-                      ),
-                      shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              'https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg',
-                              fit: BoxFit.fill,
-                              height: 64,
-                              width: 64,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace,) {
-                                return Container();
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "ЯЮБО-02-23",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                "Павел К. печатает...",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const Padding(padding: EdgeInsets.only(bottom: 6)),
-
-                // Чат обычный
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      surfaceTintColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.background,
-                      ),
-                      shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              'https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg',
-                              fit: BoxFit.fill,
-                              height: 64,
-                              width: 64,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace,) {
-                                return Container();
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "ЯЮБО-02-23",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                "Павел К. печатает...",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                const Padding(padding: EdgeInsets.only(bottom: 6)),
-
-                // Чат обычный
-                Container(
-                  margin: const EdgeInsets.only(left: 12, right: 12),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      padding: const MaterialStatePropertyAll(EdgeInsets.zero),
-                      surfaceTintColor:
-                          const MaterialStatePropertyAll(Colors.transparent),
-                      backgroundColor: MaterialStatePropertyAll(
-                        Theme.of(context).colorScheme.background,
-                      ),
-                      shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-                      shape: MaterialStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          top: 12, left: 12, right: 12, bottom: 12,),
-                      padding: const EdgeInsets.only(
-                        left: 3,
-                        right: 3,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              'https://i.pinimg.com/564x/85/0b/0d/850b0dcb658e77b680e67829961f4ebd.jpg',
-                              fit: BoxFit.fill,
-                              height: 64,
-                              width: 64,
-                              errorBuilder: (BuildContext context,
-                                  Object exception, StackTrace? stackTrace,) {
-                                return Container();
-                              },
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "тимбилдинг",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Text(
-                                "Игорь С. печатает...",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(right: 12)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(bottom: 6)),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'GroupName',
+                    secondary: 'secondaryText',),
               ],
             ),
           ),
