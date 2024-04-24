@@ -3,8 +3,10 @@ package main
 import (
 	"iqj/api/handler"
 	"iqj/api/scraper"
+	"iqj/config"
 	"iqj/database"
 	"iqj/service"
+	"log"
 )
 
 func main() {
@@ -19,8 +21,7 @@ func main() {
 	go scraper.ScrapTick()
 
 	// Запускает сервер на порту и "слушает" запросы.
-	//if err := handlers.InitRoutes().RunTLS(":8443", config.SertificatePath, config.KeyPath); err != nil {
-	//	log.Fatal(err)
-	//}
-	handlers.InitRoutes().Run(":3333")
+	if err := handlers.InitRoutes().RunTLS(":8443", config.SertificatePath, config.KeyPath); err != nil {
+		log.Fatal(err)
+	}
 }
