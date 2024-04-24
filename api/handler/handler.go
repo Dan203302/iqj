@@ -16,9 +16,14 @@ func NewHandler(services *service.Service) *Handler {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
-	// Вызов хэндлеров исходя из запроса.
 	r := gin.Default()
 
+	// Добавляет заголовки CORS к ответам сервера.
+	// Необходимо для того, чтобы клиентские приложения,
+	// работающие на других доменах, могли взаимодействовать с API.
+	r.Use(middleware.CORSMiddleware())
+
+	// Вызов хэндлеров исходя из запроса.
 	r.GET("/", h.Hello)
 	r.POST("/sign-up", h.HandleSignUp)
 	r.POST("/sign-in", h.HandleSignIn)
@@ -26,7 +31,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	r.GET("/news", h.HandleGetNews)
 	r.GET("/news_id", h.HandleGetNewsById)
 
-	r.GET("/ad", h.HandleGetAd)
+	r.GET("/ad", h.HandleGetAdvertisement)
 
 	//r.GET("/lessons", h.Lessons)
 
@@ -35,7 +40,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	authGroup.Use(middleware.WithJWTAuth)
 	{
 		authGroup.POST("/news", h.HandleAddNews)
-		authGroup.POST("/ad", h.HandlePostAd)
+		authGroup.POST("/ad", h.HandlePostAdvertisement)
 	}
 	return r
 }
