@@ -4,6 +4,7 @@ import 'package:iqj/features/auth/presentation/screens/auth_screen.dart';
 import 'package:iqj/features/homescreen/presentation/homescreen.dart';
 import 'package:iqj/features/messenger/presentation/screens/messenger_screen.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
+import 'package:iqj/features/services/presentation/screens/about_screen.dart';
 import 'package:iqj/features/services/presentation/screens/services_screen.dart';
 import 'package:iqj/features/welcome/presentation/welcome.dart';
 import 'package:iqj/theme/theme.dart';
@@ -57,6 +58,7 @@ class _AppState extends State<App> {
         'successreg': (context) => const SuccessReg(),
         'messenger': (context) => const MessengerScreen(),
         'services': (context) => const ServicesScreen(),
+        'about': (context) => const AboutScreen(),
        },
     );
   }
