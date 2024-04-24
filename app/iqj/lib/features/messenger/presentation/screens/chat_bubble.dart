@@ -76,6 +76,9 @@ class _ChatBubble extends State<ChatBubble> {
               arguments: {'name': widget.chatTitle,'url':widget.imageUrl},
           );
             },
+            onLongPress: () => {
+              print("fdsafasdfjk")
+            },
             child: Container(
               margin: const EdgeInsets.only(
                 top: 12,

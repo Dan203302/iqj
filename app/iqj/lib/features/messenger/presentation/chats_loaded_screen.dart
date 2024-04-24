@@ -59,6 +59,7 @@ class _ChatsListState extends State<ChatsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar( 
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Container(
           width: MediaQuery.of(context).size.width,
           child: Row(
@@ -108,19 +109,38 @@ class _ChatsListState extends State<ChatsList> {
       padding: EdgeInsets.all(8.0), // Добавляем отступы вокруг TextField
       child: TextField(
         decoration: InputDecoration(
-          hintText: "Сообщение",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20), // Закругленные углы для поля ввода
+          filled: true, // Включаем заливку цветом
+          fillColor: const Color.fromARGB(255, 53, 53, 53),
+          hintText: "Введите сообщение...",
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.only(topLeft:Radius.circular(24),topRight: Radius.circular(24)), // Закругленные углы для поля ввода
           ),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.send), // Иконка отправки сообщения
+          prefixIcon: IconButton(
+            icon: Icon(Icons.insert_emoticon), // Иконка смайлика
             onPressed: () {
-              // Действие при нажатии на кнопку отправки
+              // Действие при нажатии на кнопку смайлика
             },
+          ),
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: Icon(Icons.attach_file), // Иконка скрепки
+                onPressed: () {
+                  // Действие при нажатии на кнопку скрепки
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.send), 
+                onPressed: () {
+                  // Действие при нажатии на кнопку отправки
+                },
+              ),
+            ],
           ),
         ),
       ),
-      ),
+    ),
     );
   }
 }
