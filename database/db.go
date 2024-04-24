@@ -35,6 +35,12 @@ type Entity interface {
 	isDefault() bool
 }
 
+type Interactor interface {
+	makeDelete(*sql.DB, string, ...interface{}) error
+	makeInsert(*sql.DB, string, ...interface{}) error
+	makeSelect(*sql.DB, string, ...interface{}) (*sql.Rows, error)
+}
+
 // NewDatabaseInstance() создает новое подключение к базе данных, не возвращает ошибку,
 // если подключение создать не удалось, чтобы не захламлять main(), вызывает панику
 // при ошибке.
