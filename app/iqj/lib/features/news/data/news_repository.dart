@@ -118,19 +118,37 @@ Future<http.Response> postGeneralNews(
   );
 }
 
-Future<http.Response> postSpecialNews(
+Future<void> postSpecialNews(
   String text,
-  //String publishFromTime,
-  //String publishUntilTime,
+  String publishFromTime,
+  String publishUntilTime,
 ) async {
-  return http.post(
+  try {
+  final response = await http.post(
     Uri(
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
       path: '/api/ad',
     ),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8', 
+    },
+    body: jsonEncode(<String, dynamic>{
+      'content': text,
+      'creation_date': publishFromTime,
+      'expiration_date': publishUntilTime,
+    }),
   );
+  if (response.statusCode == 201) { 
+        final responseData = jsonDecode(response.body); 
+        print('OK, news posted: $responseData');
+      } else { 
+        throw Exception('Failed to post data'); 
+      } 
+    } catch (e) { 
+      print("error: $e");
+    } 
 }
 
 
