@@ -29,11 +29,12 @@ import 'package:flutter/material.dart';
 //     );
 //   }
 
-class ReceiverMessage extends StatelessWidget{
+class ReceiverMessage extends StatelessWidget {
   final String _url;
   final String _message;
 
   const ReceiverMessage(this._url, this._message, {required MainAxisAlignment mainAxisAlignment});
+
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -41,38 +42,56 @@ class ReceiverMessage extends StatelessWidget{
       widthFactor: 0.75,
       child: Stack(
         children: [
-          Padding(padding: const EdgeInsets.only(right: 20,bottom: 5,top: 8),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  _buildThumbnailImage(_url),
-                  DecoratedBox(
-                    decoration: BoxDecoration( 
-                      color: Color.fromRGBO(150,150,150,150),
-                      borderRadius: BorderRadius.only(topLeft:Radius.circular(12),topRight: Radius.circular(12), bottomRight: Radius.circular(12), bottomLeft: Radius.circular(4)),
-                    ),
-                    position: DecorationPosition.background,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 12),
-                      child: Text(
-                        _message,
-                        softWrap: true,
-                        style: Theme.of(context).textTheme.bodyLarge,
+          Padding(
+            padding: const EdgeInsets.only(right: 20, bottom: 5, top: 8),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    _buildThumbnailImage(_url),
+                    Flexible( // Обернуть DecoratedBox в Flexible
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(150, 150, 150, 1), // Исправлено значение альфа-канала на 1
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                            bottomRight: Radius.circular(12),
+                            bottomLeft: Radius.circular(4),
+                          ),
+                        ),
+                        position: DecorationPosition.background,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start, // Выравнивание текста по левому краю
+                            children: [
+                              Text(
+                                _message,
+                                softWrap: true,
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              Text(
+                                "14:00",
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
-
 }
+
+
 
 
 
