@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/features/messenger/presentation/screens/struct_of_message.dart';
 
 class ChatsList extends StatefulWidget {
   const ChatsList({Key? key}) : super(key: key);
@@ -103,6 +104,14 @@ class _ChatsListState extends State<ChatsList> {
                     ),
                   ],
                 ),
+        ),
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Message(text: "hi", who: true,),
+            Message(text: "hi", who: false,),
+        ],
         ),
       ),
       bottomNavigationBar: Padding(
