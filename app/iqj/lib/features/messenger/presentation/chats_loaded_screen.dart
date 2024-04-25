@@ -43,6 +43,8 @@ class _ChatsListState extends State<ChatsList> {
 
   String? user_name = "..."; // Объявление user_name как поле класса
   String? image_url = "";
+  bool vol = false;
+  bool pin = false;
 
   @override
   void didChangeDependencies() {
@@ -51,6 +53,8 @@ class _ChatsListState extends State<ChatsList> {
     Map<String, dynamic> help = args as Map<String, dynamic>;
     user_name = help["name"] as String?; // Присваивание значения переменной user_name
     image_url = help["url"] as String?;
+    vol = help["volume"] as bool;
+    pin = help["pin"] as bool;
 
     setState(() {});
     super.didChangeDependencies();
@@ -70,13 +74,19 @@ class _ChatsListState extends State<ChatsList> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          user_name ?? "",
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.onPrimaryContainer,
-                            fontSize: 20,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              user_name ?? "",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onPrimaryContainer,
+                                fontSize: 20,
+                              ),
+                            ),
+                            vol? Icon(Icons.volume_off) : Container(),
+                            pin? Icon(Icons.push_pin_outlined) : Container(),
+                          ],
                         ),
                         Text(
                           "печатает...",
