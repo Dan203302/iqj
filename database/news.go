@@ -85,6 +85,7 @@ func (nt *NewsTable) GetById(n *News) (*News, error) {
 		"SELECT Header, Link, NewsText, ImageLinks, Tags, PublicationTime FROM News WHERE NewsId = $1",
 		n.Id,
 	)
+	defer rows.Close()
 
 	if err != nil {
 		return nil, fmt.Errorf("News.GetById: %v", err)

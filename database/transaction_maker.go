@@ -29,16 +29,11 @@ func (tm *transactionMaker) makeSelect(db *sql.DB, query string, key interface{}
 	if err != nil {
 		return nil, err
 	}
-	defer tx.Rollback()
 
 	rows, err := tx.Query(query, key)
 	if err != nil {
+		tx.Rollback()
 		return nil, fmt.Errorf("problem with selecting! %v\ncaused by: %v", err, query)
-	}
-
-	if err := tx.Commit(); err != nil {
-		rows.Close()
-		return nil, err
 	}
 
 	return rows, nil

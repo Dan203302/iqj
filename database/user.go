@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -107,23 +108,25 @@ func (ut *UserTable) Check(u *User) (*User, error) {
 
 	rows, err := ut.tm.makeSelect(ut.db, "SELECT Password, UserId FROM Users WHERE Email = $1", u.Email)
 	if err != nil {
-		return nil, fmt.Errorf("User.Check: %v", err)
+		return nil, fmt.Errorf("User.Check1: %v", err)
 	}
-	defer rows.Close()
-	// Сканируем данные из результата запроса и заполняем структуру User
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Printf("Error closing rows: %v", err)
+		}
+	}()
+
 	if rows.Next() {
 		if err := rows.Scan(&pass, &id); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("User.Check: %v", err)
 		}
 	} else {
-		return nil, errors.New("User.Check: no rows returned")
+		return nil, errors.New("User not found")
 	}
 
-	// Сравниваем хеш из базы данных с хешем введенного пароля
-	if errHash := bcrypt.CompareHashAndPassword([]byte(pass), []byte(u.Password)); errHash != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(pass), []byte(u.Password)); err != nil {
 		return nil, errors.New("Users.Check: incorrect password!")
 	}
-
 	// Если все хорошо, возвращаем пользователя с id
 	u.Id = id
 	return u, nil
