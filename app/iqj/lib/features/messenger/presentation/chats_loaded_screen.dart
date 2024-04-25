@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/features/messenger/presentation/screens/date_for_load_chats.dart';
 import 'package:iqj/features/messenger/presentation/screens/struct_of_message.dart';
 
 class ChatsList extends StatefulWidget {
@@ -117,13 +118,27 @@ class _ChatsListState extends State<ChatsList> {
         ),
       ),
       body: Container(
-        child: Column(
-          children: [
-            Message(text: "hi", who: true,),
-            Message(text: "hi", who: false,),
-        ],
-        ),
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.end, // Для выравнивания содержимого слева
+    crossAxisAlignment: CrossAxisAlignment.stretch, // Для растягивания элементов в высоту
+    children: [
+      ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+        mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
       ),
+      ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+        mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+      ),
+      DateWithLine(),
+      ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+        mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+      ),
+      ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+        mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+      ),
+    ],
+  ),
+),
+
       bottomNavigationBar: Padding(
       padding: EdgeInsets.all(8.0), // Добавляем отступы вокруг TextField
       child: TextField(
