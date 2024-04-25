@@ -1,7 +1,9 @@
-package group
+package main
 
 import (
 	"database/sql"
+	"fmt"
+
 	//"fmt"
 	"io"
 	"log"
@@ -11,9 +13,41 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type User struct {
+	id      string
+	name    string
+	message string
+}
+
 type Server struct {
 	conns map[*websocket.Conn]bool
 	db    *sql.DB
+}
+
+func InsertMessage(name, message string) error {
+	// Открытие соединения с базой данных PostgreSQL.
+	db, err := sql.Open("postgres", "postgres://user:password@localhost:8080/database?sslmode=disable")
+	if err != nil {
+		return fmt.Errorf("ошибка при подключении к базе данных: %v", err)
+	}
+	defer db.Close()
+
+	// Подготовка SQL-запроса для вставки данных в таблицу chat.
+	query := "INSERT INTO chat (name, message) VALUES ($1, $2)"
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		return fmt.Errorf("ошибка при подготовке SQL-запроса: %v", err)
+	}
+	defer stmt.Close()
+
+	// Выполнение SQL-запроса для вставки данных.
+	_, err = stmt.Exec(name, message)
+	if err != nil {
+		return fmt.Errorf("ошибка при выполнении SQL-запроса: %v", err)
+	}
+
+	log.Println("Данные успешно добавлены в таблицу chat.")
+	return nil
 }
 
 func NewServer(db *sql.DB) *Server {
@@ -22,6 +56,13 @@ func NewServer(db *sql.DB) *Server {
 		db:    db,
 	}
 }
+
+// func (s *Server) handlWS(ws *websocket.Conn) {
+// 	fmt.Println("new connecting", ws.RemoteAddr())
+// 	s.conns[ws] = true
+
+// 	s.readLoop(ws)
+// }
 
 func (s *Server) handleWS(w http.ResponseWriter, r *http.Request) {
 	// Инициализация соединения WebSocket.
@@ -52,6 +93,7 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 
 		// Рассылка сообщения всем клиентам.
 		s.broadcast(message)
+		InsertMessage("vova", string(message))
 	}
 }
 
@@ -66,7 +108,7 @@ func (s *Server) broadcast(message []byte) {
 
 func main() {
 	// Подключение к базе данных PostgreSQL.
-	db, err := sql.Open("postgres", "postgres://user:password@localhost:5432/database?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://user:password@localhost:8080/database?sslmode=disable")
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
@@ -77,16 +119,17 @@ func main() {
 
 	// Зарегистрировать обработчик WebSocket.
 	http.HandleFunc("/ws", server.handleWS)
+	//http.Handle("/ws", websocket.Handler(server.handlWS))
 
 	// Запуск HTTP сервера.
 	log.Println("Server is running on http://localhost:8080/ws")
-	err = http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":5037", nil)
 	if err != nil {
 		log.Fatal("Server startup failed:", err)
 	}
 }
 
-// package group
+// package main
 
 // import (
 // 	"fmt"
@@ -145,5 +188,25 @@ func main() {
 // func main() {
 // 	server := NewServer()
 // 	http.Handle("/ws", websocket.Handler(server.handlWS))
-// 	http.ListenAndServe(":8080", nil)
+// 	http.ListenAndServe(":5037", nil)
+// }
+
+// package main
+
+// import (
+// 	"fmt"
+// 	"log"
+// 	"net/http"
+// )
+
+// func main() {
+// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+// 		fmt.Fprint(w, "Привет, мир!")
+// 	})
+
+// 	log.Println("Сервер запущен на http://localhost:8080")
+// 	err := http.ListenAndServe(":5037", nil)
+// 	if err != nil {
+// 		log.Fatal("Ошибка при запуске сервера:", err)
+// 	}
 // }
