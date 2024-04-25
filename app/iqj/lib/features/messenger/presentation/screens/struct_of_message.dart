@@ -52,7 +52,7 @@ class ReceiverMessage extends StatelessWidget {
                     Flexible( // Обернуть DecoratedBox в Flexible
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(150, 150, 150, 1), // Исправлено значение альфа-канала на 1
+                          color: Color.fromRGBO(56, 56, 56, 1), // Исправлено значение альфа-канала на 1
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
@@ -71,10 +71,16 @@ class ReceiverMessage extends StatelessWidget {
                                 softWrap: true,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
-                              Text(
+                              Align(
+                            alignment: Alignment.bottomRight, // Выравниваем текст "14:00" по нижнему правому углу
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4), // Отступ сверху для текста "14:00"
+                              child: Text(
                                 "14:00",
                                 style: TextStyle(fontSize: 10),
                               ),
+                            ),
+                          ),
                             ],
                           ),
                         ),
