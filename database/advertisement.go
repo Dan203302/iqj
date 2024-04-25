@@ -41,10 +41,10 @@ func (at *AdvertisementTable) Add(a *Advertisement) error {
 
 	// Используем queryMaker для создания и исполнения insert запроса
 	err := at.qm.makeInsert(at.db,
-		`INSERT INTO Advertisements (Content, CreationDate, ExpirationDate) 
+		`INSERT INTO advertisements (content, creation_date, expiration_date)
 		VALUES ($1, $2, $3)
 		WHERE NOT EXISTS (
-			SELECT 1 FROM Advertisements WHERE Content = $1 AND CreationDate = $2
+			SELECT 1 FROM advertisements WHERE content = $1 AND creation_date = $2
 			)
 		`,
 		&a.Content, &a.CreationDate, &a.ExpirationDate,
@@ -64,7 +64,7 @@ func (at *AdvertisementTable) Add(a *Advertisement) error {
 // ads, err := ...Get() // err == nil если все хорошо
 func (at *AdvertisementTable) Get() (*[]Advertisement, error) {
 	rows, err := at.qm.makeSelect(at.db,
-		"SELECT Content FROM Advertisements WHERE ExpirationDate > $1 ORDER BY CreationDate DESC",
+		"SELECT content FROM advertisements WHERE expiration_date > $1 ORDER BY creation_date DESC",
 		time.Now(),
 	)
 
