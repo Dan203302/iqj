@@ -47,17 +47,17 @@ func (ct *ClassTable) Add(c *Class) error {
 
 	// Используем queryMaker для исполнения запроса
 	err := ct.qm.makeInsert(ct.db,
-		`INSERT INTO Classes (ClassGroupIds, ClassTeacherId, Count, Weekday, Week, ClassName, ClassType, ClassLocation)
+		`INSERT INTO Classes (class_group_ids, class_teacher_id, count, weekday, week, class_name, class_type, class_location)
 		SELECT $1, $2, $3, $4, $5, $6, $7, $8
 		WHERE NOT EXISTS (
-    	SELECT 1 FROM Classes
-     	WHERE ClassName = $6
-    	AND Weekday = $4
-        AND Week = $5
-        AND ClassType = $7
-        AND Count = $3
-        AND ClassGroupId = $1
-        AND ClassTeacherId = $2
+    	SELECT 1 FROM classes
+     	WHERE class_name = $6
+    	AND weekday = $4
+        AND week = $5
+        AND class_type = $7
+        AND count = $3
+        AND class_group_id = $1
+        AND class_teacher_id = $2
 )`,
 		pq.Array(&c.Groups), &c.Teacher, &c.Count, &c.Weekday, &c.Week, &c.Name, &c.Type, &c.Location)
 
@@ -83,9 +83,9 @@ func (ct *ClassTable) GetById(c *Class) (*Class, error) {
 
 	// Используем queryMaker для создания и исполнения select запроса
 	row, err := ct.qm.makeSelect(ct.db,
-		`SELECT ClassGroupIds, ClassTeacherId, Count, Weekday, Week, ClassName, ClassType, ClassLocation
-FROM Classes
-WHERE ClassId = $1;
+		`SELECT class_group_ids, class_teacher_id, count, weekday, week, class_name, class_type, сlass_location
+FROM classes
+WHERE class_id = $1;
 `,
 		c.Id)
 	if err != nil {
@@ -114,9 +114,9 @@ func (ct *ClassTable) GetForWeekByTeacher(c *Class) (*[]Class, error) {
 	}
 
 	rows, err := ct.qm.makeSelect(ct.db,
-		`SELECT ClassId, ClassGroupIds, Count, Weekday, ClassName, ClassType, ClassLocation
-		FROM Classes
-		WHERE ClassTeacherId = $1 AND Week = $2;`,
+		`SELECT class_id, class_group_ids, count, weekday, class_name, class_type, class_location
+		FROM classes
+		WHERE class_teacher_id = $1 AND week = $2;`,
 		c.Id, c.Week)
 	if err != nil {
 		return nil, fmt.Errorf("Class.GetForWeekByTeacher: %v", err)
@@ -147,9 +147,9 @@ func (ct *ClassTable) GetForDayByTeacher(c *Class) (*[]Class, error) {
 	}
 
 	rows, err := ct.qm.makeSelect(ct.db,
-		`SELECT ClassId, ClassGroupIds, Count, ClassName, ClassType, ClassLocation
-		FROM Classes
-		WHERE ClassTeacherId = $1 AND Week = $2 AND Weekday = $3;`,
+		`SELECT class_id, сlass_group_ids, count, class_name, class_type, class_location
+		FROM classes
+		WHERE class_teacher_id = $1 AND week = $2 AND weekday = $3;`,
 		c.Id, c.Week, c.Weekday)
 	if err != nil {
 		return nil, fmt.Errorf("Class.GetById: %v", err)
@@ -173,7 +173,7 @@ func (ct *ClassTable) Delete(c *Class) error {
 	}
 
 	err := ct.qm.makeDelete(ct.db,
-		"DELETE FROM Classes WHERE ClassId = $1",
+		"DELETE FROM classes WHERE class_id = $1",
 		c.Id)
 
 	if err != nil {

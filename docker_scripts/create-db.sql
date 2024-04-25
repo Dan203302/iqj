@@ -2,72 +2,72 @@ CREATE DATABASE iqj;
 
 
 -- Создание таблицы новостей (news)
-CREATE TABLE IF NOT EXISTS News (
-    NewsId SERIAL PRIMARY KEY,
-    Header TEXT NOT NULL,
-    Link TEXT NOT NULL,
-    NewsText TEXT NOT NULL,
-    ImageLinks TEXT[],
-    Tags VARCHAR(255)[],
-    PublicationTime TIMESTAMP
+CREATE TABLE IF NOT EXISTS news (
+    news_id SERIAL PRIMARY KEY,
+    header TEXT NOT NULL,
+    link TEXT NOT NULL,
+    news_text TEXT NOT NULL,
+    image_links TEXT[],
+    tags VARCHAR(255)[],
+    publication_time TIMESTAMP
 );
 
 -- Создание таблицы пользователей (users)
-CREATE TABLE IF NOT EXISTS Users (
-    UserId SERIAL PRIMARY KEY,
-    Email VARCHAR(255) NOT NULL,
-    Password TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS users (
+    user_id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password TEXT NOT NULL
 );
 
 -- Создание таблицы данных пользователей (users_data)
-CREATE TABLE IF NOT EXISTS UsersData (
-    UserDataId INT PRIMARY KEY REFERENCES Users(UserId),
-    UserName VARCHAR(255) NOT NULL,
-    Biography TEXT NOT NULL,
-    UsefulData TEXT NOT NULL,
-    Role VARCHAR(50) NOT NULL
+CREATE TABLE IF NOT EXISTS users_data (
+    user_data_id INT PRIMARY KEY REFERENCES users(user_id),
+    user_name VARCHAR(255) NOT NULL,
+    biography TEXT NOT NULL,
+    useful_data TEXT NOT NULL,
+    role VARCHAR(50) NOT NULL
 );
 
 -- Создание таблицы студентов (students)
-CREATE TABLE IF NOT EXISTS Students (
-    StudentId INT PRIMARY KEY REFERENCES Users(UserId),
-    StudentGroupId INT NOT NULL,
-    StudentTeachersIds INT[]
+CREATE TABLE IF NOT EXISTS students (
+    student_id INT PRIMARY KEY REFERENCES users(user_id),
+    student_group_id INT NOT NULL,
+    student_teachers_ids INT[]
 );
 
 -- Создание таблицы преподавателей (teachers)
-CREATE TABLE IF NOT EXISTS Teachers (
-    TeacherId INT PRIMARY KEY REFERENCES Users(UserId),
-    TeachersStudentsGroupsIds INT[]
+CREATE TABLE IF NOT EXISTS teachers (
+    teacher_id INT PRIMARY KEY REFERENCES users(user_id),
+    teachers_students_groups_ids INT[]
 );
 
 -- Создание таблицы студенческих групп (student_groups)
-CREATE TABLE IF NOT EXISTS StudentsGroups (
-    StudentsGroupId SERIAL PRIMARY KEY,
-    Grade INT NOT NULL,
-    Institute VARCHAR(128) NOT NULL,
-    StudentGroupName VARCHAR(11) NOT NULL,
-    StudentGroupStudentsIds INT[]
+CREATE TABLE IF NOT EXISTS student_groups (
+    students_group_id SERIAL PRIMARY KEY,
+    grade INT NOT NULL,
+    institute VARCHAR(128) NOT NULL,
+    student_group_name VARCHAR(11) NOT NULL,
+    student_group_students_ids INT[]
 );
 
 -- Создание таблицы расписания (schedule)
-CREATE TABLE IF NOT EXISTS Classes (
-    ClassId SERIAL PRIMARY KEY,
-    ClassGroupIds INT[] NOT NULL,
-    ClassTeacherId INT NOT NULL,
-    Count INT NOT NULL,
-    Weekday INT NOT NULL,
-    Week INT NOT NULL,
-    ClassName VARCHAR(255),
-    ClassType VARCHAR(30),
-    ClassLocation VARCHAR(40) NOT NULL
+CREATE TABLE IF NOT EXISTS classes (
+    class_id SERIAL PRIMARY KEY,
+    class_group_ids INT[] NOT NULL,
+    class_teacher_id INT NOT NULL,
+    count INT NOT NULL,
+    weekday INT NOT NULL,
+    week INT NOT NULL,
+    class_name VARCHAR(255),
+    class_type VARCHAR(30),
+    class_location VARCHAR(40) NOT NULL
 );
 
 -- Создание таблицы объявлений (ad)
-CREATE TABLE IF NOT EXISTS Advertisements (
-    AdvertiesmentId SERIAL PRIMARY KEY,
-    Content TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS advertisements (
+    advertisement_id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL
 );
 
 CREATE USER iqj_admin WITH PASSWORD 'aZCF131';
-GRANT ALL PRIVILEGES ON DATABASE iqj TO iqj_admin,root;
+GRANT ALL PRIVILEGES ON DATABASE iqj TO iqj_admin;

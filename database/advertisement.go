@@ -40,7 +40,7 @@ func (at *AdvertisementTable) Add(a *Advertisement) error {
 
 	// Используем queryMaker для создания и исполнения insert запроса
 	err := at.qm.makeInsert(at.db,
-		"INSERT INTO Advertisements (Content) VALUES ($1)",
+		"INSERT INTO advertisements (content) VALUES ($1)",
 		&a.Content,
 	)
 
@@ -66,7 +66,7 @@ func (at *AdvertisementTable) Get(a *Advertisement) (*Advertisement, error) {
 
 	// Используем базовую функцию для формирования и исполнения select запроса
 	rows, err := at.qm.makeSelect(at.db,
-		"SELECT Content FROM Advertisements WHERE AdvertiesmentId = $1",
+		"SELECT content FROM advertisements WHERE advertiesment_id = $1",
 		a.Id,
 	)
 	if err != nil {
@@ -104,7 +104,7 @@ func (at *AdvertisementTable) Delete(a *Advertisement) error {
 
 	// Используем queryMaker для удаления объявления
 	err := at.qm.makeDelete(at.db,
-		"DELETE FROM Advertisements WHERE AdvertiesmentId = $1",
+		"DELETE FROM advertisements WHERE advertiesmentId = $1",
 		a.Id,
 	)
 	if err != nil {

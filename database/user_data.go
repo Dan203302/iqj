@@ -43,7 +43,7 @@ func (udt *UserDataTable) Add(ud *UserData) error {
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := udt.tm.makeInsert(udt.db,
-		"INSERT INTO UsersData (UserDataId,UserName,Biography,UsefulData,Role) VALUES ($1, $2, $3, $4, $5)",
+		"INSERT INTO users_data (user_data_id,user_name,biography,useful_data,role) VALUES ($1, $2, $3, $4, $5)",
 		&ud.Id, &ud.Name, &ud.Bio, &ud.UsefulData, &ud.Role,
 	)
 
@@ -72,7 +72,7 @@ func (udt *UserDataTable) GetById(ud *UserData) (*UserData, error) {
 	}
 
 	rows, err := udt.tm.makeSelect(udt.db,
-		"SELECT Name, Bio, UsefulData, Role FROM UsersData WHERE UserDataId = $1",
+		"SELECT name, bio, useful_data, role FROM users_data WHERE user_data_id = $1",
 		ud.Id)
 	if err != nil {
 		return nil, fmt.Errorf("UserData.GetById: %v", err)
@@ -104,7 +104,7 @@ func (udt *UserDataTable) GetByName(ud *UserData) (*UserData, error) {
 	}
 
 	rows, err := udt.tm.makeSelect(udt.db,
-		"SELECT UserDataId, Bio, UsefulData, Role FROM UsersData WHERE UserName = $1",
+		"SELECT user_data_id, bio, useful_data, role FROM users_data WHERE user_name = $1",
 		ud.Name)
 	if err != nil {
 		return nil, fmt.Errorf("UserData.GetByName: %v", err)
@@ -136,7 +136,7 @@ func (udt *UserDataTable) GetRoleById(ud *UserData) (*UserData, error) {
 	}
 
 	rows, err := udt.tm.makeSelect(udt.db,
-		"SELECT Role FROM UsersData WHERE UserDataId = $1",
+		"SELECT role FROM users_data WHERE user_data_id = $1",
 		ud.Id)
 	if err != nil {
 		return nil, fmt.Errorf("UserData.GetRoleById: %v", err)
@@ -169,7 +169,7 @@ func (udt *UserDataTable) Delete(ud *UserData) error {
 
 	// Для удаления используем базовую функцию
 	err := udt.tm.makeDelete(udt.db,
-		"DELETE FROM UsersData WHERE UserDataId = $1",
+		"DELETE FROM users_data WHERE user_data_id = $1",
 		ud.Id)
 
 	if err != nil {

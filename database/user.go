@@ -44,7 +44,7 @@ func (ut *UserTable) Add(u *User) error {
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := ut.tm.makeInsert(ut.db,
-		"INSERT INTO Users (Email,Password) VALUES ($1, $2)",
+		"INSERT INTO users (email,password) VALUES ($1, $2)",
 		&u.Email, &u.Password,
 	)
 
@@ -72,7 +72,7 @@ func (ut *UserTable) GetById(u *User) (*User, error) {
 		return nil, errors.New("User.Get: wrong data! provided *User.Id is empty")
 	}
 
-	rows, err := ut.tm.makeSelect(ut.db, "SELECT Email, Password FROM Users WHERE UserId = $1", u.Id)
+	rows, err := ut.tm.makeSelect(ut.db, "SELECT email, password FROM users WHERE user_id = $1", u.Id)
 	if err != nil {
 		return nil, fmt.Errorf("User.Get: %v", err)
 	}
@@ -106,7 +106,7 @@ func (ut *UserTable) Check(u *User) (*User, error) {
 	id := 0
 	pass := ""
 
-	rows, err := ut.tm.makeSelect(ut.db, "SELECT Password, UserId FROM Users WHERE Email = $1", u.Email)
+	rows, err := ut.tm.makeSelect(ut.db, "SELECT password, user_id FROM users WHERE email = $1", u.Email)
 	if err != nil {
 		return nil, fmt.Errorf("User.Check1: %v", err)
 	}
@@ -146,7 +146,7 @@ func (ut *UserTable) Delete(u *User) error {
 	}
 
 	// Для удаления используем базовую функцию
-	err := ut.tm.makeDelete(ut.db, "DELETE FROM Users WHERE UserId = $1", u.Id)
+	err := ut.tm.makeDelete(ut.db, "DELETE FROM users WHERE user_id = $1", u.Id)
 
 	if err != nil {
 		return fmt.Errorf("User.Delete: %v", err)

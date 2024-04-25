@@ -42,7 +42,7 @@ func (tt *TeacherTable) Add(t *Teacher) error {
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := tt.qm.makeInsert(tt.db,
-		"INSERT INTO teachers (id,groups) VALUES ($1, $2)",
+		"INSERT INTO teachers (teacher_id,teacher_students_groups_ids) VALUES ($1, $2)",
 		&t.Id, &t.Groups,
 	)
 
@@ -73,7 +73,7 @@ func (tt *TeacherTable) GetById(t *Teacher) (*Teacher, error) {
 
 	// Используем базовую функцию для формирования и исполнения select запроса
 	row, err := tt.qm.makeSelect(tt.db,
-		"SELECT groups FROM teachers WHERE id = $1",
+		"SELECT teacher_students_groups_ids FROM teachers WHERE teacher_id = $1",
 		t.Id)
 
 	// Проверяем ошибку select'а
@@ -106,7 +106,7 @@ func (tt *TeacherTable) UpdateGroups(t *Teacher) (*Teacher, error) {
 
 	// Используем базовую функцию для формирования и исполнения update запроса
 	err := tt.qm.makeUpdate(tt.db,
-		"UPDATE teachers SET groups = $1 WHERE id = $2",
+		"UPDATE teachers SET  teacher_students_groups_ids = $1 WHERE teacher_id = $2",
 		t.Id, &t.Groups)
 
 	// Проверяем ошибку update'а
