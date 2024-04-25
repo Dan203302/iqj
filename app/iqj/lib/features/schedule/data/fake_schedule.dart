@@ -19,7 +19,7 @@ final List<Day> schedule = [
       Lesson(
         name: "Физика",
         type: "Лекция",
-        classroom: "A-63 (МП-1)",
+        classroom: "A-15 (В-78)",
         groups: [
           "ЭФБО-01-23",
           "ЭФБО-02-23",
@@ -27,7 +27,7 @@ final List<Day> schedule = [
           "ЭФБО-04-23",
           "ЭФБО-05-23",
         ],
-        professor: "Я не помню",
+        professor: "Сафронов А. А.",
       ),
       Lesson(
         name: 'Физика',
