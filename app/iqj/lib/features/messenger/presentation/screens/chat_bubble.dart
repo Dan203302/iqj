@@ -46,6 +46,21 @@ class _ChatBubble extends State<ChatBubble> {
     }
   }
 
+  bool volume = false;
+  bool push_pin = false;
+
+  void volume_off() {
+    setState(() {
+      volume = !volume;
+    });
+  }
+
+  void push_pin_get() {
+    setState(() {
+      push_pin = !push_pin;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //final String username = "А. Б. Веселухов";
@@ -77,7 +92,32 @@ class _ChatBubble extends State<ChatBubble> {
           );
             },
             onLongPress: () => {
-              print("fdsafasdfjk")
+              showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.push_pin_outlined),
+                        title: Text('Закрепить'),
+                        onTap: () {
+                          push_pin_get();
+                        },
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.volume_off),
+                        title: Text('Без звука'),
+                        onTap: () {
+                          volume_off();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
             },
             child: Container(
               margin: const EdgeInsets.only(
@@ -101,13 +141,20 @@ class _ChatBubble extends State<ChatBubble> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.chatTitle,
-                        style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                          fontSize: 20,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            widget.chatTitle,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.onPrimaryContainer,
+                              fontSize: 20,
+                            ),
+                          ),
+                          volume? Icon(Icons.volume_off) : Container(),
+                          push_pin? Icon(Icons.push_pin_outlined) : Container(),
+
+                        ],
                       ),
                       Text(
                         "печатает...",
@@ -136,3 +183,9 @@ class _ChatBubble extends State<ChatBubble> {
     );
   }
 }
+
+
+
+
+
+
