@@ -8,11 +8,10 @@ import (
 )
 
 // Выдает массив с объявлениями, у которых срок годности
-// меньше текущей даты, если таких объявлений нет - вернет пустой массив
+// больше текущей даты, если таких объявлений нет - вернет пустой массив
 // GET /ad
 func (h *Handler) HandleGetAdvertisement(c *gin.Context) {
-	var advertisement database.Advertisement // Заглушка, чтобы не выдавало ошибку
-	advertisementSlice, err := database.Database.Advertisement.Get(&advertisement)
+	advertisementSlice, err := database.Database.Advertisement.Get()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		fmt.Println("HandleGetAdvertisement:", err)
