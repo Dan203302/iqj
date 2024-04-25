@@ -29,12 +29,10 @@ class Lessons extends StatelessWidget {
                 height: 12,
               ),
             );
+          } else if (state.activeDay is DayOff) {
+            return const Center(child: Text('Выходной!'));
           } else {
-            return const Center(
-              child: Text(
-                'Выходной!',
-              ),
-            );
+            return const Center(child: Text('Нет информации :('));
           }
         } else {
           return const Text('Unhandled state');

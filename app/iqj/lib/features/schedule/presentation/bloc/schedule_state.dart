@@ -1,6 +1,5 @@
 // Абстрактный класс для состояний, будет расширен по потребности
 import 'package:iqj/features/schedule/domain/day.dart';
-import 'package:iqj/features/schedule/domain/week.dart';
 
 abstract class ScheduleState {}
 
@@ -14,7 +13,7 @@ class ScheduleLoadingFailed extends ScheduleState {
 }
 
 class ScheduleLoaded extends ScheduleState {
-  final List<Week> scheduleList;
+  final List<Day> scheduleList;
   final Day? activeDay; // выбранный в данный момент день
 
   ScheduleLoaded({required this.scheduleList, required this.activeDay});
