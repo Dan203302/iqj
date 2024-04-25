@@ -66,7 +66,9 @@ CREATE TABLE IF NOT EXISTS Classes (
 -- Создание таблицы объявлений (ad)
 CREATE TABLE IF NOT EXISTS Advertisements (
     AdvertiesmentId SERIAL PRIMARY KEY,
-    Content TEXT NOT NULL
+    Content TEXT NOT NULL,
+    CreationDate TIMESTAMP,
+    ExpirationDate TIMESTAMP
 );
 
 CREATE USER iqj_admin WITH PASSWORD 'aZCF131';
