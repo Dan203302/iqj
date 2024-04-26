@@ -31,7 +31,10 @@ class _AboutBloc extends State<AboutScreen> {
               return CircleAvatar(
                 radius: 6,
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                child: const Text('A'),
+                child: const Text('IQJ',
+                style: TextStyle(
+                  fontSize: 48,
+                ),),
               );
             },
           ),
@@ -181,8 +184,6 @@ class _AboutBloc extends State<AboutScreen> {
                   ),
                   Text(
                       'IQJ MIREA версия 0.0.1\nсборка 221803-24042024\nИПТИП/КИП (с) 2024 - Все права защищены.'),
-                  const Padding(padding: EdgeInsets.only(bottom: 512)),
-                  Text('Это место для пасхалок.'),
                 ],
               ),
             ],

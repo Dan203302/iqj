@@ -106,10 +106,12 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
           final List<News> updatedNewsList =
               currentState.newsList.map((newsItem) {
             if (newsItem.id == event.news.id) {
+              print('bookmarked news found');
               newsItem.bookmarked = true;
             }
             return newsItem;
           }).toList();
+          print('bookmarked news emit');
           emit(NewsLoaded(updatedNewsList));
         }
       } catch (e) {

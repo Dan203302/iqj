@@ -11,7 +11,7 @@ Future<List<News>> getNews() async {
       host: 'mireaiqj.ru',
       port: 8443,
       path: '/news',
-      queryParameters: {'offset': '0', 'count': '15'},
+      queryParameters: {'offset': '0', 'count': '50'},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
   );
@@ -62,7 +62,7 @@ Future<List<SpecialNews>> getSpecialNews() async {
       host: 'mireaiqj.ru',
       port: 8443,
       path: '/ad',
-      queryParameters: {'offset': '0', 'count': '15'},
+      // queryParameters: {'offset': '0', 'count': ''},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
   );
@@ -81,6 +81,7 @@ Future<List<SpecialNews>> getSpecialNews() async {
     //     );
     //   },
     // ).toList();
+    print('response 200');
     final dynamic decodedData = json.decode(response.body);
     List<SpecialNews> newsList = [];
     final List<dynamic> jsonList = decodedData as List;
@@ -90,10 +91,11 @@ Future<List<SpecialNews>> getSpecialNews() async {
       return SpecialNews(
         id: json['id'] as String,
         text: json['content'] as String,
-        //publishFromTime: DateTime.parse(json['publication_time'] as String),
-        //publishUntilTime: DateTime.parse(json['publication_time'] as String),
+        publishFromTime: DateTime.parse(json['creation_date'] as String),
+        publishUntilTime: DateTime.parse(json['expiration_date'] as String),
       );
     }).toList();
+    print(newsList.length);
     return newsList;
   } else {
     throw Exception(response.statusCode);

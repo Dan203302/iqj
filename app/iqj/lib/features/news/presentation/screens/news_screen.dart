@@ -9,6 +9,8 @@ import 'package:iqj/features/news/admin/admin_button.dart';
 import 'package:iqj/features/news/data/bookmarks.dart';
 import 'package:iqj/features/news/domain/news.dart';
 import 'package:iqj/features/news/presentation/bloc/news_bloc.dart';
+import 'package:iqj/features/news/presentation/bloc/special_news_bloc.dart';
+import 'package:iqj/features/news/presentation/screens/announcement.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list.dart';
 import 'package:iqj/features/news/presentation/screens/news_loaded_list_screen.dart';
 import 'package:iqj/features/news/presentation/screens/search/search_date.dart';
@@ -28,6 +30,7 @@ class _NewsBloc extends State<NewsScreen> {
   // final _newsbloc=NewsBloc(NewsArticle());
   //final newsList=NewsSmall();
   final _newsbloc = NewsBloc();
+  final _specialNewsBloc = SpecialNewsBloc();
 
   static get title => null;
 
@@ -80,6 +83,8 @@ class _NewsBloc extends State<NewsScreen> {
     //final _newslistbloc=NewsBloc(context);
     final newsBloc = NewsBloc();
     GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+        GlobalKey<RefreshIndicatorState>();
+    GlobalKey<RefreshIndicatorState> _refreshIndicatorKeySpecial =
         GlobalKey<RefreshIndicatorState>();
 
     return Scaffold(
@@ -291,7 +296,7 @@ class _NewsBloc extends State<NewsScreen> {
                 ],
               ),
             ),
-          if (flag_close)
+            if (flag_close)
             Container(
               margin: const EdgeInsets.only(left: 14, right: 12),
               child: Text(
@@ -305,72 +310,41 @@ class _NewsBloc extends State<NewsScreen> {
                 ),
               ),
             ),
-          if (flag_close)
-            Container(
-              margin: const EdgeInsets.only(
-                  top: 12, left: 12, right: 12, bottom: 12),
-              padding:
-                  const EdgeInsets.only(left: 12, right: 12, top: 6, bottom: 6),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Theme.of(context).colorScheme.primaryContainer,
-                // В дизайне же нет рамки вроде не было рамки 🤨
-                // border: Border.all(
-                //   color: const Color.fromARGB(255, 255, 166, 0),
-                // ),
-                // boxShadow: const [
-                //   BoxShadow(
-                //     blurRadius: 2,
-                //     color: Color.fromARGB(255, 239, 172, 0),
-                //     spreadRadius: 1,
-                //   ),
-                // ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(right: 12),
-                          child: SvgPicture.asset(
-                            'assets/icons/schedule/warning.svg',
-                            semanticsLabel: 'warning',
-                            height: 24,
-                            width: 24,
-                            allowDrawingOutsideViewBox: true,
-                            // color: const Color.fromARGB(255, 239, 172, 0),
-                          ),
-                        ),
-                        const Expanded(
-                          child: Text(
-                            'С 35 нояктября по 64 апремая в корпусе В-78 будет закрыт главный вход. ',
-                            softWrap: true,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 18,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 255, 166, 0),
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              announce_close();
-                            });
-                          },
-                          icon: SvgPicture.asset('assets/icons/news/close.svg'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          BlocBuilder<SpecialNewsBloc, SpecialNewsLoadState>(
+            bloc: _specialNewsBloc,
+            builder: (context, state) {
+              if (state is SpecialNewsLoadLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is SpecialNewsLoadLoaded) {
+                return ListView.builder(
+                  itemCount: state.newsList.length,
+                  itemBuilder: (context, index) {
+                    final news = state.newsList[index];
+                    print('announcement return:');
+                    return AnnouncementWidget(
+                      id: news.id,
+                      text: news.text,
+                      creationDate: news.publishFromTime,
+                      expiryDate: news.publishUntilTime,
+                    );
+                  },
+                );
+              } else if (state is SpecialNewsLoadListLoadingFail) {
+                return Center(
+                  child: Text(state.except?.toString() ?? "Error"),
+                );
+              }
+              print('announcement fallback');
+              return AnnouncementWidget(
+                id: '1',
+                text: 'С 35 нояктября по 64 апремая в корпусе В-78 будет закрыт главный вход. ',
+                creationDate: DateTime.now(),
+                expiryDate: DateTime.now(),
+              );
+            },
+          ),
           if (flag_close)
             Container(
               margin: const EdgeInsets.only(left: 12, right: 12),
@@ -418,7 +392,10 @@ class _NewsBloc extends State<NewsScreen> {
                     //     );
                     //   },
                     // );
-                    final List<News> filteredNews = state.newsList.where((news) => _isBookmarkedView ? news.bookmarked : true).toList();
+                    final List<News> filteredNews = state.newsList
+                        .where((news) =>
+                            _isBookmarkedView ? news.bookmarked : true)
+                        .toList();
                     if (filteredNews.isEmpty && _isBookmarkedView) {
                       return Center(
                         child: Text(
