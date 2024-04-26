@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iqj/features/auth/domain/emailField.dart';
+import 'package:iqj/features/registration/data/registration_data.dart';
 import 'package:iqj/features/registration/domain/surnameField.dart';
 import 'package:iqj/features/registration/domain/nameField.dart';
 import 'package:iqj/features/registration/domain/patronymicField.dart';
@@ -7,6 +8,16 @@ import 'package:iqj/features/registration/domain/roleField.dart';
 import 'package:iqj/features/registration/domain/passwordField.dart';
 import 'package:iqj/features/registration/domain/repPasswordField.dart';
 import 'package:iqj/main.dart';
+
+// String globalSurname = '';
+// String globalName = '';
+// String globalPatronymic = '';
+String globalEmail = '';
+
+ void saveEmail(String text) {
+   globalEmail = text;
+ }
+
 
 class RegScreen extends StatefulWidget {
   const RegScreen({super.key});
@@ -19,6 +30,7 @@ class RegScreen extends StatefulWidget {
 //изменить поле роль
 
 class _LoginScreenState extends State<RegScreen> {
+  String _password = '';
   bool passwordVisible = false;
   @override
   void initState() {
@@ -52,22 +64,28 @@ class _LoginScreenState extends State<RegScreen> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                const SizedBox(height: 40),
+                EmailField(onTextSubmitted: saveEmail),
                 const SizedBox(height: 20),
-                EmailField(),
-                const SizedBox(height: 20),
-                SurnameField(),
-                const SizedBox(height: 20),
-                NameField(),
-                const SizedBox(height: 20),
-                PatronymicField(),
-                const SizedBox(height: 20),
-                RoleField(),
-                const SizedBox(height: 20),
-                PasswordField(),
+                //SurnameField(onTextSubmitted: saveSurname),
+                //const SizedBox(height: 20),
+                //NameField(onTextSubmitted: saveName),
+                //const SizedBox(height: 20),
+                //PatronymicField(onTextSubmitted: savePatronymic),
+                //const SizedBox(height: 20),
+                //RoleField(),
+                //const SizedBox(height: 20),
+                PasswordField(
+                  onPasswordChanged: (value) {
+                    setState(() {
+                      _password = value;
+                    });
+                  },
+                ),
                 const SizedBox(height: 20),
                 RepPasswordField(),
                 // const SizedBox(height: 20),
-                const SizedBox(height: 60),
+                const SizedBox(height: 180),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -82,6 +100,9 @@ class _LoginScreenState extends State<RegScreen> {
                       ),
                       onPressed: () {
                         // if (_formKey.currentState?.validate() ?? false) {
+                          print("TYT VIVODIT SLOVA");
+                          print(_password);
+                          sendData(globalEmail, _password);
                           Navigator.pushReplacementNamed(context, 'successreg');
                         // }
                       },

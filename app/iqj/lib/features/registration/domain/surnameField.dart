@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SurnameField extends StatefulWidget {
-   const SurnameField({super.key});
+  final Function(String) onTextSubmitted;
+   const SurnameField({required this.onTextSubmitted});
 
   @override
   _SurnameFieldState createState() => _SurnameFieldState();
 }
 
 class _SurnameFieldState extends State<SurnameField> {
+  final TextEditingController _textController = TextEditingController();
   Color boxFillColor = const Color(0xFFF6F6F6);
   bool isError = false;
 
@@ -15,6 +17,7 @@ class _SurnameFieldState extends State<SurnameField> {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        controller: _textController,
         keyboardType: TextInputType.emailAddress,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
         style: const TextStyle(
@@ -83,6 +86,9 @@ class _SurnameFieldState extends State<SurnameField> {
           }
           isError = false;
           return null;
+        },
+        onFieldSubmitted: (value) {
+          widget.onTextSubmitted(_textController.text);
         },
       ),
     );

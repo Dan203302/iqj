@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iqj/features/news/data/news_repository.dart';
@@ -31,34 +30,39 @@ class SpecialNewsLoadLoaded extends SpecialNewsLoadState {
   SpecialNewsLoadLoaded(this.newsList);
 }
 
-class NewsLoadError extends SpecialNewsLoadState {
+class SpecialNewsLoadError extends SpecialNewsLoadState {
   final String errorMessage;
 
-  NewsLoadError(this.errorMessage);
+  SpecialNewsLoadError(this.errorMessage);
 }
 
-class NewsLoadListLoadingFail extends SpecialNewsLoadState{
+class SpecialNewsLoadListLoadingFail extends SpecialNewsLoadState{
   final Object? except;
 
-  NewsLoadListLoadingFail({required this.except});
+  SpecialNewsLoadListLoadingFail({required this.except});
   List<Object?> get pros => [except];
 }
 
-class NewsLoadBloc extends Bloc<SpecialNewsLoadEvent,SpecialNewsLoadState>{
-  final String id;
-
-  NewsLoadBloc(this.id): super(SpecialNewsLoadInitial()){
+class SpecialNewsBloc extends Bloc<SpecialNewsLoadEvent, SpecialNewsLoadState>{
+  SpecialNewsBloc(): super(SpecialNewsLoadInitial()){
+    print('special news initial load');
+    // Сюда не заходит почему-то
     on<LoadSpecialNewsLoadList>((event,emit) async{
+      print('test');
       try {
         if (state is! SpecialNewsLoadLoaded) {
+          print('emit special news loading');
           emit(SpecialNewsLoadLoading());
         }
         final List<SpecialNews> news = await getSpecialNews();
         //print(newsList);
+        print('emit special news loaded');
         emit(SpecialNewsLoadLoaded(news));
       } catch (e) {
-        emit(NewsLoadListLoadingFail(except: e));
+        print('emit special news load failed: $e');
+        emit(SpecialNewsLoadListLoadingFail(except: e));
       } finally {
+        print('emit special news complete');
         event.completer?.complete();
       }
     });
