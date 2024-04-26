@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 )
 
 // Структура объявления
@@ -40,8 +41,13 @@ func (at *AdvertisementTable) Add(a *Advertisement) error {
 
 	// Используем queryMaker для создания и исполнения insert запроса
 	err := at.qm.makeInsert(at.db,
-		"INSERT INTO Advertisements (Content) VALUES ($1)",
-		&a.Content,
+		`INSERT INTO advertisements (content, creation_date, expiration_date)
+		VALUES ($1, $2, $3)
+		WHERE NOT EXISTS (
+			SELECT 1 FROM advertisements WHERE content = $1 AND creation_date = $2
+			)
+		`,
+		&a.Content, &a.CreationDate, &a.ExpirationDate,
 	)
 
 	if err != nil {
@@ -51,46 +57,34 @@ func (at *AdvertisementTable) Add(a *Advertisement) error {
 	return nil
 }
 
-// GetById удаляет данные из базы данных по заданному Id.
-// Принимает указатель на Advertisement с непустым полем GetById,
-// возвращает заполненный *Advertisement и nil при успешном запросе.
+// Get возвращает объявления из бд срок годности которых больше текущей даты.
+// Возвращает заполненный *[]Advertisement и nil при успешном запросе.
 //
 // Прим:\n
-// a := &Advertisement{Id:123} // Id != 0 !!!!!!\n
-// ad, err := ...GetById(a) // err == nil если все хорошо
-func (at *AdvertisementTable) Get(a *Advertisement) (*Advertisement, error) {
-	// Проверяем передан ли ID рекламного объявления
-	if a.Id == 0 {
-		return nil, errors.New("Advertisement.GetById: wrong data! provided advertisementID is empty")
-	}
-
-	// Используем базовую функцию для формирования и исполнения select запроса
+// ads, err := ...Get() // err == nil если все хорошо
+func (at *AdvertisementTable) Get() (*[]Advertisement, error) {
 	rows, err := at.qm.makeSelect(at.db,
-		"SELECT Content FROM Advertisements WHERE AdvertiesmentId = $1",
-		a.Id,
+		"SELECT content FROM advertisements WHERE expiration_date > $1 ORDER BY creation_date DESC",
+		time.Now(),
 	)
+
 	if err != nil {
-		return nil, fmt.Errorf("Advertisement.GetByID: %v", err)
-	}
-	defer rows.Close()
-
-	// Создаем переменную для хранения информации о рекламном объявлении
-	var adv Advertisement
-
-	// Извлекаем информацию из результата запроса и заполняем структуру Advertisement
-	if rows.Next() {
-		if err := rows.Scan(&adv.Content); err != nil {
-			return nil, err
-		}
-	} else {
-		return nil, errors.New("Advertisement.GetByID: no rows returned")
+		return nil, fmt.Errorf("News.GetLatest: %v", err)
 	}
 
-	return &adv, nil
+	var resultAdvertisementArr []Advertisement
+	var resultAdvertisement Advertisement
+
+	for rows.Next() {
+		rows.Scan(&resultAdvertisement.Content)
+		resultAdvertisementArr = append(resultAdvertisementArr, resultAdvertisement)
+	}
+
+	return &resultAdvertisementArr, nil
 }
 
-// GetById удаляет данные из базы данных по заданному Id.
-// Принимает указатель на Advertisement с непустым полем GetById,
+// Delete удаляет данные из базы данных по заданному Id.
+// Принимает указатель на Advertisement с заполненным полем Id,
 // возвращает nil при успешном удалении.
 //
 // Прим:\n
@@ -104,7 +98,7 @@ func (at *AdvertisementTable) Delete(a *Advertisement) error {
 
 	// Используем queryMaker для удаления объявления
 	err := at.qm.makeDelete(at.db,
-		"DELETE FROM Advertisements WHERE AdvertiesmentId = $1",
+		"DELETE FROM advertisements WHERE advertiesmentId = $1",
 		a.Id,
 	)
 	if err != nil {

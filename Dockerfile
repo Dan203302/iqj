@@ -7,7 +7,7 @@ WORKDIR /iqj
 COPY . .
 
 # init db
-COPY /docker_scripts/create-db.sql /docker-entrypoint-initdb.d/create-db.sql
+COPY /docker_scripts/init.sql /docker-entrypoint-initdb.d/init.sql
 
 
 RUN go mod download

@@ -43,7 +43,7 @@ func (st *StudentTable) Add(s *Student) error {
 
 	// Используем базовую функцию для создания и исполнения insert запроса
 	err := st.qm.makeInsert(st.db,
-		"INSERT INTO Students (StudentId, StudentGroupId, StudentTeachersIds) VALUES ($1, $2, $3)",
+		"INSERT INTO students (student_id, student_group_id, student_teachers_ids) VALUES ($1, $2, $3)",
 		s.Id, s.Group, pq.Array(s.Teachers),
 	)
 
@@ -74,7 +74,7 @@ func (st *StudentTable) GetById(s *Student) (*Student, error) {
 
 	// Используем базовую функцию для формирования и исполнения select запроса
 	rows, err := st.qm.makeSelect(st.db,
-		"SELECT StudentGroupId, StudentTeachersIds FROM Students WHERE StudentId = $1",
+		"SELECT student_group_id, student_teachers_ids FROM students WHERE student_id = $1",
 		s.Id)
 
 	// Проверяем ошибку select'а
