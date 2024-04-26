@@ -22,7 +22,16 @@ class _SuccessRegState extends State<SuccessReg> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/images/welcome/registration_1.png'),
+                      Container(
+                        height: 240,
+                        width: 360,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/welcome/registration_1.png'),
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         height: 50,
                       ),

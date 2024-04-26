@@ -15,24 +15,30 @@ class Lessons extends StatelessWidget {
         if (state is ScheduleLoading) {
           return const CircularProgressIndicator();
         } else if (state is ScheduleLoadingFailed) {
-          return const Text("Произошла ошибка при загрузке расписания: ");
+          return Text("Произошла ошибка при загрузке расписания: ${state.except}");
         } else if (state is ScheduleLoaded) {
           if (state.activeDay is WorkingDay) {
-            final WorkingDay activeDay = state.activeDay! as WorkingDay;
-            return ListView.separated(
-              shrinkWrap: true,
-              itemCount: activeDay.lessons.length,
-              itemBuilder: (context, index) => activeDay.lessons[index] == null
-                  ? EmptyLessonCard(index)
-                  : LessonCard(activeDay.lessons[index]!, index),
-              separatorBuilder: (_, __) => const SizedBox(
-                height: 12,
+            final WorkingDay activeDay = state.activeDay as WorkingDay;
+            return Column(
+              children: List.generate(
+                activeDay.lessons.length,
+                (index) => activeDay.lessons[index] == null
+                    ? EmptyLessonCard(index)
+                    : LessonCard(activeDay.lessons[index]!, index),
               ),
+              // shrinkWrap: true,
+              // itemCount: activeDay.lessons.length,
+              // itemBuilder: (context, index) => activeDay.lessons[index] == null
+              //     ? EmptyLessonCard(index)
+              //     : LessonCard(activeDay.lessons[index]!, index),
+              // separatorBuilder: (_, __) => const SizedBox(
+              //   height: 12,
+              // ),
             );
-          } else if (state.activeDay is DayOff) {
-            return const Center(child: Text('Выходной!'));
+            // } else if (state.activeDay is DayOff) {
+            //   return const Center(child: Text('Выходной!'));
           } else {
-            return const Center(child: Text('Нет информации :('));
+            return const Center(child: Text('Выходной!'));
           }
         } else {
           return const Text('Unhandled state');

@@ -20,6 +20,7 @@ class _EmailFieldState extends State<EmailField> {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        controller: widget.controllerEmail,
         keyboardType: TextInputType.emailAddress,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
         style: const TextStyle(

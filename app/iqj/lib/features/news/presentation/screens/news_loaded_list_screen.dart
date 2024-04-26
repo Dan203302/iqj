@@ -170,6 +170,7 @@ Future<News> getNewsFull(String id) async {
             id: json['id'] as String,
             title: json['header'] as String,
             publicationTime: DateTime.parse(json['publication_time'] as String),
+            tags: ["a"],
             thumbnails: (json['image_link'] as List<String>).isNotEmpty
                 ? json['image_link'][0] as String
                 : '',
@@ -185,6 +186,7 @@ Future<News> getNewsFull(String id) async {
         publicationTime:
             DateTime.parse(decodedData['publication_time'] as String),
         thumbnails: decodedData['image_link'][0] as String,
+        tags: [""],
         link: "decodedData['link'] as String",
         description: decodedData['text'] as String,
         bookmarked: false,
@@ -268,26 +270,27 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
     checkBookmarked();
 
     Widget _buildThumbnailImage(String image) {
-    try {
-      return Container(
-        margin: const EdgeInsets.only(top: 12),
-        width: double.infinity,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: Image.network(
-            image,
-            fit: BoxFit.fitWidth,
-            height: 256,
-            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-              return Container();
-            },
+      try {
+        return Container(
+          margin: const EdgeInsets.only(top: 12),
+          width: double.infinity,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.network(
+              image,
+              fit: BoxFit.fitWidth,
+              height: 256,
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return Container();
+              },
+            ),
           ),
-        ),
-      );
-    } catch (e) {
-      return Container();
+        );
+      } catch (e) {
+        return Container();
+      }
     }
-  }
 
     return MultiBlocProvider(
       providers: [
@@ -306,7 +309,6 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
             final News news = state.news;
 
             return Scaffold(
-              
               appBar: AppBar(
                 title: const Text('Новость'),
                 actions: [
@@ -405,11 +407,10 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                                       margin: const EdgeInsets.only(
                                         left: 12,
                                         right: 12,
-                                        
                                       ),
                                       width: double.infinity,
-                                      
-                                      child: _buildThumbnailImage(news.thumbnails),
+                                      child:
+                                          _buildThumbnailImage(news.thumbnails),
                                     ),
                                   ),
                                   const Padding(
@@ -551,7 +552,12 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
               ),
             );
           }
-          return const Text('Что-то пошло не так!');
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Новость'),
+            ),
+            body: const Text('Ошибка'),
+          );
         },
       ),
     );

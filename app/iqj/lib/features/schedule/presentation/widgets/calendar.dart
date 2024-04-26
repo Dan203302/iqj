@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iqj/features/schedule/presentation/bloc/schedule_bloc.dart';
+import 'package:iqj/features/schedule/presentation/bloc/schedule_event.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
@@ -39,30 +42,31 @@ class _CalendarState extends State<Calendar> {
           focusedDay = focusDay;
         });
         print(focusedDay);
-      }, // Выбор дня
+        BlocProvider.of<ScheduleBloc>(context).add(SelectDay(focusDay));
+      },
       selectedDayPredicate: (DateTime date) {
         return isSameDay(selectedDay, date);
       }, // Проверка, является ли день выбранным
-      calendarStyle: CalendarStyle(
+      calendarStyle: const CalendarStyle(
         isTodayHighlighted: true, // Выделение сегодняшнего дня
-        defaultDecoration: BoxDecoration(
+        defaultDecoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: const Color(0xFFEFAC00).withOpacity(0.56),
         ), // Декорация дня по умолчанию
         selectedDecoration: BoxDecoration(
-          color: const Color(0xFFEFAC00).withOpacity(0.17),
+          color: Color(0xFFD1D1D1),
           shape: BoxShape.circle,
         ), // Декорация выбранного дня
-        selectedTextStyle: const TextStyle(color: Colors.white), // Стиль текста выбранного дня
-        todayDecoration: const BoxDecoration(
+        selectedTextStyle: TextStyle(color: Color(0xFF191919)), // Стиль текста выбранного дня
+        todayDecoration: BoxDecoration(
           color: Color(0xFFEF9800),
           shape: BoxShape.circle,
-        ), // Декорация сегодняшнего дня
-        defaultTextStyle: const TextStyle(color: Colors.white), // Стиль текста дня по умолчанию
-        weekendTextStyle: const TextStyle(color: Colors.white), // Стиль текста выходного дня
+          
+        ),
+        todayTextStyle: TextStyle(color: Color(0xFF191919)), // Декорация сегодняшнего дня
+        defaultTextStyle: TextStyle(color: Color(0xFF191919)), // Стиль текста дня по умолчанию
+        weekendTextStyle: TextStyle(color: Color(0xFF191919)), // Стиль текста выходного дня
         weekendDecoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF545448) : const Color(0xFFD1D1D1),
         ), // Декорация выходного дня
       ),
       headerStyle: HeaderStyle(
@@ -73,7 +77,7 @@ class _CalendarState extends State<Calendar> {
           borderRadius: BorderRadius.circular(5.0),
         ),
         formatButtonTextStyle: const TextStyle(
-          color: Colors.white,
+          color: Color(0xFF191919),
         ),
       ),
     );
@@ -125,8 +129,8 @@ class CustomCalendarBuilder extends CalendarBuilders {
               child: Text(
                 date.day.toString(),
                 style: isSelected
-                    ? const TextStyle(color: Colors.white)
-                    : const TextStyle(color: Colors.white),
+                    ? const TextStyle(color: Color(0xFF191919))
+                    : const TextStyle(color: Color(0xFF191919)),
               ),
             ),
           ),

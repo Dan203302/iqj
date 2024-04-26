@@ -93,10 +93,11 @@ class LessonCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     text: 'Группа: ',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      color: Color(0xFF191919)
                     ),
                     children: [
                       TextSpan(
@@ -120,10 +121,11 @@ class LessonCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     text: 'Аудитория: ',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      color: Color(0xFF191919)
                     ),
                     children: [
                       TextSpan(
@@ -150,34 +152,35 @@ class EmptyLessonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: Theme.of(context).colorScheme.onInverseSurface,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "${index + 1} пара",
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                  ),
+      color: Theme.of(context).colorScheme.onInverseSurface,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "${index + 1} пара",
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
                 ),
-                Text(
-                  _lessonTime[index],
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                  ),
+              ),
+              Text(
+                _lessonTime[index],
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

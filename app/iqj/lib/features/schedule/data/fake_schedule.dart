@@ -13,8 +13,7 @@ Future<List<Day>> getSchedule() async {
 }
 
 final List<Day> schedule = [
-  WorkingDay(
-    date: DateTime(2024, 1, 1),
+  WorkingDay( DateTime(2024, 1, 1),
     lessons: [
       Lesson(
         name: "Физика",
@@ -39,7 +38,7 @@ final List<Day> schedule = [
         professor: 'Кто-то',
       ),
       Lesson(
-        name: 'Линейная алгебра и аналитическая геометрия',
+        name: 'Еще одна скучная пара',
         type: 'Практика',
         classroom: 'А-107-1 (В-78)',
         groups: [
@@ -52,7 +51,44 @@ final List<Day> schedule = [
       null,
     ],
   ),
-  DayOff(DateTime(2024, 1, 2)),
+  WorkingDay( DateTime(2024, 1, 2),
+    lessons: [
+      Lesson(
+        name: "Физика",
+        type: "Лекция",
+        classroom: "A-63 (МП-1)",
+        groups: [
+          "ЭФБО-01-23",
+          "ЭФБО-02-23",
+          "ЭФБО-03-23",
+          "ЭФБО-04-23",
+          "ЭФБО-05-23",
+        ],
+        professor: "Я не помню",
+      ),
+      Lesson(
+        name: 'Физика',
+        type: 'Практика',
+        classroom: 'А-107-1 (В-78)',
+        groups: [
+          'ЭФБО-14-88',
+        ],
+        professor: 'Кто-то',
+      ),
+      Lesson(
+        name: 'Еще одна скучная пара',
+        type: 'Практика',
+        classroom: 'А-107-1 (В-78)',
+        groups: [
+          'ЭФБО-14-88',
+        ],
+        professor: 'Кто-то',
+      ),
+      null,
+      null,
+      null,
+    ],
+  ),
   DayOff(DateTime(2024, 1, 3)),
   DayOff(DateTime(2024, 1, 4)),
   DayOff(DateTime(2024, 1, 5)),
@@ -62,4 +98,42 @@ final List<Day> schedule = [
   DayOff(DateTime(2024, 1, 9)),
   DayOff(DateTime(2024, 1, 10)),
   DayOff(DateTime(2024, 1, 11)),
+  WorkingDay( DateTime(2024, 4, 26),
+    lessons: [
+      Lesson(
+        name: "Физика",
+        type: "Лекция",
+        classroom: "A-63 (МП-1)",
+        groups: [
+          "ЭФБО-01-23",
+          "ЭФБО-02-23",
+          "ЭФБО-03-23",
+          "ЭФБО-04-23",
+          "ЭФБО-05-23",
+        ],
+        professor: "Я не помню",
+      ),
+      Lesson(
+        name: 'Физика',
+        type: 'Практика',
+        classroom: 'А-107-1 (В-78)',
+        groups: [
+          'ЭФБО-14-88',
+        ],
+        professor: 'Кто-то',
+      ),
+      Lesson(
+        name: 'Еще одна скучная пара',
+        type: 'Практика',
+        classroom: 'А-107-1 (В-78)',
+        groups: [
+          'ЭФБО-14-88',
+        ],
+        professor: 'Кто-то',
+      ),
+      null,
+      null,
+      null,
+    ],
+  ),
 ];

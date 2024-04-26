@@ -3,7 +3,7 @@ class News {
   final String title;
   // final List<String> thumbnails;
   final String thumbnails;
-  //final List<String> tags; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+  final List<String> tags; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
   final DateTime publicationTime;
   final String description;
   final String link;
@@ -12,7 +12,7 @@ class News {
     required this.id,
     required this.title,
     required this.thumbnails,
-    //required this.tags, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+    required this.tags, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
     required this.publicationTime,
     required this.description,
     required this.link,
