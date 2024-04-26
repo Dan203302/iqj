@@ -5,7 +5,8 @@ typedef void OnEmailChanged(String email);
 
 class EmailField extends StatefulWidget {
   final OnEmailChanged onEmailChanged;
-   const EmailField({required this.onEmailChanged, super.key});
+  final TextEditingController controllerEmail;
+   const EmailField({required this.onEmailChanged, required this.controllerEmail, super.key});
 
   @override
   _EmailFieldState createState() => _EmailFieldState();

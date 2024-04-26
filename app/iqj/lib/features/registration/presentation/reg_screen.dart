@@ -54,8 +54,8 @@ class _LoginScreenState extends State<RegScreen> {
     final GlobalKey<FormState> _formKey = GlobalKey();
 
     //final FocusNode _focusNodePassword = FocusNode();
-    //final TextEditingController _controllerEmail = TextEditingController();
-    //final TextEditingController _controllerPassword = TextEditingController();
+    final TextEditingController _controllerEmail = TextEditingController();
+    final TextEditingController _controllerPassword = TextEditingController();
 
     return  Scaffold(
         body: Form(
@@ -75,7 +75,7 @@ class _LoginScreenState extends State<RegScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                EmailField(onEmailChanged: _handlerEmailChanged),
+                EmailField(onEmailChanged: _handlerEmailChanged, controllerEmail: _controllerEmail,),
                 const SizedBox(height: 20),
                 //SurnameField(onTextSubmitted: saveSurname),
                 //const SizedBox(height: 20),

@@ -99,7 +99,7 @@ class _LoginScreenState extends State<AuthScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                EmailField(onEmailChanged: _handlerEmailChanged),
+                EmailField(onEmailChanged: _handlerEmailChanged, controllerEmail: _controllerEmail,),
                 const SizedBox(height: 20),
                 PasswordField(controllerPassword: _controllerPassword,),
                 const SizedBox(height: 20),
