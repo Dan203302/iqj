@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+typedef void OnPasswordChanged(String password);
+
 class PasswordField extends StatefulWidget {
-  final Function(String) onPasswordChanged;
-  const PasswordField({super.key, required this.onPasswordChanged});
+  final OnPasswordChanged onPasswordChanged;
+  const PasswordField({required this.onPasswordChanged, super.key});
 
   @override
-  _PasswordFieldState createState() => _PasswordFieldState(onPasswordChanged: onPasswordChanged);
+  _PasswordFieldState createState() => _PasswordFieldState();
 }
 
 class _PasswordFieldState extends State<PasswordField> {
-  String _password = '';
-
-  final Function(String) onPasswordChanged;
-
-  _PasswordFieldState({required this.onPasswordChanged});
   bool _ishidden = true;
   Color boxFillColor = const Color(0xFFF6F6F6);
+  String _password = '';
 
   void _toggleVisibility() {
     setState(
@@ -102,11 +100,11 @@ class _PasswordFieldState extends State<PasswordField> {
         ),
         ),
         onChanged: (value) {
-          //boxFillColor = const Color(0xFFF6F6F6);
           setState(() {
             _password = value;
+            boxFillColor = const Color(0xFFF6F6F6);
           });
-          onPasswordChanged(value);
+          widget.onPasswordChanged(value);
         },
         validator: (value) {
           // confirmPass = value;

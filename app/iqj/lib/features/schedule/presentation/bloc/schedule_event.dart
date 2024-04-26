@@ -8,6 +8,6 @@ class LoadSchedule extends ScheduleEvent {} // Загрузка расписан
 class SelectSchedule extends ScheduleEvent {} // Выбор расписания (конкретного преподавателя, группы или аудитории)
 
 class SelectDay extends ScheduleEvent{
-  DateTime newDay;
-  SelectDay(this.newDay);
+  DateTime selectedDay;
+  SelectDay(this.selectedDay) ;
 } // Выбор дня для расписания

@@ -12,11 +12,11 @@ abstract class Day {
 class WorkingDay extends Day {
   final List<Lesson?> lessons; // Список пар в этот день
 
-  WorkingDay({
+  WorkingDay(
+    super.date, {
     required this.lessons,
-    required DateTime date,
     //required String date,
-  }) : super._(date); //date);
+  }) : super._(); //date);
 }
 
 // Выходной день
