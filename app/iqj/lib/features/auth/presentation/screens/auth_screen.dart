@@ -5,6 +5,11 @@ import 'package:iqj/features/auth/domain/passwordField.dart';
 import 'package:iqj/main.dart';
 import 'package:provider/provider.dart';
 
+String globalEmail = '';
+ void saveEmail(String text) {
+   globalEmail = text;
+ }
+
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -93,7 +98,7 @@ class _LoginScreenState extends State<AuthScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                EmailField(controllerEmail: _controllerEmail,),
+                EmailField(controllerEmail: _controllerEmail,onTextSubmitted: saveEmail),
                 const SizedBox(height: 20),
                 PasswordField(controllerPassword: _controllerPassword,),
                 const SizedBox(height: 20),

@@ -97,6 +97,7 @@ class LessonCard extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      color: Color(0xFF191919)
                     ),
                     children: [
                       TextSpan(
@@ -124,6 +125,7 @@ class LessonCard extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      color: Color(0xFF191919)
                     ),
                     children: [
                       TextSpan(

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 class EmailField extends StatefulWidget {
    final TextEditingController controllerEmail;
-   const EmailField({super.key, required this.controllerEmail});
+  final Function(String) onTextSubmitted;
+   const EmailField({required this.onTextSubmitted, required this.controllerEmail});
 
   @override
   _EmailFieldState createState() => _EmailFieldState();
 }
 
 class _EmailFieldState extends State<EmailField> {
+  final TextEditingController _textController = TextEditingController();
   Color boxFillColor = const Color(0xFFF6F6F6);
   bool isError = false;
 
@@ -91,6 +93,9 @@ class _EmailFieldState extends State<EmailField> {
           }
           isError = false;
           return null;
+        },
+        onFieldSubmitted: (value) {
+          widget.onTextSubmitted(_textController.text);
         },
       ),
     );

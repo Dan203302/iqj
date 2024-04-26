@@ -1,20 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<dynamic> sendData(String email, String surname, String name, String patr, String role, String password) async{
-  final response = await http.get(
-    Uri(
-      scheme: 'https',
-      host: 'mireaiqj.ru',
-      port: 8443,
-      path: '/sign-up',
-    ),
-  );
-  String fio = surname + ' ' + name + ' ' + patr;
-  json.encode({'name': fio, 'role': role, 'data': {'email': email, 'password': password}, 'bio': ''});
-  if (response.statusCode == 200){
-    return json.decode(response.body);
+Future<dynamic> sendData(String email, String password) async{
+  final userUpdateUrl = Uri.parse('https://mireaiqj.ru:8443/sign-up');
+  final body = json.encode({'email': "test1", 'password': "101"});
+
+  final response = await http.post(userUpdateUrl, headers: {'Content-Type': 'application/json'}, body: body);
+
+  if (response.statusCode == 200) {
+    print("VSE OKEY");
   } else {
-    throw Exception('Ошибка');
+    print('Failed to send data: ${response.statusCode}');
+    return null;
   }
-}
+ }
