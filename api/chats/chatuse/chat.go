@@ -4,19 +4,32 @@ import (
 	"database/sql"
 	"fmt"
 
+	//"os/user"
+
 	//"fmt"
 	"io"
 	"log"
 	"net/http"
 
+	//"iqj/database/user_data.go"
+
 	"github.com/gorilla/websocket"
 	_ "github.com/lib/pq"
 )
 
-type User struct {
-	id      string
-	name    string
-	message string
+// потом заменить на то что находиться в бд (сейчас чет не импортироаволось)
+
+type UserData struct {
+	Id         int    `json:"id"`          // Уникальный идентификатор данных пользователя
+	Name       string `json:"name"`        // Имя пользователя
+	Bio        string `json:"bio"`         // Биография пользователя
+	UsefulData string `json:"useful_data"` // Дополнительные данные пользователя
+	Role       string `json:"role"`        // Роль пользователя в системе
+}
+
+type Message struct {
+	text string
+	user UserData
 }
 
 type Server struct {
@@ -50,7 +63,7 @@ type Server struct {
 // 	return nil
 // }
 
-func InsertMessage(name, message string) error {
+func InsertMessage(mes Message) error {
 	host := "localhost"
 	port := 8080
 	user := "postgres"
@@ -73,7 +86,7 @@ func InsertMessage(name, message string) error {
 	}
 
 	defer db.Close()
-	_, err = db.Exec("INSERT INTO chat (name, message) VALUES ($1, $2)", name, message)
+	_, err = db.Exec("INSERT INTO chat (name, message) VALUES ($1, $2)", mes.user.Name, mes.text)
 	if err != nil {
 		panic(err)
 	}
@@ -132,6 +145,7 @@ func (s *Server) handleWS(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) readLoop(ws *websocket.Conn) {
+	var mes Message
 	for {
 		// Чтение сообщения из WebSocket.
 		_, message, err := ws.ReadMessage()
@@ -145,7 +159,9 @@ func (s *Server) readLoop(ws *websocket.Conn) {
 
 		// Рассылка сообщения всем клиентам.
 		s.broadcast(message)
-		InsertMessage("vova", string(message))
+		mes.text = string(message)
+		mes.user.Name = "Vova"
+		InsertMessage(mes)
 	}
 }
 
