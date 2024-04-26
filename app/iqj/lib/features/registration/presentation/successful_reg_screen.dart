@@ -33,7 +33,7 @@ class _SuccessRegState extends State<SuccessReg> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 34,
+                              fontSize: 33,
                               fontWeight: FontWeight.w700,
                               color: Theme.of(context)
                                 .colorScheme

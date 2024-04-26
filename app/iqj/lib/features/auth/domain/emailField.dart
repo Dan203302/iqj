@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 
+
+typedef void OnEmailChanged(String email);
+
 class EmailField extends StatefulWidget {
-  final Function(String) onTextSubmitted;
-   const EmailField({required this.onTextSubmitted});
+  final OnEmailChanged onEmailChanged;
+   const EmailField({required this.onEmailChanged, super.key});
 
   @override
   _EmailFieldState createState() => _EmailFieldState();
 }
 
 class _EmailFieldState extends State<EmailField> {
-  final TextEditingController _textController = TextEditingController();
   Color boxFillColor = const Color(0xFFF6F6F6);
   bool isError = false;
+  String _email = '';
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +77,11 @@ class _EmailFieldState extends State<EmailField> {
           ),
         ),
         onChanged: (value) {
-          boxFillColor = const Color(0xFFF6F6F6);
+          setState(() {
+            _email = value;
+            boxFillColor = const Color(0xFFF6F6F6);
+          });
+          widget.onEmailChanged(value);
         },
         validator: (String? value) {
           // RegExp regEx = RegExp("^[a-zA-Z0-9.a-zA-Z0-9.!#\$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"); // Regex [anything]@[anything].[anything]
@@ -92,9 +99,9 @@ class _EmailFieldState extends State<EmailField> {
           isError = false;
           return null;
         },
-        onFieldSubmitted: (value) {
-          widget.onTextSubmitted(_textController.text);
-        },
+        // onFieldSubmitted: (value) {
+        //   widget.onTextSubmitted(_textController.text);
+        // },
       ),
     );
   }

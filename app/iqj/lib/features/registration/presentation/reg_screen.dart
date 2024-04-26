@@ -12,11 +12,7 @@ import 'package:iqj/main.dart';
 // String globalSurname = '';
 // String globalName = '';
 // String globalPatronymic = '';
-String globalEmail = '';
 
- void saveEmail(String text) {
-   globalEmail = text;
- }
 
 
 class RegScreen extends StatefulWidget {
@@ -30,7 +26,21 @@ class RegScreen extends StatefulWidget {
 //изменить поле роль
 
 class _LoginScreenState extends State<RegScreen> {
-  String _password = '';
+  String password = '';
+  String repassword = '';
+  String email = '';
+  bool globalchekpass = true;
+
+  void _handlePasswordChanged(String pass) {
+      password = pass;
+  }
+  void _handlerePasswordChanged(String repass) {
+      repassword = repass;
+  }
+  void _handlerEmailChanged(String emailadress) {
+      email = emailadress;
+  }
+
   bool passwordVisible = false;
   @override
   void initState() {
@@ -65,7 +75,7 @@ class _LoginScreenState extends State<RegScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                EmailField(onTextSubmitted: saveEmail),
+                EmailField(onEmailChanged: _handlerEmailChanged),
                 const SizedBox(height: 20),
                 //SurnameField(onTextSubmitted: saveSurname),
                 //const SizedBox(height: 20),
@@ -75,15 +85,9 @@ class _LoginScreenState extends State<RegScreen> {
                 //const SizedBox(height: 20),
                 //RoleField(),
                 //const SizedBox(height: 20),
-                PasswordField(
-                  onPasswordChanged: (value) {
-                    setState(() {
-                      _password = value;
-                    });
-                  },
-                ),
+                PasswordField(onPasswordChanged: _handlePasswordChanged),
                 const SizedBox(height: 20),
-                RepPasswordField(),
+                RepPasswordField(onPasswordChanged: _handlerePasswordChanged),
                 // const SizedBox(height: 20),
                 const SizedBox(height: 180),
                 Row(
@@ -101,10 +105,17 @@ class _LoginScreenState extends State<RegScreen> {
                       onPressed: () {
                         // if (_formKey.currentState?.validate() ?? false) {
                           print("TYT VIVODIT SLOVA");
-                          print(_password);
-                          sendData(globalEmail, _password);
-                          Navigator.pushReplacementNamed(context, 'successreg');
-                        // }
+                          print(email);
+                          print(password);
+                          print(repassword);
+                          if (password == repassword){
+                            sendData(email, password);
+                            Navigator.pushReplacementNamed(context, 'successreg');
+                          }
+                          if (password != repassword){
+                            globalchekpass = false;
+                          }
+                          print(globalchekpass);
                       },
                       child: const Text(
                         "Регистрация",
@@ -118,6 +129,10 @@ class _LoginScreenState extends State<RegScreen> {
                     ),
                   ],
                 ),
+              // if (globalchekpass == false) {
+              //     SizedBox(height: 20),
+              //     Text('Пароли не совпадают'),
+              // }
               ],
             ),
           ),
