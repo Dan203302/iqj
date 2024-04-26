@@ -92,7 +92,7 @@ func (nt *NewsTable) GetById(n *News) (*News, error) {
 	}
 
 	if rows.Next() {
-		rows.Scan(n.Header, n.Link, n.Content, pq.Array(n.ImageLinks), pq.Array(n.Tags), n.PublicationTime)
+		rows.Scan(&n.Header, &n.Link, &n.Content, pq.Array(&n.ImageLinks), pq.Array(&n.Tags), &n.PublicationTime)
 	} else {
 		return nil, errors.New("News.GetById: could not find any News with provided *News.Id")
 	}
