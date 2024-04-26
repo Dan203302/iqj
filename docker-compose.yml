@@ -61,6 +61,7 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./docker_scripts/init.sql:/docker-entrypoint-initdb.d/db.sql
+      - data:/var/lib/postgresql/data/
     ports:
       - "5436:5432"
     healthcheck:
