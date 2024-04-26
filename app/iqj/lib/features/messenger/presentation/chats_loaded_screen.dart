@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_reversed_list/flutter_reversed_list.dart';
 import 'package:iqj/features/messenger/presentation/screens/date_for_load_chats.dart';
 import 'package:iqj/features/messenger/presentation/screens/struct_of_message.dart';
-
 class ChatsList extends StatefulWidget {
   const ChatsList({Key? key}) : super(key: key);
   @override
@@ -118,6 +118,7 @@ class _ChatsListState extends State<ChatsList> {
         ),
       ),
       body: ListView(
+        reverse: true,
         children: [
           Container(
             child: Column(

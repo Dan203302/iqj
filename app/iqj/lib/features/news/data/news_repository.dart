@@ -11,7 +11,7 @@ Future<List<News>> getNews() async {
       host: 'mireaiqj.ru',
       port: 8443,
       path: '/news',
-      queryParameters: {'offset': '0', 'count': '15'},
+      queryParameters: {'offset': '0', 'count': '11'},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
   );
@@ -37,7 +37,7 @@ Future<List<News>> getNews() async {
     // print(hi['image_link'][0]);
     newsList = jsonList.map((json) {
       return News(
-        id: json['id'] as String,
+        id: json['id'].toString(),
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
         // tags: json['tags'] as List<String>, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
