@@ -184,7 +184,7 @@ class _ChatsListState extends State<ChatsList> {
           controller: _msgController,
           decoration: InputDecoration(
             filled: true, // Включаем заливку цветом
-            fillColor: const Color.fromARGB(255, 53, 53, 53),
+            fillColor: Theme.of(context).colorScheme.onInverseSurface,
             hintText: "Введите сообщение...",
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.only(
