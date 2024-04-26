@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iqj/features/schedule/presentation/bloc/schedule_bloc.dart';
+import 'package:iqj/features/schedule/presentation/bloc/schedule_event.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatefulWidget {
@@ -39,7 +42,8 @@ class _CalendarState extends State<Calendar> {
           focusedDay = focusDay;
         });
         print(focusedDay);
-      }, // Выбор дня
+        BlocProvider.of<ScheduleBloc>(context).add(SelectDay(focusDay));
+      },
       selectedDayPredicate: (DateTime date) {
         return isSameDay(selectedDay, date);
       }, // Проверка, является ли день выбранным

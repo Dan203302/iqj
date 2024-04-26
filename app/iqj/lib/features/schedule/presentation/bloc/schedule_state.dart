@@ -8,13 +8,12 @@ class ScheduleInitial extends ScheduleState {}
 class ScheduleLoading extends ScheduleState {}
 
 class ScheduleLoadingFailed extends ScheduleState {
-  final Object? except;
+  final Object except;
   ScheduleLoadingFailed({required this.except});
 }
 
 class ScheduleLoaded extends ScheduleState {
-  final List<Day> scheduleList;
-  final Day? activeDay; // выбранный в данный момент день
+  final Day activeDay; // выбранный в данный момент день
 
-  ScheduleLoaded({required this.scheduleList, required this.activeDay});
+  ScheduleLoaded({required this.activeDay});
 }
