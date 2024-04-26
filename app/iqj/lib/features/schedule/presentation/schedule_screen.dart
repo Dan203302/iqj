@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/schedule/presentation/bloc/schedule_bloc.dart';
 import 'package:iqj/features/schedule/presentation/bloc/schedule_event.dart';
 import 'package:iqj/features/schedule/presentation/widgets/calendar.dart';
 import 'package:iqj/features/schedule/presentation/widgets/lesson_list.dart';
-import 'widgets/calendar.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 
 // Всю логику новостей нужно сесть и хорошо обдумать, прежде чем писать этот код
 
@@ -24,9 +20,20 @@ class ScheduleScreen extends StatelessWidget {
             'Расписание',
             style: Theme.of(context).textTheme.titleLarge,
           ),
+          actions: [
+            IconButton(
+              onPressed: () => DoNothingAction(),
+              icon: const Icon(Icons.more_vert),
+            ),
+            // SvgPicture.asset(
+            //   'assets/schedule/dots.svg',
+            //   width: 4.17,
+            //   height: 16,
+            // ),
+          ],
         ),
         body: ListView(
-          children: const [
+          children: const <Widget>[
             Calendar(),
             Lessons(),
           ],

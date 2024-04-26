@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iqj/features/news/admin/special_news_add_button.dart';
-import 'package:iqj/features/news/presentation/screens/search/body_for_tags/body_tags.dart';
 import 'package:intl/intl.dart';
 
 class SpecialNews extends StatefulWidget {
@@ -16,6 +15,8 @@ class _SpecialNews extends State<SpecialNews> {
   String _text = '';
   String _publishFromTime = '';
   String _publishUntilTime = '';
+  String formattedFromDate = '';
+  String formattedUntilDate = '';
 
   TextEditingController fromDatePickerController = TextEditingController();
   TextEditingController toDatePickerController = TextEditingController();
@@ -276,6 +277,9 @@ class _SpecialNews extends State<SpecialNews> {
                     ),
                     onChanged: (text) {
                       setState(() {
+                        DateFormat outputFormat =
+                            DateFormat("yyyy-MM-dd'T'00:00:00.000'Z'");
+                        formattedFromDate = outputFormat.format(DateFormat('dd.MM.yyyy').parse(text));
                         _publishFromTime = text;
                       });
                     },
@@ -337,6 +341,9 @@ class _SpecialNews extends State<SpecialNews> {
                     ),
                     onChanged: (text) {
                       setState(() {
+                        DateFormat outputFormat =
+                            DateFormat("yyyy-MM-dd'T'00:00:00.000'Z'");
+                        formattedUntilDate = outputFormat.format(DateFormat('dd.MM.yyyy').parse(text));
                         _publishUntilTime = text;
                       });
                     },
@@ -453,8 +460,8 @@ class _SpecialNews extends State<SpecialNews> {
           special_news_add_button(
             context,
             _text,
-            _publishFromTime,
-            _publishUntilTime,
+            formattedFromDate,
+            formattedUntilDate,
           ),
           const Padding(
             padding: EdgeInsets.only(bottom: 12, top: 12),

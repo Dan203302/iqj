@@ -11,7 +11,7 @@ Future<List<News>> getNews() async {
       host: 'mireaiqj.ru',
       port: 8443,
       path: '/news',
-      queryParameters: {'offset': '0', 'count': '15'},
+      queryParameters: {'offset': '0', 'count': '50'},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
   );
@@ -37,7 +37,7 @@ Future<List<News>> getNews() async {
     // print(hi['image_link'][0]);
     newsList = jsonList.map((json) {
       return News(
-        id: json['id'] as String,
+        id: json['id'].toString(),
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
         // tags: json['tags'] as List<String>, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
@@ -45,6 +45,7 @@ Future<List<News>> getNews() async {
         thumbnails: json['image_link'][0] as String,
         description: "dd", ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         link: json['link'] as String,
+        bookmarked: false,
       );
     }).toList();
     return newsList;
@@ -60,8 +61,8 @@ Future<List<SpecialNews>> getSpecialNews() async {
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
-      path: '/news',
-      queryParameters: {'offset': '0', 'count': '15'},
+      path: '/ad',
+      // queryParameters: {'offset': '0', 'count': ''},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
   );
@@ -80,6 +81,7 @@ Future<List<SpecialNews>> getSpecialNews() async {
     //     );
     //   },
     // ).toList();
+    print('response 200');
     final dynamic decodedData = json.decode(response.body);
     List<SpecialNews> newsList = [];
     final List<dynamic> jsonList = decodedData as List;
@@ -88,11 +90,12 @@ Future<List<SpecialNews>> getSpecialNews() async {
     newsList = jsonList.map((json) {
       return SpecialNews(
         id: json['id'] as String,
-        text: json['header'] as String,
-        publishFromTime: DateTime.parse(json['publication_time'] as String),
-        publishUntilTime: DateTime.parse(json['publication_time'] as String),
+        text: json['content'] as String,
+        publishFromTime: DateTime.parse(json['creation_date'] as String),
+        publishUntilTime: DateTime.parse(json['expiration_date'] as String),
       );
     }).toList();
+    print(newsList.length);
     return newsList;
   } else {
     throw Exception(response.statusCode);
@@ -112,24 +115,42 @@ Future<http.Response> postGeneralNews(
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
-      path: '/news',
+      path: '/api/news',
     ),
   );
 }
 
-Future<http.Response> postSpecialNews(
+Future<void> postSpecialNews(
   String text,
   String publishFromTime,
   String publishUntilTime,
 ) async {
-  return http.post(
+  try {
+  final response = await http.post(
     Uri(
       scheme: 'https',
       host: 'mireaiqj.ru',
       port: 8443,
-      path: '/news',
+      path: '/api/ad',
     ),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8', 
+    },
+    body: jsonEncode(<String, dynamic>{
+      'content': text,
+      'creation_date': publishFromTime,
+      'expiration_date': publishUntilTime,
+    }),
   );
+  if (response.statusCode == 201) { 
+        final responseData = jsonDecode(response.body); 
+        print('OK, news posted: $responseData');
+      } else { 
+        throw Exception('Failed to post data'); 
+      } 
+    } catch (e) { 
+      print("error: $e");
+    } 
 }
 
 
@@ -158,7 +179,8 @@ Future<News> getNewsFull(String id) async {
           ? json['image_link'][0] as String
           : '',
         link: json['link'] as String,
-      )));
+        bookmarked: false,
+      ),),);
     } else if (decodedData is Map<String, dynamic>) {
       // Handle case where decodedData is a Map
       News news = News(
@@ -168,6 +190,7 @@ Future<News> getNewsFull(String id) async {
         thumbnails: decodedData['image_link'][0] as String,
         link: "decodedData['link'] as String",
         description: decodedData['text'] as String,
+        bookmarked: false,
       );
       newsList.add(news);
     }

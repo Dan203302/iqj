@@ -5,15 +5,17 @@ class News {
   final String thumbnails;
   //final List<String> tags; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
   final DateTime publicationTime;
-  final String description; ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+  final String description;
   final String link;
+  late final bool bookmarked;
   News({
     required this.id,
     required this.title,
     required this.thumbnails,
     //required this.tags, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
     required this.publicationTime,
-    required this.description, ///////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+    required this.description,
     required this.link,
+    required this.bookmarked,
   });
 }

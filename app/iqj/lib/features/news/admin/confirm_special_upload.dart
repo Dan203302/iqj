@@ -36,6 +36,7 @@ void uploadSpecialDialog(
     ),
     onPressed: () {
       postSpecialNews(text, publishFromTime, publishUntilTime);
+      //postSpecialNews(text);
       Navigator.of(context).pop();
     },
   );
