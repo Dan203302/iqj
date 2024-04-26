@@ -128,16 +128,16 @@ class NewsLoadListLoadingFail extends NewsLoadState {
 class NewsLoadBloc extends Bloc<NewsLoadEvent, NewsLoadState> {
   final String id;
   NewsLoadBloc(this.id) : super(NewsLoadInitial()) {
-    //print("init bloc");
+    print("init bloc");
     on<LoadNewsLoadList>((event, emit) async {
       try {
         if (state is! NewsLoadLoaded) {
-          //print("news load loading now");
+          print("news load loading now");
           emit(NewsLoadLoading());
         }
-        //print("Start load news");
+        print("Start load news "+id);
         final News news = await getNewsFull(id);
-        //print("News loaded");
+        print("News loaded");
         emit(NewsLoadLoaded(news, false));
       } catch (e) {
         print("error: " + NewsLoadListLoadingFail(except: e).toString());
@@ -161,24 +161,26 @@ Future<News> getNewsFull(String id) async {
   );
   if (response.statusCode == 200) {
     final dynamic decodedData = json.decode(response.body);
+    //print(decodedData);
     List<News> newsList = [];
     if (decodedData is List) {
       newsList = List<News>.from(
         decodedData.map(
           (json) => News(
-            description: json['text'].toString(),
             id: json['id'] as String,
             title: json['header'] as String,
-            publicationTime: DateTime.parse(json['publication_time'] as String),
-            tags: ["a"],
+            link: json['link'] as String,
+            description: json['content'].toString(),
             thumbnails: (json['image_link'] as List<String>).isNotEmpty
                 ? json['image_link'][0] as String
-                : '',
-            link: json['link'] as String,
+                : 'https://www.mirea.ru/upload/resize_cache/iblock/315/a8z66au34adqxo5a6ax0y60sh8c6yxk3/250_250_2/20240425191345_LR0A6461.jpg',
+            tags: json['tags'][0] as String,
+            publicationTime: DateTime.parse(json['publication_time'] as String),
             bookmarked: false,
           ),
         ),
       );
+      print(decodedData);
     } else if (decodedData is Map<String, dynamic>) {
       final News news = News(
         id: decodedData['id'].toString(),
@@ -186,13 +188,16 @@ Future<News> getNewsFull(String id) async {
         publicationTime:
             DateTime.parse(decodedData['publication_time'] as String),
         thumbnails: decodedData['image_link'][0] as String,
-        tags: [""],
-        link: "decodedData['link'] as String",
-        description: decodedData['text'] as String,
+            
+        tags: decodedData['tags'][0] as String,
+        link: decodedData['link'] as String,
+        description: decodedData['content'] as String,
         bookmarked: false,
       );
+      print(newsList);
       newsList.add(news);
     }
+    print(newsList[0]);
     return newsList[0];
   } else {
     throw Exception(response.statusCode);
@@ -207,18 +212,20 @@ class NewsList extends StatelessWidget {
     final Map<String, String> args =
         ModalRoute.of(context)!.settings.arguments! as Map<String, String>;
     final String newsId = args['id']!;
+    final String newsLink = args['link']!;
 
     return BlocProvider(
       create: (context) => NewsLoadBloc(newsId),
-      child: _NewsListWidget(newsId: newsId),
+      child: _NewsListWidget(newsId: newsId, newsLink: newsLink,),
     );
   }
 }
 
 class _NewsListWidget extends StatefulWidget {
   final String newsId;
+  final String newsLink;
 
-  _NewsListWidget({required this.newsId, Key? key}) : super(key: key);
+  _NewsListWidget({required this.newsId, required this.newsLink, Key? key}) : super(key: key);
 
   @override
   __NewsListWidgetState createState() => __NewsListWidgetState();
@@ -337,7 +344,7 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
                               context,
                               DateFormat('dd.MM.yyyy hh:mm')
                                   .format(news.publicationTime),
-                              widget.newsId,
+                              widget.newsId, widget.newsLink,
                             );
                           },
                           itemBuilder: (BuildContext context) {
@@ -618,11 +625,10 @@ void handleMenuSelection(
   BuildContext context,
   String newsDate,
   String newsId,
+  String newsLink,
 ) {
   if (choice == 'Поделиться...') {
-    //Share.share('Прочитайте эту новость МИРЭА: ' + newsLink);
-    // Ссылка не передается в запросе /news_id, поэтому это не работает.
-    // Пусть будут передавать чтобы можно было поделиться новостью)
+    Share.share('Прочитайте эту новость МИРЭА: $newsLink');
   } else if (choice == 'Подробнее...') {
     showDetailsDialog(context, newsDate, newsId);
   }
