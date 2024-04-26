@@ -1,4 +1,4 @@
-package chats
+package ws
 
 type Message struct {
 	Author string `json:"author"`

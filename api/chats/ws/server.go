@@ -1,4 +1,4 @@
-package chats
+package ws
 
 import (
 	"log"
