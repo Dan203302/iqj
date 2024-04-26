@@ -90,7 +90,7 @@ class _ChatBubble extends State<ChatBubble> {
               //String name = widget.chatTitle;
               Navigator.of(context).pushNamed(
               'chatslist',
-              arguments: {'name': widget.chatTitle,'url':widget.imageUrl,'volume': volume,'pin': push_pin},
+              arguments: {'name': widget.chatTitle,'url':widget.imageUrl,'volume': volume,'pin': push_pin, 'uid':widget.uid},
           );
             },
             onLongPress: () => {

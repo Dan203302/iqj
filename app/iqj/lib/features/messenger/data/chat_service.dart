@@ -15,7 +15,7 @@ class ChatService extends ChangeNotifier {
     final Timestamp timestamp = Timestamp.now();
 
     // create msg
-    Message newMessage = Message(
+    final Message newMessage = Message(
       senderId: currentUserId,
       senderEmail: currentUserEmail,
       receiverId: receiverId,
@@ -24,9 +24,10 @@ class ChatService extends ChangeNotifier {
     );
 
     // make chatroom
-    List<String> ids = [currentUserId, receiverId];
+    final List<String> ids = [currentUserId, receiverId];
     ids.sort();
-    String chatRoomId = ids.join("_");
+    print(ids);
+    final String chatRoomId = ids.join("_");
 
     // add to db
     await _firestore
@@ -36,12 +37,12 @@ class ChatService extends ChangeNotifier {
         .add(newMessage.toMap());
   }
 
-
   // Get messages
   Stream<QuerySnapshot> getMessages(String userId, String otherId) {
-      List<String> ids = [userId, otherId];
+      final List<String> ids = [userId, otherId];
       ids.sort();
-      String chatRoomId = ids.join("_");
+      print(ids);
+      final String chatRoomId = ids.join("_");
       return _firestore
           .collection('chatrooms')
           .doc(chatRoomId)

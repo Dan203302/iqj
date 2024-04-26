@@ -7,8 +7,7 @@ import 'package:iqj/features/messenger/presentation/screens/date_for_load_chats.
 import 'package:iqj/features/messenger/presentation/screens/struct_of_message.dart';
 
 class ChatsList extends StatefulWidget {
-  final String receiverUserId;
-  const ChatsList({Key? key, required this.receiverUserId}) : super(key: key);
+  const ChatsList({super.key});
   @override
   State<StatefulWidget> createState() => _ChatsListState();
 }
@@ -50,6 +49,7 @@ class _ChatsListState extends State<ChatsList> {
 
   String? user_name = "..."; // Объявление user_name как поле класса
   String? image_url = "";
+  String uid = "";
   bool vol = false;
   bool pin = false;
 
@@ -63,6 +63,7 @@ class _ChatsListState extends State<ChatsList> {
     image_url = help["url"] as String?;
     vol = help["volume"] as bool;
     pin = help["pin"] as bool;
+    uid = help["uid"] as String;
 
     setState(() {});
     super.didChangeDependencies();
@@ -75,7 +76,7 @@ class _ChatsListState extends State<ChatsList> {
   void sendMessage() async {
     if (_msgController.text.isNotEmpty) {
       await _chatService.sendMessage(
-          widget.receiverUserId, _msgController.text);
+          uid, _msgController.text,);
       _msgController.clear();
     }
   }
@@ -83,7 +84,7 @@ class _ChatsListState extends State<ChatsList> {
   Widget _buildMessageList() {
     return StreamBuilder(
       stream: _chatService.getMessages(
-          widget.receiverUserId, _firebaseAuth.currentUser!.uid),
+          uid, _firebaseAuth.currentUser!.uid,),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -92,7 +93,7 @@ class _ChatsListState extends State<ChatsList> {
           return const Text('loading');
         }
         return ListView(
-          reverse: true,
+          //reverse: true,
           children: snapshot.data!.docs
               .map((document) => _buildMessageListItem(document))
               .toList(),
@@ -102,18 +103,18 @@ class _ChatsListState extends State<ChatsList> {
   }
 
   Widget _buildMessageListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-    var alignment = (data['senderId'] == _firebaseAuth.currentUser!.uid)
+    final Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    print(data);
+    final mainalignment = (data['senderId'] == _firebaseAuth.currentUser!.uid)
+        ? MainAxisAlignment.start
+        : MainAxisAlignment.end;
+    final alignment = (data['senderId'] == _firebaseAuth.currentUser!.uid)
         ? Alignment.centerRight
         : Alignment.centerLeft;
     return Container(
-        alignment: alignment,
-        child: Column(
-          children: [
-            Text(data['senderEmail'].toString()),
-            Text(data['message'].toString())
-          ],
-        ));
+      alignment: alignment,
+      child: ReceiverMessage(message: data['message'].toString(), mainAxisAlignment: mainalignment, url: '',)
+      );
   }
 
   @override
@@ -179,7 +180,7 @@ class _ChatsListState extends State<ChatsList> {
       ),
       body: _buildMessageList(),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(8.0), // Добавляем отступы вокруг TextField
+        padding: EdgeInsets.zero,
         child: TextField(
           controller: _msgController,
           decoration: InputDecoration(
@@ -188,9 +189,9 @@ class _ChatsListState extends State<ChatsList> {
             hintText: "Введите сообщение...",
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
+                  topLeft: Radius.circular(12),
                   topRight:
-                      Radius.circular(24)), // Закругленные углы для поля ввода
+                      Radius.circular(12)), // Закругленные углы для поля ввода
             ),
             prefixIcon: IconButton(
               icon: Icon(Icons.insert_emoticon), // Иконка смайлика

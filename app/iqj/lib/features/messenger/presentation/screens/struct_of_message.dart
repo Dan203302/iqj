@@ -30,10 +30,11 @@ import 'package:flutter/material.dart';
 //   }
 
 class ReceiverMessage extends StatelessWidget {
-  final String _url;
-  final String _message;
+  final String url;
+  final String message;
+  //final String _receiver;
 
-  const ReceiverMessage(this._url, this._message, {required MainAxisAlignment mainAxisAlignment});
+  const ReceiverMessage({required MainAxisAlignment mainAxisAlignment, required this.message, required this.url,});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class ReceiverMessage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _buildThumbnailImage(_url),
+                    _buildThumbnailImage(url),
                     Flexible( // Обернуть DecoratedBox в Flexible
                       child: DecoratedBox(
                         decoration: BoxDecoration(
@@ -67,7 +68,7 @@ class ReceiverMessage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start, // Выравнивание текста по левому краю
                             children: [
                               Text(
-                                _message,
+                                message,
                                 softWrap: true,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),

@@ -65,7 +65,7 @@ class _AppState extends State<App> {
       darkTheme: darkTheme,
       initialRoute: firstLaunch ? 'welcome' : '/',
       routes: {
-        //'/': (context) => const HomeScreen(),
+        '/': (context) => const HomeScreen(),
         'welcome': (context) => const Welcome(),
         'authorise': (context) => const AuthScreen(),
         'newslist': (context) => const NewsList(),
@@ -73,9 +73,12 @@ class _AppState extends State<App> {
         'registration': (context) => const RegScreen(),
         'successreg': (context) => const SuccessReg(),
         'messenger': (context) => const MessengerScreen(),
-        'chatslist': (context) => const ChatsList(receiverUserId: 'KwicA3zjUueSRURvYJYCrjYo0sP2'),
+        'chatslist': (context) => const ChatsList(),
         'services': (context) => const ServicesScreen(),
         'about': (context) => const AboutScreen(),
+      },
+      onUnknownRoute: (settings) {
+        
       },
     );
   }
