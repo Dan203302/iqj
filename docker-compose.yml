@@ -25,7 +25,6 @@ services:
 
 
   postgres:
-    container_name: iqj_postgres_container
     image: postgres:14.7-alpine
     command:
       - "postgres"
@@ -62,7 +61,6 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ./docker_scripts/init.sql:/docker-entrypoint-initdb.d/db.sql
-      - ./data:/var/lib/postgresql/data
     ports:
       - "5436:5432"
     healthcheck:
