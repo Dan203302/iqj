@@ -8,6 +8,7 @@ import 'package:iqj/features/news/domain/news.dart';
 
 // Events
 abstract class NewsEvent {}
+
 class FetchNews extends NewsEvent {}
 
 class LoadNewsList extends NewsEvent {
@@ -93,8 +94,11 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
         final List<News> updatedNewsList = List.from(
             currentState.newsList); // Создаем копию текущего списка новостей
         updatedNewsList.add(event.news); // Добавляем новую новость
-        emit(NewsLoaded(
-            updatedNewsList)); // Отправляем обновленный список новостей
+        emit(
+          NewsLoaded(
+            updatedNewsList,
+          ),
+        ); // Отправляем обновленный список новостей
       } catch (e) {
         emit(NewsError("Error while adding news: $e"));
       }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class PasswordField extends StatefulWidget {
-  const PasswordField({super.key});
+  final TextEditingController controllerPassword;
+  const PasswordField({super.key, required this.controllerPassword,});
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();
@@ -24,6 +25,7 @@ class _PasswordFieldState extends State<PasswordField> {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        controller: widget.controllerPassword,
         obscureText: _ishidden,
         keyboardType: TextInputType.visiblePassword,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
@@ -35,7 +37,8 @@ class _PasswordFieldState extends State<PasswordField> {
           floatingLabelBehavior: FloatingLabelBehavior.never,
           filled: true,
           fillColor: boxFillColor,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           label: Container(
             child: const Text(
               "Пароль",
@@ -79,18 +82,20 @@ class _PasswordFieldState extends State<PasswordField> {
           suffixIcon: Container(
             margin: const EdgeInsets.only(right: 5),
             child: IconButton(
-            icon: Icon(_ishidden
-                ? Icons.visibility_outlined
-                : Icons.visibility_off_outlined,),
-            onPressed: () {
-              setState(
-                () {
-                  _ishidden = !_ishidden;
-                },
-              );
-            },
+              icon: Icon(
+                _ishidden
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+              ),
+              onPressed: () {
+                setState(
+                  () {
+                    _ishidden = !_ishidden;
+                  },
+                );
+              },
+            ),
           ),
-        ),
         ),
         onChanged: (value) {
           boxFillColor = const Color(0xFFF6F6F6);

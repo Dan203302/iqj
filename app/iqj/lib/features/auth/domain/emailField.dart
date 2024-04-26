@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EmailField extends StatefulWidget {
-   const EmailField({super.key});
+   final TextEditingController controllerEmail;
+   const EmailField({super.key, required this.controllerEmail});
 
   @override
   _EmailFieldState createState() => _EmailFieldState();
@@ -15,6 +16,7 @@ class _EmailFieldState extends State<EmailField> {
   Widget build(BuildContext context) {
     return Container(
       child: TextFormField(
+        controller: widget.controllerEmail,
         keyboardType: TextInputType.emailAddress,
         cursorColor: const Color.fromARGB(255, 239, 172, 0),
         style: const TextStyle(

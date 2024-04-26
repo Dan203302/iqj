@@ -11,7 +11,7 @@ Future<List<News>> getNews() async {
       host: 'mireaiqj.ru',
       port: 8443,
       path: '/news',
-      queryParameters: {'offset': '0', 'count': '50'},
+      queryParameters: {'offset': '0', 'count': '13'},
       //TODO сделать offset динамически изменяемым, чтоб получать следующие новости при страницы
     ),
   );
@@ -40,7 +40,7 @@ Future<List<News>> getNews() async {
         id: json['id'].toString(),
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
-        // tags: json['tags'] as List<String>, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+        tags: [""], ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         // thumbnails: json['image_link'] as List<String>,
         thumbnails: json['image_link'][0] as String,
         description: "dd", ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
@@ -175,6 +175,7 @@ Future<News> getNewsFull(String id) async {
         id: json['id'] as String,
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
+        tags: [""],
         thumbnails: (json['image_link'] as List<String>).isNotEmpty 
           ? json['image_link'][0] as String
           : '',
@@ -187,6 +188,7 @@ Future<News> getNewsFull(String id) async {
         id: decodedData['id'] as String,
         title: decodedData['header'] as String,
         publicationTime: DateTime.parse(decodedData['publication_time'] as String),
+        tags: [""],
         thumbnails: decodedData['image_link'][0] as String,
         link: "decodedData['link'] as String",
         description: decodedData['text'] as String,

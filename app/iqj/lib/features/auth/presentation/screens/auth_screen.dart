@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iqj/features/auth/data/auth_service.dart';
 import 'package:iqj/features/auth/domain/emailField.dart';
 import 'package:iqj/features/auth/domain/passwordField.dart';
 import 'package:iqj/main.dart';
+import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -62,8 +64,8 @@ class _LoginScreenState extends State<AuthScreen> {
     final GlobalKey<FormState> _formKey = GlobalKey();
 
     //final FocusNode _focusNodePassword = FocusNode();
-    //final TextEditingController _controllerEmail = TextEditingController();
-    //final TextEditingController _controllerPassword = TextEditingController();
+    final TextEditingController _controllerEmail = TextEditingController();
+    final TextEditingController _controllerPassword = TextEditingController();
 
     return  Scaffold(
         body: Form(
@@ -91,9 +93,9 @@ class _LoginScreenState extends State<AuthScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                EmailField(),
+                EmailField(controllerEmail: _controllerEmail,),
                 const SizedBox(height: 20),
-                PasswordField(),
+                PasswordField(controllerPassword: _controllerPassword,),
                 const SizedBox(height: 20),
                 Container(
                   child: Transform.translate(
@@ -132,8 +134,18 @@ class _LoginScreenState extends State<AuthScreen> {
                           borderRadius: BorderRadius.circular(40),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState?.validate() ?? false) {
+                          final authService = Provider.of<AuthService>(context, listen: false);
+
+                          try {
+                            await authService.signInWithEmailandPassword(
+                              _controllerEmail.text, 
+                              _controllerPassword.text,
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error')));
+                          }
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
