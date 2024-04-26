@@ -42,7 +42,7 @@ func (sgt *StudentGroupTable) GetByID(sg *StudentGroup) (*StudentGroup, error) {
 	}
 
 	row, err := sgt.qm.makeSelect(sgt.db,
-		"SELECT Grade, Institute, StudentGroupName, StudentGroupStudentsIds FROM StudentsGroups WHERE StudentsGroupId = $1",
+		"SELECT grade, institute, student_group_name, student_group_studentsIds FROM students_groups WHERE students_group_id = $1",
 		sg.Id)
 	if err != nil {
 		return nil, fmt.Errorf("studentGroupTable.GetByID: %v", err)
@@ -73,7 +73,7 @@ func (sgt *StudentGroupTable) GetStudent(sg *StudentGroup) (*StudentGroup, error
 	}
 
 	row, err := sgt.qm.makeSelect(sgt.db,
-		"SELECT sg.Grade, sg.Institute, sg.StudentGroupName, sg.StudentGroupStudentsIds FROM StudentsGroups sg JOIN Students s ON sg.StudentsGroupId = s.StudentGroupId WHERE s.StudentId = $1",
+		"SELECT sg.grade, sg.institute, sg.student_group_name, sg.student_group_students_ids FROM students_groups sg JOIN students s ON sg.students_group_id = s.student_group_id WHERE s.student_id = $1",
 		sg.Id)
 	if err != nil {
 		return nil, fmt.Errorf("studentGroupTable.GetStudent: %v", err)
@@ -101,7 +101,7 @@ func (sgt *StudentGroupTable) GetGroupsByInstituteAndGrade(institute string, gra
 	groups := []*StudentGroup{}
 
 	rows, err := sgt.qm.makeSelect(sgt.db,
-		"SELECT StudentsGroupId, StudentGroupName, StudentGroupStudentsIds FROM StudentsGroups WHERE Institute = $1 AND Grade = $2",
+		"SELECT students_group_id, student_group_name, student_group_students_ids FROM students_groups WHERE institute = $1 AND grade = $2",
 		institute, grade)
 	if err != nil {
 		return nil, fmt.Errorf("studentGroupTable.GetGroupsByInstituteAndGrade: %v", err)
@@ -130,7 +130,7 @@ func (sgt *StudentGroupTable) GetGroupsByInstitute(sg *StudentGroup) ([]*Student
 	groups := []*StudentGroup{}
 
 	rows, err := sgt.qm.makeSelect(sgt.db,
-		"SELECT StudentsGroupId, StudentGroupName, StudentGroupStudentsIds FROM StudentsGroups WHERE Institute = $1",
+		"SELECT students_group_id, student_group_name, student_group_students_ids FROM students_groups WHERE institute = $1",
 		sg.Institute)
 	if err != nil {
 		return nil, fmt.Errorf("studentGroupTable.GetGroupsByInstitute: %v", err)
@@ -159,7 +159,7 @@ func (sgt *StudentGroupTable) GetGroupsByGrade(sg *StudentGroup) ([]*StudentGrou
 	groups := []*StudentGroup{}
 
 	rows, err := sgt.qm.makeSelect(sgt.db,
-		"SELECT StudentsGroupId, StudentGroupName, StudentGroupStudentsIds FROM StudentsGroups WHERE Grade = $1",
+		"SELECT students_group_id, student_group_name, student_group_students_ids FROM students_groups WHERE grade = $1",
 		sg.Grade)
 	if err != nil {
 		return nil, fmt.Errorf("studentGroupTable.GetGroupsByGrade: %v", err)
@@ -190,7 +190,7 @@ func (sgt *StudentGroupTable) Add(group *StudentGroup) error {
 	}
 
 	err := sgt.qm.makeInsert(sgt.db,
-		"INSERT INTO StudentsGroups (Grade, Institute, StudentGroupName, StudentGroupStudentsIds) VALUES ($1, $2, $3, $4)",
+		"INSERT INTO students_groups (grade, institute, student_group_name, student_group_students_ids) VALUES ($1, $2, $3, $4)",
 		&group.Grade, &group.Institute, &group.Name, pq.Array(&group.Students))
 	if err != nil {
 		return fmt.Errorf("studentGroupTable.Add: %v", err)
@@ -211,7 +211,7 @@ func (sgt *StudentGroupTable) Update(group *StudentGroup) error {
 		return errors.New("studentGroupTable.Update: wrong data! provided *StudentGroup is empty")
 	}
 
-	_, err := sgt.db.Exec("UPDATE StudentsGroups SET Grade = $1, Institute = $2, StudentGroupName = $3, StudentGroupStudentsIds = $4 WHERE StudentsGroupId = $5",
+	_, err := sgt.db.Exec("UPDATE students_groups SET grade = $1, institute = $2, student_group_name = $3, student_group_students_ids = $4 WHERE students_group_id = $5",
 		group.Grade, group.Institute, group.Name, pq.Array(&group.Students), group.Id)
 	if err != nil {
 		return fmt.Errorf("studentGroupTable.Update: %v", err)
@@ -228,7 +228,7 @@ func (sgt *StudentGroupTable) Update(group *StudentGroup) error {
 // sg := &StudentGroup{Id: 1}
 // err := ...Delete(sg) // err == nil если все хорошо
 func (sgt *StudentGroupTable) Delete(sg *StudentGroup) error {
-	_, err := sgt.db.Exec("DELETE FROM StudentsGroups WHERE StudentsGroupId = $1", sg.Id)
+	_, err := sgt.db.Exec("DELETE FROM students_groups WHERE students_group_id = $1", sg.Id)
 	if err != nil {
 		return fmt.Errorf("studentGroupTable.Delete: %v", err)
 	}

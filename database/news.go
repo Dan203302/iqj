@@ -50,10 +50,10 @@ func (nt *NewsTable) Add(n *News) error {
 	n.PublicationTime = formattedDate.Format("2006-01-02 15:04:05")
 
 	err = nt.qm.makeInsert(nt.db,
-		`INSERT INTO News (Header, Link, NewsText, ImageLinks, Tags, PublicationTime)
+		`INSERT INTO news (header, link, news_text, image_links, tags, publication_time)
 			SELECT $1, $2, $3, $4, $5, $6
 			WHERE NOT EXISTS (
-				SELECT 1 FROM News WHERE Header = $1 AND PublicationTime = $6
+				SELECT 1 FROM news WHERE header = $1 AND publication_time = $6
 			)
 		`,
 		n.Header, n.Link, n.Content, pq.Array(n.ImageLinks), pq.Array(n.Tags), n.PublicationTime)
@@ -82,7 +82,7 @@ func (nt *NewsTable) GetById(n *News) (*News, error) {
 	}
 
 	rows, err := nt.qm.makeSelect(nt.db,
-		"SELECT Header, Link, NewsText, ImageLinks, Tags, PublicationTime FROM News WHERE NewsId = $1",
+		"SELECT header, link, news_text, image_links, tags, publication_time FROM news WHERE news_id = $1",
 		n.Id,
 	)
 	defer rows.Close()
@@ -108,7 +108,7 @@ func (nt *NewsTable) GetById(n *News) (*News, error) {
 // blocks, err := ...GetLatestBlocks(10, 0) // Получить 10 последних новостных блоков
 func (nt *NewsTable) GetLatestBlocks(count, offset int) (*[]News, error) {
 	rows, err := nt.qm.makeSelect(nt.db,
-		"SELECT NewsId, Header, Link, ImageLinks, PublicationTime FROM News ORDER BY PublicationTime DESC LIMIT $1 OFFSET $2",
+		"SELECT news_id, header, link, image_links, publication_time FROM news ORDER BY publication_time DESC LIMIT $1 OFFSET $2",
 		count, offset,
 	)
 
@@ -144,7 +144,7 @@ func (nt *NewsTable) Delete(n *News) error {
 	}
 
 	err := nt.qm.makeDelete(nt.db,
-		"DELETE FROM News WHERE NewsId = $1",
+		"DELETE FROM news WHERE news_id = $1",
 		n.Id)
 
 	if err != nil {
