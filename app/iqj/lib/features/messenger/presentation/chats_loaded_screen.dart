@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:iqj/features/messenger/data/chat_service.dart';
 //import 'package:flutter_reversed_list/flutter_reversed_list.dart';
 import 'package:iqj/features/messenger/presentation/screens/date_for_load_chats.dart';
 import 'package:iqj/features/messenger/presentation/screens/struct_of_message.dart';
+
 class ChatsList extends StatefulWidget {
-  const ChatsList({Key? key}) : super(key: key);
+  final String receiverUserId;
+  const ChatsList({Key? key, required this.receiverUserId}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _ChatsListState();
 }
@@ -29,7 +34,8 @@ class _ChatsListState extends State<ChatsList> {
               ) {
                 return CircleAvatar(
                   radius: 6,
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
                   child: const Text('A'),
                 );
               },
@@ -52,7 +58,8 @@ class _ChatsListState extends State<ChatsList> {
     final args = ModalRoute.of(context)?.settings.arguments;
     assert(args != null, "Check args");
     Map<String, dynamic> help = args as Map<String, dynamic>;
-    user_name = help["name"] as String?; // Присваивание значения переменной user_name
+    user_name =
+        help["name"] as String?; // Присваивание значения переменной user_name
     image_url = help["url"] as String?;
     vol = help["volume"] as bool;
     pin = help["pin"] as bool;
@@ -61,157 +68,157 @@ class _ChatsListState extends State<ChatsList> {
     super.didChangeDependencies();
   }
 
+  final TextEditingController _msgController = TextEditingController();
+  final ChatService _chatService = ChatService();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  void sendMessage() async {
+    if (_msgController.text.isNotEmpty) {
+      await _chatService.sendMessage(
+          widget.receiverUserId, _msgController.text);
+      _msgController.clear();
+    }
+  }
+
+  Widget _buildMessageList() {
+    return StreamBuilder(
+      stream: _chatService.getMessages(
+          widget.receiverUserId, _firebaseAuth.currentUser!.uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text('loading');
+        }
+        return ListView(
+          reverse: true,
+          children: snapshot.data!.docs
+              .map((document) => _buildMessageListItem(document))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildMessageListItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+    var alignment = (data['senderId'] == _firebaseAuth.currentUser!.uid)
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
+    return Container(
+        alignment: alignment,
+        child: Column(
+          children: [
+            Text(data['senderEmail'].toString()),
+            Text(data['message'].toString())
+          ],
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( 
+      appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Container(
           width: MediaQuery.of(context).size.width,
           child: Row(
-                  children: [
-                    _buildThumbnailImage(image_url ?? ""),
-                    const Padding(padding: EdgeInsets.only(right: 12)),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              user_name ?? "",
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).colorScheme.onPrimaryContainer,
-                                fontSize: 20,
-                              ),
-                            ),
-                            vol? Icon(Icons.volume_off) : Container(),
-                            pin? Icon(Icons.push_pin_outlined) : Container(),
-                          ],
-                        ),
-                        Text(
-                          "печатает...",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    const Padding(padding: EdgeInsets.only(right: 12)),// Вставляет пространство между текстом и иконками
-                    IconButton(
-                      icon: Icon(Icons.phone, color: Theme.of(context).colorScheme.onBackground),
-                      onPressed: () {
-                        // Действие при нажатии на кнопку с телефоном
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.more_vert, color: Theme.of(context).colorScheme.onBackground),
-                      onPressed: () {
-                        // Действие при нажатии на кнопку с тремя вертикальными точками
-                      },
-                    ),
-                  ],
-                ),
-        ),
-      ),
-      body: ListView(
-        reverse: true,
-        children: [
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end, // Для выравнивания содержимого слева
-              crossAxisAlignment: CrossAxisAlignment.stretch, // Для растягивания элементов в высоту
-              children: [
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          DateWithLine(),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          DateWithLine(),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          DateWithLine(),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
-            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
-          ),
-              ],
-            ),
-          ),
-        ],
-      ),
-
-      bottomNavigationBar: Padding(
-      padding: EdgeInsets.all(8.0), // Добавляем отступы вокруг TextField
-      child: TextField(
-        decoration: InputDecoration(
-          filled: true, // Включаем заливку цветом
-          fillColor: const Color.fromARGB(255, 53, 53, 53),
-          hintText: "Введите сообщение...",
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.only(topLeft:Radius.circular(24),topRight: Radius.circular(24)), // Закругленные углы для поля ввода
-          ),
-          prefixIcon: IconButton(
-            icon: Icon(Icons.insert_emoticon), // Иконка смайлика
-            onPressed: () {
-              // Действие при нажатии на кнопку смайлика
-            },
-          ),
-          suffixIcon: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
+              _buildThumbnailImage(image_url ?? ""),
+              const Padding(padding: EdgeInsets.only(right: 12)),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        user_name ?? "",
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontSize: 20,
+                        ),
+                      ),
+                      vol ? Icon(Icons.volume_off) : Container(),
+                      pin ? Icon(Icons.push_pin_outlined) : Container(),
+                    ],
+                  ),
+                  Text(
+                    "печатает...",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+              Spacer(),
+              const Padding(
+                  padding: EdgeInsets.only(
+                      right:
+                          12)), // Вставляет пространство между текстом и иконками
               IconButton(
-                icon: Icon(Icons.attach_file), // Иконка скрепки
+                icon: Icon(Icons.phone,
+                    color: Theme.of(context).colorScheme.onBackground),
                 onPressed: () {
-                  // Действие при нажатии на кнопку скрепки
+                  // Действие при нажатии на кнопку с телефоном
                 },
               ),
               IconButton(
-                icon: Icon(Icons.send), 
+                icon: Icon(Icons.more_vert,
+                    color: Theme.of(context).colorScheme.onBackground),
                 onPressed: () {
-                  // Действие при нажатии на кнопку отправки
+                  // Действие при нажатии на кнопку с тремя вертикальными точками
                 },
               ),
             ],
           ),
         ),
       ),
-    ),
+      body: _buildMessageList(),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(8.0), // Добавляем отступы вокруг TextField
+        child: TextField(
+          controller: _msgController,
+          decoration: InputDecoration(
+            filled: true, // Включаем заливку цветом
+            fillColor: const Color.fromARGB(255, 53, 53, 53),
+            hintText: "Введите сообщение...",
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24),
+                  topRight:
+                      Radius.circular(24)), // Закругленные углы для поля ввода
+            ),
+            prefixIcon: IconButton(
+              icon: Icon(Icons.insert_emoticon), // Иконка смайлика
+              onPressed: () {
+                // Действие при нажатии на кнопку смайлика
+              },
+            ),
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.attach_file), // Иконка скрепки
+                  onPressed: () {
+                    // Действие при нажатии на кнопку скрепки
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    // Действие при нажатии на кнопку отправки
+                    sendMessage();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

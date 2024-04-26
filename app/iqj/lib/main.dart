@@ -74,7 +74,7 @@ class _AppState extends State<App> {
         'registration': (context) => const RegScreen(),
         'successreg': (context) => const SuccessReg(),
         'messenger': (context) => const MessengerScreen(),
-        'chatslist': (context) => const ChatsList(),
+        'chatslist': (context) => const ChatsList(receiverUserId: 'KwicA3zjUueSRURvYJYCrjYo0sP2'),
         'services': (context) => const ServicesScreen(),
         'about': (context) => const AboutScreen(),
       },
