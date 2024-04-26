@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - postgres # env db values maybe?
+      - postgres
     ports:
       - "8443:8443"
     networks:
@@ -22,7 +22,10 @@ services:
     volumes:
       - /etc/nginx/certs/certificate.crt:/etc/nginx/certs/certificate.crt
       - /etc/nginx/certs/key.crt:/etc/nginx/certs/key.crt
-
+    depends_on:
+      - postgres
+    networks:
+      - postgres
 
   postgres:
     image: postgres:14.7-alpine
@@ -75,14 +78,8 @@ services:
         limits:
           cpus: '1'
           memory: 2G
-    depends_on:
-      - nginx
     networks:
       - postgres
-
-
-volumes:
-  data:
 
 networks:
   postgres:
