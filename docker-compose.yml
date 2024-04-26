@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  iqj-api:
+  api:
     image: client:0.9.1
     build:
       context: .
@@ -22,8 +22,7 @@ services:
     volumes:
       - /etc/nginx/certs/certificate.crt:/etc/nginx/certs/certificate.crt
       - /etc/nginx/certs/key.crt:/etc/nginx/certs/key.crt
-    depends_on:
-      - iqj-api
+
 
   postgres:
     container_name: iqj_postgres_container
@@ -62,10 +61,10 @@ services:
       POSTGRES_PASSWORD: "aZCF131"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
-      - ../2. Init Database:/docker-entrypoint-initdb.d
-      - iqj-data:/var/lib/postgresql/data
+      - ./docker_scripts/init.sql:/docker-entrypoint-initdb.d/db.sql
+      - ./data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5436:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U iqj_admin -d iqj"]
       interval: 10s
@@ -78,12 +77,14 @@ services:
         limits:
           cpus: '1'
           memory: 2G
+    depends_on:
+      - nginx
     networks:
       - postgres
 
 
 volumes:
-  iqj-data:
+  data:
 
 networks:
   postgres:
