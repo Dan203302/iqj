@@ -24,33 +24,85 @@ type Server struct {
 	db    *sql.DB
 }
 
+// func InsertMessage(name, message string) error {
+// 	// Открытие соединения с базой данных PostgreSQL.
+// 	db, err := sql.Open("postgres", "postgres://user:password@localhost:8080/database?sslmode=disable")
+// 	if err != nil {
+// 		return fmt.Errorf("ошибка при подключении к базе данных: %v", err)
+// 	}
+// 	defer db.Close()
+
+// 	// Подготовка SQL-запроса для вставки данных в таблицу chat.
+// 	query := "INSERT INTO chat (name, message) VALUES ($1, $2)"
+// 	stmt, err := db.Prepare(query)
+// 	if err != nil {
+// 		return fmt.Errorf("ошибка при подготовке SQL-запроса: %v", err)
+// 	}
+// 	defer stmt.Close()
+
+// 	// Выполнение SQL-запроса для вставки данных.
+// 	_, err = stmt.Exec(name, message)
+// 	if err != nil {
+// 		return fmt.Errorf("ошибка при выполнении SQL-запроса: %v", err)
+// 	}
+
+// 	log.Println("Данные успешно добавлены в таблицу chat.")
+// 	return nil
+// }
+
 func InsertMessage(name, message string) error {
-	// Открытие соединения с базой данных PostgreSQL.
-	db, err := sql.Open("postgres", "postgres://user:password@localhost:8080/database?sslmode=disable")
+	host := "localhost"
+	port := 8080
+	user := "postgres"
+	password := "ghbdtn"
+	dbname := "postgres"
+
+	// Формирование строки подключения
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	// Устанавливаем подключение к базе данных
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		return fmt.Errorf("ошибка при подключении к базе данных: %v", err)
+		log.Fatal("Database connection failed:", err)
 	}
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
 	defer db.Close()
-
-	// Подготовка SQL-запроса для вставки данных в таблицу chat.
-	query := "INSERT INTO chat (name, message) VALUES ($1, $2)"
-	stmt, err := db.Prepare(query)
+	_, err = db.Exec("INSERT INTO chat (name, message) VALUES ($1, $2)", name, message)
 	if err != nil {
-		return fmt.Errorf("ошибка при подготовке SQL-запроса: %v", err)
+		panic(err)
 	}
-	defer stmt.Close()
-
-	// Выполнение SQL-запроса для вставки данных.
-	_, err = stmt.Exec(name, message)
-	if err != nil {
-		return fmt.Errorf("ошибка при выполнении SQL-запроса: %v", err)
-	}
-
-	log.Println("Данные успешно добавлены в таблицу chat.")
 	return nil
 }
 
-func NewServer(db *sql.DB) *Server {
+func NewServer() *Server {
+	host := "localhost"
+	port := 8080
+	user := "postgres"
+	password := "ghbdtn"
+	dbname := "postgres"
+
+	// Формирование строки подключения
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	// Устанавливаем подключение к базе данных
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal("Database connection failed:", err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	defer db.Close()
 	return &Server{
 		conns: make(map[*websocket.Conn]bool),
 		db:    db,
@@ -107,15 +159,65 @@ func (s *Server) broadcast(message []byte) {
 }
 
 func main() {
-	// Подключение к базе данных PostgreSQL.
-	db, err := sql.Open("postgres", "postgres://user:password@localhost:8080/database?sslmode=disable")
+	host := "localhost"
+	port := 8080
+	user := "postgres"
+	password := "ghbdtn"
+	dbname := "postgres"
+
+	// Формирование строки подключения
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
+	// Устанавливаем подключение к базе данных
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
 	defer db.Close()
 
+	// Выполняем запрос к таблице "chat"
+	rows, err := db.Query("SELECT * FROM chat")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	//InsertMessage("petya", "Hello everyone")
+
+	// // Обрабатываем результаты запроса
+	// var chats []User
+	// for rows.Next() {
+	// 	var chat User
+	// 	err := rows.Scan(&chat.id, &chat.name, &chat.message)
+	// 	if err != nil {
+	// 		panic(err)
+	// 	}
+	// 	chats = append(chats, chat)
+	// }
+	// if err = rows.Err(); err != nil {
+	// 	panic(err)
+	// }
+
+	// // Выводим данные
+	// for _, chat := range chats {
+	// 	fmt.Printf("ID: %d, Name: %s, Message: %s\n", chat.id, chat.name, chat.message)
+	// }
+
+	// Проверяем подключение к базе данных
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	// // Выполняем операцию INSERT
+	// _, err = db.Exec("INSERT INTO chat (name, message) VALUES ($1, $2)", "Имя пользователя", "Пример сообщения")
+	// if err != nil {
+	// 	panic(err)
+	// }
+
 	// Создание сервера WebSocket.
-	server := NewServer(db)
+	server := NewServer()
 
 	// Зарегистрировать обработчик WebSocket.
 	http.HandleFunc("/ws", server.handleWS)
