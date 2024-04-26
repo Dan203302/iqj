@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+//import 'package:flutter_reversed_list/flutter_reversed_list.dart';
+import 'package:iqj/features/messenger/presentation/screens/date_for_load_chats.dart';
+import 'package:iqj/features/messenger/presentation/screens/struct_of_message.dart';
 class ChatsList extends StatefulWidget {
   const ChatsList({Key? key}) : super(key: key);
   @override
@@ -42,6 +44,8 @@ class _ChatsListState extends State<ChatsList> {
 
   String? user_name = "..."; // Объявление user_name как поле класса
   String? image_url = "";
+  bool vol = false;
+  bool pin = false;
 
   @override
   void didChangeDependencies() {
@@ -50,6 +54,8 @@ class _ChatsListState extends State<ChatsList> {
     Map<String, dynamic> help = args as Map<String, dynamic>;
     user_name = help["name"] as String?; // Присваивание значения переменной user_name
     image_url = help["url"] as String?;
+    vol = help["volume"] as bool;
+    pin = help["pin"] as bool;
 
     setState(() {});
     super.didChangeDependencies();
@@ -69,13 +75,19 @@ class _ChatsListState extends State<ChatsList> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          user_name ?? "",
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).colorScheme.onPrimaryContainer,
-                            fontSize: 20,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              user_name ?? "",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onPrimaryContainer,
+                                fontSize: 20,
+                              ),
+                            ),
+                            vol? Icon(Icons.volume_off) : Container(),
+                            pin? Icon(Icons.push_pin_outlined) : Container(),
+                          ],
                         ),
                         Text(
                           "печатает...",
@@ -105,6 +117,65 @@ class _ChatsListState extends State<ChatsList> {
                 ),
         ),
       ),
+      body: ListView(
+        reverse: true,
+        children: [
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end, // Для выравнивания содержимого слева
+              crossAxisAlignment: CrossAxisAlignment.stretch, // Для растягивания элементов в высоту
+              children: [
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          DateWithLine(),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          DateWithLine(),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          DateWithLine(),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "У нас мероприятие в армии",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+          ReceiverMessage('https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en', "Не хотите придти? :)",
+            mainAxisAlignment: MainAxisAlignment.end, // Выравнивание сообщения справа
+          ),
+              ],
+            ),
+          ),
+        ],
+      ),
+
       bottomNavigationBar: Padding(
       padding: EdgeInsets.all(8.0), // Добавляем отступы вокруг TextField
       child: TextField(

@@ -166,7 +166,7 @@ Future<News> getNewsFull(String id) async {
       newsList = List<News>.from(
         decodedData.map(
           (json) => News(
-            description: json['text'] as String,
+            description: json['text'].toString(),
             id: json['id'] as String,
             title: json['header'] as String,
             publicationTime: DateTime.parse(json['publication_time'] as String),
@@ -180,7 +180,7 @@ Future<News> getNewsFull(String id) async {
       );
     } else if (decodedData is Map<String, dynamic>) {
       final News news = News(
-        id: decodedData['id'] as String,
+        id: decodedData['id'].toString(),
         title: decodedData['header'] as String,
         publicationTime:
             DateTime.parse(decodedData['publication_time'] as String),

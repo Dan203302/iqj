@@ -211,7 +211,12 @@ class _MessengerBloc extends State<MessengerScreen> {
                 ChatBubble(
                     imageUrl:
                         'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                    chatTitle: 'АPI',
+                    chatTitle: 'Денис',
+                    secondary: 'secondaryText',),
+                ChatBubble(
+                    imageUrl:
+                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                    chatTitle: 'Стас',
                     secondary: 'secondaryText',),
                 ChatBubble(
                     imageUrl:
@@ -221,7 +226,7 @@ class _MessengerBloc extends State<MessengerScreen> {
                 ChatBubble(
                     imageUrl:
                         'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                    chatTitle: 'АPI',
+                    chatTitle: 'Gewin',
                     secondary: 'secondaryText',),
               ],
             ),

@@ -37,7 +37,7 @@ Future<List<News>> getNews() async {
     // print(hi['image_link'][0]);
     newsList = jsonList.map((json) {
       return News(
-        id: json['id'] as String,
+        id: json['id'].toString(),
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
         // tags: json['tags'] as List<String>, ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
