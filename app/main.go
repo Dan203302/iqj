@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mirea/iqj/iqj/api/handler"
+	"iqj/api/handler"
 	"log"
 
 	"github.com/gin-gonic/gin"

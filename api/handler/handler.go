@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/mirea/iqj/iqj/api/excelparser"
+	"iqj/api/excelparser"
 	"iqj/models"
 	"net/http"
 

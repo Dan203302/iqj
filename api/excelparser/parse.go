@@ -2,6 +2,7 @@ package excelparser
 
 import (
 	"fmt"
+	"iqj/config"
 	"iqj/models"
 	"os"
 	"path/filepath"
@@ -13,7 +14,7 @@ import (
 // Парсинг всех Excel файлов директории
 func Parse(criterion string, value string) ([]models.Lesson, error) {
 	var tables []models.Lesson
-	directory := "excelFiles" //ПРОПИСАТЬ ПОЛНЫЙ ПУТЬ, ЕСЛИ НЕ РАБОТАЕТ
+	directory := config.DirToParse //ПРОПИСАТЬ ПОЛНЫЙ ПУТЬ, ЕСЛИ НЕ РАБОТАЕТ
 	files, err := os.ReadDir(directory)
 	if err != nil {
 		return tables, err
