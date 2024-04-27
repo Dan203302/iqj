@@ -251,6 +251,7 @@ class _ChatsListState extends State<ChatsList> {
             fillColor: Theme.of(context).colorScheme.onInverseSurface,
             hintText: "Введите сообщение...",
             border: const OutlineInputBorder(
+              borderSide: BorderSide.none,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(12),
                   topRight:

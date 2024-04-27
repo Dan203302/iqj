@@ -148,7 +148,7 @@ Future<void> postSpecialNews(
         final responseData = jsonDecode(response.body); 
         print('OK, news posted: $responseData');
       } else { 
-        throw Exception('Failed to post data'); 
+        throw Exception('Failed to post data, response ${response.statusCode}'); 
       } 
     } catch (e) { 
       print("error: $e");
