@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 // import 'package:iqj/features/registration/domain/passwordField.dart';
 
+
+typedef void OnPasswordChanged(String password);
+
 class RepPasswordField extends StatefulWidget {
-  const RepPasswordField({super.key});
+  final OnPasswordChanged onPasswordChanged;
+  const RepPasswordField({required this.onPasswordChanged, super.key});
 
   @override
   _RepPasswordFieldState createState() => _RepPasswordFieldState();
@@ -12,6 +16,7 @@ class RepPasswordField extends StatefulWidget {
 class _RepPasswordFieldState extends State<RepPasswordField> {
   bool _ishidden = true;
   Color boxFillColor = const Color(0xFFF6F6F6);
+  String _password = '';
 
   void _toggleVisibility() {
     setState(
@@ -96,6 +101,11 @@ class _RepPasswordFieldState extends State<RepPasswordField> {
         ),
         onChanged: (value) {
           boxFillColor = const Color(0xFFF6F6F6);
+          setState(() {
+            _password = value;
+            boxFillColor = const Color(0xFFF6F6F6);
+          });
+          widget.onPasswordChanged(value);
         },
         validator: (value) {
           // TODO сделать подсветку ошибок

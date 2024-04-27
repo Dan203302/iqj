@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iqj/features/messenger/presentation/screens/chat_bubble.dart';
 import 'package:iqj/features/messenger/presentation/screens/highlight_chat_bubble.dart';
@@ -11,6 +13,8 @@ class MessengerScreen extends StatefulWidget {
 
 class _MessengerBloc extends State<MessengerScreen> {
   bool _isSearch = false;
+
+  final FirebaseAuth _auth =  FirebaseAuth.instance;
 
   void searchfilter() {
     setState(() {
@@ -199,40 +203,77 @@ class _MessengerBloc extends State<MessengerScreen> {
           ),
           Expanded(
             child: ListView(
-              children: const [
+              children: [
                 // Чат текущей пары
                 HighlightChatBubble(
                     imageUrl:
                         'https://gas-kvas.com/grafic/uploads/posts/2023-10/1696557271_gas-kvas-com-p-kartinki-vulkan-9.jpg',
                     chatTitle: 'GroupName',
                     secondary: 'secondaryText',),
-
+                _buildUserList(),
                 // Чат обычный
-                ChatBubble(
-                    imageUrl:
-                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                    chatTitle: 'Денис',
-                    secondary: 'secondaryText',),
-                ChatBubble(
-                    imageUrl:
-                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                    chatTitle: 'Стас',
-                    secondary: 'secondaryText',),
-                ChatBubble(
-                    imageUrl:
-                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                    chatTitle: 'АPI',
-                    secondary: 'secondaryText',),
-                ChatBubble(
-                    imageUrl:
-                        'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
-                    chatTitle: 'Gewin',
-                    secondary: 'secondaryText',),
+                // ChatBubble(
+                //     imageUrl:
+                //         'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                //     chatTitle: 'Денис',
+                //     secondary: 'secondaryText',),
+                // ChatBubble(
+                //     imageUrl:
+                //         'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                //     chatTitle: 'Стас',
+                //     secondary: 'secondaryText',),
+                // ChatBubble(
+                //     imageUrl:
+                //         'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                //     chatTitle: 'АPI',
+                //     secondary: 'secondaryText',),
+                // ChatBubble(
+                //     imageUrl:
+                //         'https://static.wikia.nocookie.net/half-life/images/0/00/Gordonhl1.png/revision/latest/scale-to-width/360?cb=20230625151406&path-prefix=en',
+                //     chatTitle: 'Gewin',
+                //     secondary: 'secondaryText',),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildUserList(){
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError){
+          return const Text('err');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting){
+          return const Text('loading');
+        }
+        return Column(
+          children: 
+            snapshot.data!.docs
+            .map<Widget>((doc) => _buildUserListItem(doc))
+            .toList(),
+        );
+      },
+      );
+  }
+
+  Widget _buildUserListItem(DocumentSnapshot document){
+    final Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    if (_auth.currentUser!.email != data['email']){
+      // return ListTile(
+      //   title: Text(data['email'].toString()),
+      //   onTap: (){
+      //     Navigator.of(context).pushNamed(
+      //       'chatslist',
+      //         arguments: {'name': data['title'],'url':'e','volume': false,'pin': false},
+      //     );
+      //   },
+      // );
+      return ChatBubble(imageUrl: '', chatTitle: data['email'].toString(), secondary: 'text', uid: data['uid'].toString());
+    }
+    return Padding(padding: EdgeInsets.zero);
   }
 }

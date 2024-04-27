@@ -20,11 +20,11 @@ class AuthGate extends StatelessWidget {
           }
           // logged out
           else {
-            //if (_getFirstLaunch() == true) {
+            if (_getFirstLaunch() == true) {
               return const Welcome();
-            //} else {
-            //  return const AuthScreen();
-            //}
+            } else {
+              return const AuthScreen();
+            }
           }
         },
       )
@@ -33,7 +33,7 @@ class AuthGate extends StatelessWidget {
 
    Future<bool> _getFirstLaunch() async {
     final prefs = await SharedPreferences.getInstance();
-    //return prefs.getBool('firstLaunch') ?? true;
-    return false;
+    return prefs.getBool('firstLaunch') ?? true;
+    //return false;
   }
 }

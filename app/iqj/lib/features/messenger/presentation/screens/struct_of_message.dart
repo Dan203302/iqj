@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 // class Message extends StatelessWidget {
 //   final String text;
@@ -30,10 +31,12 @@ import 'package:flutter/material.dart';
 //   }
 
 class ReceiverMessage extends StatelessWidget {
-  final String _url;
-  final String _message;
+  final String url;
+  final String message;
+  final String receiver;
+  final String compare;
 
-  const ReceiverMessage(this._url, this._message, {required MainAxisAlignment mainAxisAlignment});
+  const ReceiverMessage({required MainAxisAlignment mainAxisAlignment, required this.message, required this.url, required this.receiver, required this.compare,});
 
   @override
   Widget build(BuildContext context) {
@@ -43,21 +46,28 @@ class ReceiverMessage extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 20, bottom: 5, top: 8),
+            padding: const EdgeInsets.only(bottom: 5, top: 8),
             child: Column(
               children: [
                 Row(
                   children: [
-                    _buildThumbnailImage(_url),
+                   (receiver != compare)?  _buildThumbnailImage(url) : Container(),
                     Flexible( // Обернуть DecoratedBox в Flexible
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                          color: Color.fromRGBO(56, 56, 56, 1), // Исправлено значение альфа-канала на 1
-                          borderRadius: BorderRadius.only(
+                          color: (receiver != compare)? 
+                          Theme.of(context).colorScheme.onInverseSurface
+                          : Theme.of(context).colorScheme.primaryContainer, // Исправлено значение альфа-канала на 1
+                          borderRadius: (receiver != compare)? const BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),
                             bottomRight: Radius.circular(12),
                             bottomLeft: Radius.circular(4),
+                          ) :  const BorderRadius.only(
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(4),
                           ),
                         ),
                         position: DecorationPosition.background,
@@ -67,20 +77,27 @@ class ReceiverMessage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start, // Выравнивание текста по левому краю
                             children: [
                               Text(
-                                _message,
+                                message,
                                 softWrap: true,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Align(
-                            alignment: Alignment.bottomRight, // Выравниваем текст "14:00" по нижнему правому углу
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 4), // Отступ сверху для текста "14:00"
-                              child: Text(
-                                "14:00",
-                                style: TextStyle(fontSize: 10),
+                                alignment: Alignment.bottomRight, // Выравниваем текст "14:00" по нижнему правому углу
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4), // Отступ сверху для текста "14:00"
+                                      child: Text(
+                                        "14:00",
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                    ),
+                                    (receiver != compare)? Container():
+                                      SvgPicture.asset(
+                                    'assets/icons/chat/send_mes.svg',)
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
                             ],
                           ),
                         ),

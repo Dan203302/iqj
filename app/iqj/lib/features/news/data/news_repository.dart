@@ -40,10 +40,12 @@ Future<List<News>> getNews() async {
         id: json['id'].toString(),
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
-        tags: [""], ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+        tags: "", ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         // thumbnails: json['image_link'] as List<String>,
-        thumbnails: json['image_link'][0] as String,
-        description: "dd", ////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
+        thumbnails: json['image_link'] == null
+        ? "" as String
+        : json['image_link'][0] as String,
+        description: "", 
         link: json['link'] as String,
         bookmarked: false,
       );
@@ -146,7 +148,7 @@ Future<void> postSpecialNews(
         final responseData = jsonDecode(response.body); 
         print('OK, news posted: $responseData');
       } else { 
-        throw Exception('Failed to post data'); 
+        throw Exception('Failed to post data, response ${response.statusCode}'); 
       } 
     } catch (e) { 
       print("error: $e");
@@ -171,11 +173,11 @@ Future<News> getNewsFull(String id) async {
 
     if (decodedData is List) {
       newsList = List<News>.from(decodedData.map((json) => News(
-        description: json['text'] as String,
+        description: json['content'] as String,
         id: json['id'] as String,
         title: json['header'] as String,
         publicationTime: DateTime.parse(json['publication_time'] as String),
-        tags: [""],
+        tags: json['tags'][0] as String,
         thumbnails: (json['image_link'] as List<String>).isNotEmpty 
           ? json['image_link'][0] as String
           : '',
@@ -188,10 +190,10 @@ Future<News> getNewsFull(String id) async {
         id: decodedData['id'] as String,
         title: decodedData['header'] as String,
         publicationTime: DateTime.parse(decodedData['publication_time'] as String),
-        tags: [""],
+        tags: decodedData['tags'][0] as String,
         thumbnails: decodedData['image_link'][0] as String,
-        link: "decodedData['link'] as String",
-        description: decodedData['text'] as String,
+        link: decodedData['link'] as String,
+        description: decodedData['content'] as String,
         bookmarked: false,
       );
       newsList.add(news);

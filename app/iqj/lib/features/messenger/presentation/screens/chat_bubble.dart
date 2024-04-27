@@ -4,10 +4,12 @@ class ChatBubble extends StatefulWidget {
   final String imageUrl;
   final String chatTitle;
   final String secondary;
+  final String uid;
   const ChatBubble({
     required this.imageUrl,
     required this.chatTitle,
     required this.secondary,
+    required this.uid,
     super.key,
   });
 
@@ -88,7 +90,7 @@ class _ChatBubble extends State<ChatBubble> {
               //String name = widget.chatTitle;
               Navigator.of(context).pushNamed(
               'chatslist',
-              arguments: {'name': widget.chatTitle,'url':widget.imageUrl,'volume': volume,'pin': push_pin},
+              arguments: {'name': widget.chatTitle,'url':widget.imageUrl,'volume': volume,'pin': push_pin, 'uid':widget.uid},
           );
             },
             onLongPress: () => {
@@ -183,9 +185,3 @@ class _ChatBubble extends State<ChatBubble> {
     );
   }
 }
-
-
-
-
-
-

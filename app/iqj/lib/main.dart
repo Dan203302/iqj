@@ -50,7 +50,7 @@ class _AppState extends State<App> {
     final prefs = await SharedPreferences.getInstance();
     setState(
       () {
-        // firstLaunch = prefs.getBool('firstLaunch') ?? true;
+         firstLaunch = prefs.getBool('firstLaunch') ?? true;
       },
     );
   }
@@ -63,10 +63,9 @@ class _AppState extends State<App> {
       title: 'IQJ',
       theme: lightTheme,
       darkTheme: darkTheme,
-      home: const AuthGate(),
-      //initialRoute: firstLaunch ? 'welcome' : '/',
+      initialRoute: firstLaunch ? 'welcome' : '/',
       routes: {
-        //'/': (context) => const HomeScreen(),
+        '/': (context) => const HomeScreen(),
         'welcome': (context) => const Welcome(),
         'authorise': (context) => const AuthScreen(),
         'newslist': (context) => const NewsList(),
@@ -77,6 +76,9 @@ class _AppState extends State<App> {
         'chatslist': (context) => const ChatsList(),
         'services': (context) => const ServicesScreen(),
         'about': (context) => const AboutScreen(),
+      },
+      onUnknownRoute: (settings) {
+        
       },
     );
   }
