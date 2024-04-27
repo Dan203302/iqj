@@ -89,7 +89,17 @@ final List<Day> schedule = [
       null,
     ],
   ),
-  DayOff(DateTime(2024, 1, 3)),
+  WorkingDay(DateTime(2024, 4, 30), 
+  lessons: [
+    Lesson(
+      name: 'Алгоритмы', 
+      type: 'Практика',
+      classroom: 'A-220 (В-78)',
+      groups: ['ЭФБО-01-23'],
+      professor: 'Яковлев М. С.'
+
+    )
+  ]),
   DayOff(DateTime(2024, 1, 4)),
   DayOff(DateTime(2024, 1, 5)),
   DayOff(DateTime(2024, 1, 6)),
