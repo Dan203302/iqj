@@ -57,7 +57,7 @@ class ReceiverMessage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: (receiver != compare)? 
                           Theme.of(context).colorScheme.onInverseSurface
-                          : Theme.of(context).colorScheme.inversePrimary, // Исправлено значение альфа-канала на 1
+                          : Theme.of(context).colorScheme.primaryContainer, // Исправлено значение альфа-канала на 1
                           borderRadius: (receiver != compare)? const BorderRadius.only(
                             topLeft: Radius.circular(12),
                             topRight: Radius.circular(12),

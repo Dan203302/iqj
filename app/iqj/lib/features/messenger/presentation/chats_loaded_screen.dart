@@ -101,6 +101,7 @@ class _ChatsListState extends State<ChatsList> {
         return Align(
           alignment: Alignment.bottomCenter,
           child: ListView(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             //reverse: true,
             shrinkWrap: true,
             children: snapshot.data!.docs
@@ -242,6 +243,8 @@ class _ChatsListState extends State<ChatsList> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.zero,
         child: TextField(
+          scrollPadding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom),
           controller: _msgController,
           decoration: InputDecoration(
             filled: true, // Включаем заливку цветом
