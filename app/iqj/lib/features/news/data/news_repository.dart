@@ -42,7 +42,9 @@ Future<List<News>> getNews() async {
         publicationTime: DateTime.parse(json['publication_time'] as String),
         tags: "", ////////////// РАСКОММЕНТИРОВАТЬ КОГДА АПИ БУДЕТ ГОТОВО
         // thumbnails: json['image_link'] as List<String>,
-        thumbnails: json['image_link'][0] as String,
+        thumbnails: json['image_link'] == null
+        ? "" as String
+        : json['image_link'][0] as String,
         description: "", 
         link: json['link'] as String,
         bookmarked: false,

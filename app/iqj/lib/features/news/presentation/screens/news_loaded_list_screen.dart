@@ -171,10 +171,12 @@ Future<News> getNewsFull(String id) async {
             title: json['header'] as String,
             link: json['link'] as String,
             description: json['content'].toString(),
-            thumbnails: (json['image_link'] as List<String>).isNotEmpty
-                ? json['image_link'][0] as String
-                : 'https://www.mirea.ru/upload/resize_cache/iblock/315/a8z66au34adqxo5a6ax0y60sh8c6yxk3/250_250_2/20240425191345_LR0A6461.jpg',
-            tags: json['tags'][0] as String,
+            thumbnails: json['image_link'] == null
+                ? ''
+                : json['image_link'][0] as String,
+            tags: json['tags'] == null
+            ? ''
+            : json['tags'][0] as String,
             publicationTime: DateTime.parse(json['publication_time'] as String),
             bookmarked: false,
           ),
@@ -187,9 +189,12 @@ Future<News> getNewsFull(String id) async {
         title: decodedData['header'] as String,
         publicationTime:
             DateTime.parse(decodedData['publication_time'] as String),
-        thumbnails: decodedData['image_link'][0] as String,
-            
-        tags: decodedData['tags'][0] as String,
+        thumbnails: decodedData['image_link'] == null
+                ? ''
+                : decodedData['image_link'][0] as String,
+            tags: decodedData['tags'] == null
+            ? ''
+            : decodedData['tags'][0] as String,
         link: decodedData['link'] as String,
         description: decodedData['content'] as String,
         bookmarked: false,
@@ -563,7 +568,7 @@ class __NewsListWidgetState extends State<_NewsListWidget> {
             appBar: AppBar(
               title: const Text('Новость'),
             ),
-            body: const Text('Ошибка'),
+            body: const Center(child: Text('Ошибка')),
           );
         },
       ),
