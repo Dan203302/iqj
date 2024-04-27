@@ -94,7 +94,9 @@ class _ChatsListState extends State<ChatsList> {
           return Text('Error: ${snapshot.error}');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text('loading');
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
         return Align(
           alignment: Alignment.bottomCenter,
@@ -148,7 +150,7 @@ class _ChatsListState extends State<ChatsList> {
                     Row(
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.38,
+                          width: MediaQuery.of(context).size.width * 0.35,
                           child: Flexible(
                             child: Text(
                               user_name ?? "",
@@ -182,23 +184,55 @@ class _ChatsListState extends State<ChatsList> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.phone,
-              color: Theme.of(context).colorScheme.onBackground,
+          Container(
+            padding: const EdgeInsets.only(right: 12),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.phone,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  onPressed: () {
+                    // Действие при нажатии на кнопку с телефоном
+                  },
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (String choice) {},
+                  itemBuilder: (BuildContext context) {
+                    return {'Настройки', 'Статус'}.map((String choice) {
+                      return choice == "Настройки"
+                          ? PopupMenuItem<String>(
+                              value: choice,
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.settings_outlined),
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 12),
+                                  ),
+                                  Text(choice),
+                                ],
+                              ),
+                            )
+                          : PopupMenuItem<String>(
+                              value: choice,
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.tag_faces_sharp,
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 12),
+                                  ),
+                                  Text(choice),
+                                ],
+                              ),
+                            );
+                    }).toList();
+                  },
+                ),
+              ],
             ),
-            onPressed: () {
-              // Действие при нажатии на кнопку с телефоном
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-            onPressed: () {
-              // Действие при нажатии на кнопку с тремя вертикальными точками
-            },
           ),
         ],
       ),
