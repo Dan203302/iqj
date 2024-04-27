@@ -8,9 +8,9 @@ class AuthService extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<UserCredential> signInWithEmailandPassword(
-      String email, String password) async {
+      String email, String password,) async {
     try {
-      UserCredential userCredential = await _firebaseAuth
+      final UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
       _firestore.collection('users').doc(userCredential.user!.uid).set({

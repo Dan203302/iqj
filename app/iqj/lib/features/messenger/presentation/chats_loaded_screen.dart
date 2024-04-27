@@ -16,7 +16,7 @@ class _ChatsListState extends State<ChatsList> {
   Widget _buildThumbnailImage(String image_url) {
     try {
       return Container(
-        padding: EdgeInsets.only(right: 30),
+        padding: EdgeInsets.only(right: 12),
         child: SizedBox(
           width: 45,
           height: 45,
@@ -76,7 +76,9 @@ class _ChatsListState extends State<ChatsList> {
   void sendMessage() async {
     if (_msgController.text.isNotEmpty) {
       await _chatService.sendMessage(
-          uid, _msgController.text,);
+        uid,
+        _msgController.text,
+      );
       _msgController.clear();
     }
   }
@@ -84,7 +86,9 @@ class _ChatsListState extends State<ChatsList> {
   Widget _buildMessageList() {
     return StreamBuilder(
       stream: _chatService.getMessages(
-          uid, _firebaseAuth.currentUser!.uid,),
+        uid,
+        _firebaseAuth.currentUser!.uid,
+      ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -92,11 +96,15 @@ class _ChatsListState extends State<ChatsList> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text('loading');
         }
-        return ListView(
-          //reverse: true,
-          children: snapshot.data!.docs
-              .map((document) => _buildMessageListItem(document))
-              .toList(),
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: ListView(
+            //reverse: true,
+            shrinkWrap: true,
+            children: snapshot.data!.docs
+                .map((document) => _buildMessageListItem(document))
+                .toList(),
+          ),
         );
       },
     );
@@ -112,9 +120,14 @@ class _ChatsListState extends State<ChatsList> {
         ? Alignment.centerRight
         : Alignment.centerLeft;
     return Container(
+      padding: EdgeInsets.only(left: 12, right: 12),
       alignment: alignment,
-      child: ReceiverMessage(message: data['message'].toString(), mainAxisAlignment: mainalignment, url: '',)
-      );
+      child: ReceiverMessage(
+        message: data['message'].toString(),
+        mainAxisAlignment: mainalignment,
+        url: '',
+      ),
+    );
   }
 
   @override
@@ -127,56 +140,67 @@ class _ChatsListState extends State<ChatsList> {
           child: Row(
             children: [
               _buildThumbnailImage(image_url ?? ""),
-              const Padding(padding: EdgeInsets.only(right: 12)),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        user_name ?? "",
-                        style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                          fontSize: 20,
+              //const Padding(padding: EdgeInsets.only(right: 12)),
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.38,
+                          child: Flexible(
+                            child: Text(
+                              user_name ?? "",
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                                fontSize: 20,
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                         ),
-                      ),
-                      vol ? Icon(Icons.volume_off) : Container(),
-                      pin ? Icon(Icons.push_pin_outlined) : Container(),
-                    ],
-                  ),
-                  Text(
-                    "печатает...",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
+                        vol ? Icon(Icons.volume_off) : Container(),
+                        pin ? Icon(Icons.push_pin_outlined) : Container(),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Spacer(),
-              const Padding(
-                  padding: EdgeInsets.only(
-                      right:
-                          12)), // Вставляет пространство между текстом и иконками
-              IconButton(
-                icon: Icon(Icons.phone,
-                    color: Theme.of(context).colorScheme.onBackground),
-                onPressed: () {
-                  // Действие при нажатии на кнопку с телефоном
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.more_vert,
-                    color: Theme.of(context).colorScheme.onBackground),
-                onPressed: () {
-                  // Действие при нажатии на кнопку с тремя вертикальными точками
-                },
+                    Text(
+                      "печатает...",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.phone,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            onPressed: () {
+              // Действие при нажатии на кнопку с телефоном
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            onPressed: () {
+              // Действие при нажатии на кнопку с тремя вертикальными точками
+            },
+          ),
+        ],
       ),
       body: _buildMessageList(),
       bottomNavigationBar: Padding(

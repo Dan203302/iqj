@@ -44,7 +44,7 @@ class ReceiverMessage extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 20, bottom: 5, top: 8),
+            padding: const EdgeInsets.only(bottom: 5, top: 8),
             child: Column(
               children: [
                 Row(
