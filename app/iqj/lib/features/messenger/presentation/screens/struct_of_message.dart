@@ -36,8 +36,9 @@ class ReceiverMessage extends StatelessWidget {
   final String message;
   final String receiver;
   final String compare;
+  final String time;
 
-  const ReceiverMessage({required MainAxisAlignment mainAxisAlignment, required this.message, required this.url, required this.receiver, required this.compare,});
+  const ReceiverMessage({required MainAxisAlignment mainAxisAlignment, required this.message, required this.url, required this.receiver, required this.compare, required this.time,});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +90,8 @@ class ReceiverMessage extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4), 
                                       child: Text(
-                                        "${DateFormat('HH:mm').format(DateTime.now())}",
+                                        //"${DateFormat('HH:mm').format(DateTime.now())}",
+                                        time,
                                         style: TextStyle(fontSize: 10),
                                       ),
                                     ),
