@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 // class Message extends StatelessWidget {
 //   final String text;
@@ -86,9 +87,9 @@ class ReceiverMessage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 4), // Отступ сверху для текста "14:00"
+                                      padding: const EdgeInsets.only(top: 4), 
                                       child: Text(
-                                        "14:00",
+                                        "${DateFormat('HH:mm').format(DateTime.now())}",
                                         style: TextStyle(fontSize: 10),
                                       ),
                                     ),
