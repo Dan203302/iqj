@@ -6,22 +6,22 @@ import (
 )
 
 type Lesson struct {
-	Id         int    `json:"class_id"`                  // Id пары
-	GroupID    []int  `json:"class_group_ids,omitempty"` // ЗАМЕНИТЬ НА []string //Список Id групп, для которых пара
-	TeacherID  int    `json:"class_teacher_id"`          // ЗАМЕНИТЬ НА string //Id преподавателя, который ведет пару
-	Count      int    `json:"class_count"`               // Какая пара по счету за день
-	Weekday    int    `json:"class_weekday"`             // Номер дня недели
-	Week       int    `json:"class_week"`                // Номер учебной неделяя
-	LessonName string `json:"class_name"`                // Название пары
-	LessonType string `json:"class_type"`                // Тип пары
-	Location   string `json:"class_location"`            // Местонахождение
+	Id         int      `json:"class_id"`                  // Id пары
+	GroupID    []string `json:"class_group_ids,omitempty"` // ЗАМЕНИТЬ НА []string //Список Id групп, для которых пара
+	TeacherID  string   `json:"class_teacher_id"`          // ЗАМЕНИТЬ НА string //Id преподавателя, который ведет пару
+	Count      int      `json:"class_count"`               // Какая пара по счету за день
+	Weekday    int      `json:"class_weekday"`             // Номер дня недели
+	Week       int      `json:"class_week"`                // Номер учебной неделяя
+	LessonName string   `json:"class_name"`                // Название пары
+	LessonType string   `json:"class_type"`                // Тип пары
+	Location   string   `json:"class_location"`            // Местонахождение
 }
 
 // Получение критерия, значения и таблицы, возвращение массива уроков
 func find(criterion string, value string, table [][]string, id int) ([]Lesson, int, error) {
 	var valueTable []Lesson
 	weekdayIndex := []int{3, 17, 31, 45, 59, 73, 87}
-	var groupid []int //ЗАМЕНИТЬ НА []string
+	var groupid []string //ЗАМЕНИТЬ НА []string
 	//Поиск по группе
 	if criterion == "group" {
 		n := 0
@@ -47,7 +47,8 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 					break
 				}
 			}
-			groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][n]) //TODO: Заменить на поиск из БД
+			//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][n]) //TODO: Заменить на поиск из БД
+			groupid = append(groupid, table[1][n])
 			var iter int
 			if table[i][n-1] == "I" || table[i][n-1] == "II" {
 				iter = 5
@@ -68,7 +69,8 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 			}
 			m := n
 			for m+2+iter < len(table[i]) && table[i][m+2] == table[i][m+2+iter] && table[i][m] == table[i][m+iter] {
-				groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m+iter]) //TODO: Заменить на поиск из БД
+				//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m+iter]) //TODO: Заменить на поиск из БД
+				groupid = append(groupid, table[1][m+iter])
 				m += iter
 				if iter == 5 {
 					iter = 10
@@ -79,7 +81,8 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 			row.Id = id
 			row.GroupID = groupid
 			groupid = nil
-			row.TeacherID = 0 //ЗАМЕНИТЬ НА row.TeacherID = table[i][n+2] //TODO: Заменить на поиск из БД
+			//row.TeacherID = 0 //ЗАМЕНИТЬ НА row.TeacherID = table[i][n+2] //TODO: Заменить на поиск из БД
+			row.TeacherID = table[i][n+2]
 			row.LessonName = table[i][n]
 			row.LessonType = table[i][n+1]
 			row.Location = table[i][n+3]
@@ -127,13 +130,19 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 					break
 				}
 			}
-			groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][colNum-2])
+
+			//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][colNum-2])
+			groupid = append(groupid, table[1][colNum-2])
+
 			m := colNum
 			// Парсинг групп с одинаковыми парами в зависимости от положения группы в таблице
 			if table[rowNum][colNum-3] == "I" || table[rowNum][colNum-3] == "II" {
 				iter := 5
 				for m-2+iter < len(table[rowNum]) && table[rowNum][m] == table[rowNum][m+iter] && table[rowNum][m-2] == table[rowNum][m-2+iter] {
-					groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-2+iter] //TODO: Заменить на поиск из БД
+
+					//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-2+iter]) //TODO: Заменить на поиск из БД
+					groupid = append(groupid, table[1][m-2+iter])
+
 					m += iter
 					if iter == 5 {
 						iter = 10
@@ -150,7 +159,10 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 			} else {
 				iter := 10
 				for m+iter < len(table[rowNum]) && table[rowNum][m] == table[rowNum][m+iter] && table[rowNum][m-2] == table[rowNum][m-2+iter] {
-					groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-2+iter]) //TODO: Заменить на поиск из БД
+
+					//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-2+iter]) //TODO: Заменить на поиск из БД
+					groupid = append(groupid, table[1][m-2+iter])
+
 					m += iter
 					if iter == 5 {
 						iter = 10
@@ -168,7 +180,10 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 			row.Id = id
 			row.GroupID = groupid
 			groupid = nil
-			row.TeacherID = 0 //ЗАМЕНИТЬ НА row.TeacherID = table[rowNum][colNum] //TODO: Заменить на поиск из БД
+
+			//row.TeacherID = 0 //ЗАМЕНИТЬ НА row.TeacherID = table[rowNum][colNum] //TODO: Заменить на поиск из БД
+			row.TeacherID = table[rowNum][colNum]
+
 			row.LessonName = table[rowNum][colNum-2]
 			row.LessonType = table[rowNum][colNum-1]
 			row.Location = table[rowNum][colNum+1]
@@ -214,11 +229,17 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 				}
 			}
 			m := colNum
-			groupid = append(groupid, 0) // ЗАМЕНИТЬ НА groupid = append(groupid, table[1][colNum-3])
+
+			//groupid = append(groupid, 0) // ЗАМЕНИТЬ НА groupid = append(groupid, table[1][colNum-3])
+			groupid = append(groupid, table[1][colNum-3])
+
 			if table[rowNum][colNum-4] == "I" || table[rowNum][colNum-4] == "II" {
 				iter := 5
 				for m+iter < len(table[rowNum]) && table[rowNum][m] == table[rowNum][m+iter] && table[rowNum][m-3] == table[rowNum][m-3+iter] {
-					groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-3+iter]) //TODO: Заменить на поиск из БД
+
+					//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-3+iter]) //TODO: Заменить на поиск из БД
+					groupid = append(groupid, table[1][m-3+iter])
+
 					m += iter
 					if iter == 5 {
 						iter = 10
@@ -235,7 +256,10 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 			} else {
 				iter := 10
 				for m+iter < len(table[rowNum]) && table[rowNum][m] == table[rowNum][m+iter] && table[rowNum][m-3] == table[rowNum][m-3+iter] {
-					groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-3+iter]) //TODO: Заменить на поиск из БД
+
+					//groupid = append(groupid, 0) //ЗАМЕНИТЬ НА groupid = append(groupid, table[1][m-3+iter]) //TODO: Заменить на поиск из БД
+					groupid = append(groupid, table[1][m-3+iter])
+
 					m += iter
 					if iter == 5 {
 						iter = 10
@@ -253,7 +277,10 @@ func find(criterion string, value string, table [][]string, id int) ([]Lesson, i
 			row.Id = id
 			row.GroupID = groupid // //TODO: Заменить на поиск из БД
 			groupid = nil
-			row.TeacherID = 0 //ЗАМЕНИТЬ НА row.TeacherID = table[rowNum][colNum-1] //TODO: Заменить на поиск из БД
+
+			//row.TeacherID = 0 //ЗАМЕНИТЬ НА row.TeacherID = table[rowNum][colNum-1] //TODO: Заменить на поиск из БД
+			row.TeacherID = table[rowNum][colNum-1]
+
 			row.LessonName = table[rowNum][colNum-3]
 			row.LessonType = table[rowNum][colNum-2]
 			row.Location = table[rowNum][colNum]

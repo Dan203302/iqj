@@ -30,13 +30,13 @@ func (h *Handler) Lessons(c *gin.Context) {
 		switch criterion {
 		case "group":
 			for _, group := range lesson.GroupID {
-				if group == 0 { //ЗАМЕНИТЬ НА  group == value
+				if group == value { //ЗАМЕНИТЬ НА  group == value
 					filteredLessons = append(filteredLessons, lesson)
 				}
 			}
 
 		case "tutor":
-			if lesson.TeacherID == 0 { //ЗАМЕНИТЬ НА lesson.TeacherID == value
+			if lesson.TeacherID == value { //ЗАМЕНИТЬ НА lesson.TeacherID == value
 				filteredLessons = append(filteredLessons, lesson)
 			}
 
