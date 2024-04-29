@@ -18,7 +18,7 @@ func Lessons(c *gin.Context) {
 	criterion := c.Query("criterion")
 	value := c.Query("value")
 
-	lessons, err := excelparser.Parse(criterion, value)
+	lessons, err := excelparser.Parse2(criterion, value)
 	if err != nil {
 		c.String(http.StatusBadRequest, err.Error())
 		return

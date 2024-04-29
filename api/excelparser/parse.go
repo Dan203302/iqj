@@ -7,15 +7,45 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
-// Парсинг всех Excel файлов директории
-func Parse(criterion string, value string) ([]models.Lesson, error) {
-	var tables []models.Lesson
+func Parse2(criterion, value string) ([]models.Lesson, error) {
+	var wg sync.WaitGroup
+
+	institutes := []string{"/III", "/IIT", "/IKTST", "/IPTIP", "/IRI", "/ITKHT", "/ITU"}
 	directory := config.DirToParse //ПРОПИСАТЬ ПОЛНЫЙ ПУТЬ, ЕСЛИ НЕ РАБОТАЕТ
-	files, err := os.ReadDir(directory)
+
+	ch := make(chan []models.Lesson)
+
+	for i := range institutes {
+		path := directory + institutes[i]
+		wg.Add(1)
+		go Parse(criterion, value, path, &wg, ch)
+	}
+
+	var result []models.Lesson
+
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	for i := range ch {
+		result = append(result, i...)
+	}
+
+	return result, nil
+}
+
+// Парсинг всех Excel файлов директории
+func Parse(criterion, value, path string, wg *sync.WaitGroup, ch chan []models.Lesson) ([]models.Lesson, error) {
+	defer wg.Done()
+
+	var tables []models.Lesson
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return tables, err
 	}
@@ -23,7 +53,7 @@ func Parse(criterion string, value string) ([]models.Lesson, error) {
 	id := 0
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".xlsx") {
-			filePath := filepath.Join(directory, file.Name())
+			filePath := filepath.Join(path, file.Name())
 
 			xlFile, err := excelize.OpenFile(filePath)
 			if err != nil {
@@ -43,5 +73,8 @@ func Parse(criterion string, value string) ([]models.Lesson, error) {
 			}
 		}
 	}
+
+	ch <- tables
+
 	return tables, nil
 }
