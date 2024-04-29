@@ -35,7 +35,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	r.GET("/ad", h.HandleGetAdvertisement)
 
-	//r.GET("/lessons", h.Lessons)
+	r.GET("/lessons", h.Lessons)
 
 	// Группа функций, которая доступна только после аутентификации
 	authGroup := r.Group("/api")
