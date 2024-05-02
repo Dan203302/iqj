@@ -15,6 +15,7 @@ class LessonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Theme.of(context).colorScheme.onInverseSurface,
+      surfaceTintColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
         child: Column(
@@ -83,7 +84,7 @@ class LessonCard extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(color: Theme.of(context).colorScheme.outline),
+            Divider(color: Theme.of(context).colorScheme.inverseSurface),
             // MARK: Нижние строки
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -97,7 +98,7 @@ class LessonCard extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF191919)
+                      color: Theme.of(context).colorScheme.inverseSurface,
                     ),
                     children: [
                       TextSpan(
@@ -125,7 +126,7 @@ class LessonCard extends StatelessWidget {
                       fontFamily: 'Inter',
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF191919)
+                      color: Theme.of(context).colorScheme.inverseSurface,
                     ),
                     children: [
                       TextSpan(
@@ -153,6 +154,7 @@ class EmptyLessonCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Theme.of(context).colorScheme.onInverseSurface,
+      surfaceTintColor: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Align(
