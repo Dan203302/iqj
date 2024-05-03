@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:iqj/features/messenger/data/chat_service.dart';
 //import 'package:flutter_reversed_list/flutter_reversed_list.dart';
 import 'package:iqj/features/messenger/presentation/screens/date_for_load_chats.dart';
@@ -130,7 +131,8 @@ class _ChatsListState extends State<ChatsList> {
         mainAxisAlignment: mainalignment,
         url: '', 
         receiver: data['senderId'] as String,
-         compare: _firebaseAuth.currentUser!.uid,
+         compare: _firebaseAuth.currentUser!.uid, 
+         time: "${DateFormat('HH:mm').format(DateTime.now())}",
       ),
     );
   }

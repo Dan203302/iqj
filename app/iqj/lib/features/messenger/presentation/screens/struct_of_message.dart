@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 // class Message extends StatelessWidget {
 //   final String text;
@@ -35,8 +36,9 @@ class ReceiverMessage extends StatelessWidget {
   final String message;
   final String receiver;
   final String compare;
+  final String time;
 
-  const ReceiverMessage({required MainAxisAlignment mainAxisAlignment, required this.message, required this.url, required this.receiver, required this.compare,});
+  const ReceiverMessage({required MainAxisAlignment mainAxisAlignment, required this.message, required this.url, required this.receiver, required this.compare, required this.time,});
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +88,10 @@ class ReceiverMessage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 4), // Отступ сверху для текста "14:00"
+                                      padding: const EdgeInsets.only(top: 4), 
                                       child: Text(
-                                        "14:00",
+                                        //"${DateFormat('HH:mm').format(DateTime.now())}",
+                                        time,
                                         style: TextStyle(fontSize: 10),
                                       ),
                                     ),
