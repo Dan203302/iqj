@@ -20,7 +20,7 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return content();
   }
-
+  // MARK: Календарь
   Widget content() {
     return TableCalendar(
       rowHeight: 47, // Высота строки
@@ -69,6 +69,7 @@ class _CalendarState extends State<Calendar> {
           shape: BoxShape.circle,
         ), // Декорация выходного дня
       ),
+      // Заголовок
       headerStyle: HeaderStyle(
         formatButtonVisible: true,
         formatButtonShowsNext: false,
@@ -141,7 +142,7 @@ class CustomCalendarBuilder extends CalendarBuilders {
               child: Icon(
                 Icons.circle,
                 size: 8,
-                color: const Color(0xFFEFAC00).withOpacity(0.56),
+                //color: const Color(0xFFEFAC00).withOpacity(0.56),
               ),
             ),
         ],
