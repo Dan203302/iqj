@@ -1,55 +1,52 @@
 package handler
 
 import (
-	"iqj/api/excelparser"
-	"iqj/models"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"iqj/api/middleware"
+	"iqj/service"
+	"net/http"
 )
 
-// Получает criterion (group, tutor, classroom) и value из запроса, вызывает функцию Parse,
-// которая вернет массив с расписанием по заданным критериям.
-// Выдает расписание пользователю в формате JSON.
-// Например при "GET /lessons?criterion=group&value=ЭФБО-01-23" вернет расписание на неделю группы ЭФБО-01-23.
-// при "GET /lessons?criterion=tutor&value=Сафронов А.А." вернет расписание на неделю преподавателя Сафронов А.А.
-// при "GET /lessons?criterion=classroom&value=ауд. А-61 (МП-1)" вернет расписание на неделю аудитории ауд. А-61 (МП-1)
-// При неверном критерии или значении отправит null
+type Handler struct {
+	services *service.Service
+}
 
-func Lessons(c *gin.Context) {
-	criterion := c.Query("criterion")
-	value := c.Query("value")
+func NewHandler(services *service.Service) *Handler {
+	return &Handler{services: services}
+}
 
-	lessons, err := excelparser.Parse2(criterion, value)
-	if err != nil {
-		c.String(http.StatusBadRequest, err.Error())
-		return
+// Функция для создания роутера, добавления к нему CORSMiddleware
+// и объявления путей для всех запросов.
+func (h *Handler) InitRoutes() *gin.Engine {
+	r := gin.Default()
+
+	// Добавляет заголовки CORS к ответам сервера.
+	// Необходимо для того, чтобы клиентские приложения,
+	// работающие на других доменах, могли взаимодействовать с API.
+	r.Use(middleware.CORSMiddleware())
+
+	// Вызов хэндлеров исходя из запроса.
+	r.GET("/", h.Hello)
+	r.POST("/sign-up", h.HandleSignUp)
+	r.POST("/sign-in", h.HandleSignIn)
+
+	r.GET("/news", h.HandleGetNews)
+	r.GET("/news_id", h.HandleGetNewsById)
+
+	r.GET("/ad", h.HandleGetAdvertisement)
+
+	r.GET("/lessons", h.Lessons)
+
+	// Группа функций, которая доступна только после аутентификации
+	authGroup := r.Group("/api")
+	authGroup.Use(middleware.WithJWTAuth)
+	{
+		authGroup.POST("/news", h.HandleAddNews)
+		authGroup.POST("/ad", h.HandlePostAdvertisement)
 	}
+	return r
+}
 
-	var filteredLessons []models.Lesson
-	for _, lesson := range lessons {
-		switch criterion {
-		case "group":
-			for _, group := range lesson.GroupID {
-				if group == 0 { //ЗАМЕНИТЬ НА  group == value
-					filteredLessons = append(filteredLessons, lesson)
-				}
-			}
-
-		case "tutor":
-			if lesson.TeacherID == 0 { //ЗАМЕНИТЬ НА lesson.TeacherID == value
-				filteredLessons = append(filteredLessons, lesson)
-			}
-
-		case "classroom":
-			if lesson.Location == value {
-				filteredLessons = append(filteredLessons, lesson)
-			}
-		default:
-			c.String(http.StatusBadRequest, err.Error())
-			return
-		}
-	}
-
-	c.JSON(http.StatusOK, filteredLessons)
+func (h *Handler) Hello(c *gin.Context) {
+	c.String(http.StatusOK, "Добро пожаловать в IQJ")
 }
